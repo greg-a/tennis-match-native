@@ -1,10 +1,9 @@
 import React from 'react';
-import LoginScreen from './screens/LoginScreen';
-import LoginScreen2 from './app/screens/LoginScreen2';
+import PlacesNavigator from './app/navigation/PlacesNavigator';
 
 export default function App() {
   return (
-    <LoginScreen />
+    <PlacesNavigator />
   );
 }
 
