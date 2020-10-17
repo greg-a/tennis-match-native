@@ -1,5 +1,5 @@
 import React from 'react';
-import { Picker, Item } from '@react-native-community/picker';
+import { Picker } from '@react-native-community/picker';
 import { View } from 'react-native';
 
 const DropdownPicker = props => {
@@ -11,7 +11,7 @@ const DropdownPicker = props => {
             >
                 {props.menuContent.map((item, index) => {
                     return (
-                        <Item label={item.label} value={item.value} key={index} />
+                        <Picker.Item label={item.label} value={item.value} key={index} />
                     )
                 })}
             </Picker>

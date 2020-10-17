@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { ScrollView, View, StyleSheet, TextInput, Text } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
@@ -15,6 +15,22 @@ const ProfileScreen = props => {
         zipcode: '',
         skillLevel: ''
     });
+
+    useEffect(() => {
+        fetch('http://192.168.1.153:3001/api/profile')
+          .then((response) => response.json())
+          .then((json) => console.log(json))
+          .catch((error) => console.error(error))
+      }, []);
+
+    getProfileInfo = () => {
+        fetch("http://192.168.1.153:3001/api/profile")
+            .then(res => res.json())
+            .then((profileInfo) => {
+                console.log(profileInfo)
+            })
+            .catch(err => console.log(err));
+    }
 
     return (
         <ScrollView>
@@ -57,10 +73,18 @@ const ProfileScreen = props => {
 ProfileScreen.navigationOptions = navData => {
     return {
         headerTitle: 'Edit Profile',
-        headerRight: <HeaderButtons>
+        headerRight: () => <HeaderButtons>
             <Item
                 title='SAVE'
-                onPress={() => { }}
+                onPress={() => {
+                    fetch("http://localhost:3001/api/profile")
+            .then(res => res.json())
+            .then((profileInfo) => {
+                console.log(profileInfo)
+                console.log("Header Button Works!");
+            })
+            .catch(err => console.log(err));
+                }}
             />
         </HeaderButtons>
     };
