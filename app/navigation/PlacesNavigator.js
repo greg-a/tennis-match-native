@@ -3,9 +3,13 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
+import CalendarScreen from '../screens/CalendarScreen';
 
 const PlacesNavigator = createStackNavigator(
     {
+      Calendar: {
+        screen: CalendarScreen
+      },
       Profile: ProfileScreen,
       Messenger: MessengerScreen
     },
