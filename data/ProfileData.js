@@ -207,30 +207,37 @@ export const States = [
 
 export const Skills = [
     {
+        key: "1",
         value: "1",
         label: "1.0-1.5 - New Player"
     },
     {
+        key: "2",
         value: "2",
         label: "2.0 - Beginner"
     },
     {
+        key: "3",
         value: "3",
         label: "2.5 - Beginner +"
     },
     {
+        key: "4",
         value: "4",
         label: "3.0 - Beginner-Intermediate"
     },
     {
+        key: "5",
         value: "5",
         label: "3.5 - Intermediate"
     },
     {
+        key: "6",
         value: "6",
         label: "4.0 - Intermediate-Advanced"
     },
     {
+        key: "7",
         value: "7",
         label: "4.5 - Advanced"
     }
@@ -279,4 +286,19 @@ export const eventSeed = [
         eventStatus: "available",
         UserId: "3"
     }
+];
+
+export const playTypeData = [
+    { key: 1, label: 'Casual' },
+    { key: 2, label: 'Competitive' }
+];
+
+export const courtLocationData = [
+    { key: 1, label: 'any' },
+    { key: 2, label: 'Fairmount Park' },
+    { key: 3, label: 'Temple' },
+    { key: 4, label: 'FDR Park' },
+    { key: 5, label: 'Chaminoux' },
+    { key: 6, label: 'Allens Lane Park' },
+    { key: 7, label: 'Seger Park' },
 ];
