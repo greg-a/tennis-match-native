@@ -16,12 +16,12 @@ const ProfileScreen = props => {
         skillLevel: ''
     });
 
-    useEffect(() => {
-        fetch('http://192.168.1.153:3001/api/profile')
-          .then((response) => response.json())
-          .then((json) => console.log(json))
-          .catch((error) => console.error(error))
-      }, []);
+    // useEffect(() => {
+    //     fetch('http://192.168.1.153:3001/api/profile')
+    //       .then((response) => response.json())
+    //       .then((json) => console.log(json))
+    //       .catch((error) => console.error(error))
+    //   }, []);
 
     getProfileInfo = () => {
         fetch("http://192.168.1.153:3001/api/profile")
