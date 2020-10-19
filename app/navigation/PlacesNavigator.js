@@ -4,18 +4,15 @@ import { createAppContainer } from 'react-navigation';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
 import AvailabilityScreen from '../screens/AvailabilityScreen';
-
-const PlacesNavigator = createStackNavigator(
-    {
-      Availability: AvailabilityScreen,
 import CalendarScreen from '../screens/CalendarScreen';
 
 const PlacesNavigator = createStackNavigator(
     {
+      Profile: ProfileScreen,
       Calendar: {
         screen: CalendarScreen
       },
-      Profile: ProfileScreen,
+      Availability: AvailabilityScreen,
       Messenger: MessengerScreen
     },
     {

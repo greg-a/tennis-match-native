@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { ScrollView, View, StyleSheet, TextInput, Text } from 'react-native';
+import { ScrollView, View, StyleSheet, TextInput, Text, Modal } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
-import DropdownPicker from '../components/DropdownPicker';
+import ModalSelector from 'react-native-modal-selector';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -49,21 +49,31 @@ const ProfileScreen = props => {
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>State</Text>
-                    <DropdownPicker
+                    <ModalSelector
                         pickerStyle={styles.input}
-                        selected={profileUpdate.state}
-                        menuContent={States}
-                        onChange={(itemValue, itemIndex) => setProfileUpdate({ ...profileUpdate, state: itemValue })}
-                    />
+                        data={States}
+                        onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.state}
+                            editable={false}
+                            placeholder={"Choose State..."}
+                        />
+                    </ModalSelector>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Skill Level</Text>
-                    <DropdownPicker
+                    <ModalSelector
                         pickerStyle={styles.input}
-                        selected={profileUpdate.skillLevel}
-                        menuContent={Skills}
-                        onChange={(itemValue, itemIndex) => setProfileUpdate({ ...profileUpdate, skillLevel: itemValue })}
-                    />
+                        data={Skills}
+                        onChange={(option) => setProfileUpdate({ ...profileUpdate, skillLevel: option.label })}>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.skillLevel}
+                            editable={false}
+                            placeholder={"Choose Skill Level..."}
+                        />
+                    </ModalSelector>
                 </View>
             </View>
         </ScrollView>
@@ -78,12 +88,12 @@ ProfileScreen.navigationOptions = navData => {
                 title='SAVE'
                 onPress={() => {
                     fetch("http://localhost:3001/api/profile")
-            .then(res => res.json())
-            .then((profileInfo) => {
-                console.log(profileInfo)
-                console.log("Header Button Works!");
-            })
-            .catch(err => console.log(err));
+                        .then(res => res.json())
+                        .then((profileInfo) => {
+                            console.log(profileInfo)
+                            console.log("Header Button Works!");
+                        })
+                        .catch(err => console.log(err));
                 }}
             />
         </HeaderButtons>

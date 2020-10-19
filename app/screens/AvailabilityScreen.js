@@ -4,6 +4,7 @@ import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
+import { playTypeData, courtLocationData } from '../../data/ProfileData';
 
 function AvailabilityScreen() {
 
@@ -22,17 +23,17 @@ function AvailabilityScreen() {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
-    useEffect(() => {
-        console.log('eventTitle: ' + eventTitle);
-        console.log('eventLocation: ' + eventLocation);
-        console.log('newDate: ' + newDate);
-        console.log('conDate: ' + conDate);
-        console.log('startTime: ' + startTime);
-        console.log('conStartTime: ' + conStartTime);
-        console.log('endTime: ' + endTime);
-        console.log('conEndTime: ' + conEndTime);
-        console.log('-------------');
-    });
+    // useEffect(() => {
+    //     console.log('eventTitle: ' + eventTitle);
+    //     console.log('eventLocation: ' + eventLocation);
+    //     console.log('newDate: ' + newDate);
+    //     console.log('conDate: ' + conDate);
+    //     console.log('startTime: ' + startTime);
+    //     console.log('conStartTime: ' + conStartTime);
+    //     console.log('endTime: ' + endTime);
+    //     console.log('conEndTime: ' + conEndTime);
+    //     console.log('-------------');
+    // });
 
     const convertDatetime = (datetime, type) => {
         if (type === 'date') {
@@ -89,20 +90,7 @@ function AvailabilityScreen() {
         hideEndTimePicker();
     };
 
-    const playTypeData = [
-        { key: 1, label: 'Casual' },
-        { key: 2, label: 'Competitive' }
-    ];
-
-    const courtLocationData = [
-        { key: 1, label: 'any' },
-        { key: 2, label: 'Fairmount Park' },
-        { key: 3, label: 'Temple' },
-        { key: 4, label: 'FDR Park' },
-        { key: 5, label: 'Chaminoux' },
-        { key: 6, label: 'Allens Lane Park' },
-        { key: 7, label: 'Seger Park' },
-    ];
+    
 
 
     return (
