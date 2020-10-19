@@ -8,6 +8,13 @@ import AvailabilityScreen from '../screens/AvailabilityScreen';
 const PlacesNavigator = createStackNavigator(
     {
       Availability: AvailabilityScreen,
+import CalendarScreen from '../screens/CalendarScreen';
+
+const PlacesNavigator = createStackNavigator(
+    {
+      Calendar: {
+        screen: CalendarScreen
+      },
       Profile: ProfileScreen,
       Messenger: MessengerScreen
     },

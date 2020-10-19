@@ -234,4 +234,49 @@ export const Skills = [
         value: "7",
         label: "4.5 - Advanced"
     }
-]
+];
+
+export const eventSeed = [
+    {
+        title: "Doubles match",
+        start: "2020-10-18T17:00:00.000Z",
+        end: "2020-10-18T19:00:00.000Z",
+        eventStatus: "available",
+        UserId: "1"
+    },
+    {
+        title: "Singles match",
+        start: "2020-11-14T17:00:00.000Z",
+        end: "2020-11-14T19:00:00.000Z",
+        eventStatus: "available",
+        UserId: "1"
+    },
+    {
+        title: "Doubles match",
+        start: "2020-11-08T18:00:00.000Z",
+        end: "2020-11-08T20:00:00.000Z",
+        eventStatus: "available",
+        UserId: "2"
+    },
+    {
+        title: "Doubles match",
+        start: "2020-11-14T11:00:00.000Z",
+        end: "2020-11-14T13:00:00.000Z",
+        eventStatus: "available",
+        UserId: "2"
+    },
+    {
+        title: "Singles match",
+        start: "2020-11-08T13:00:00.000Z",
+        end: "2020-11-08T20:00:00.000Z",
+        eventStatus: "available",
+        UserId: "3"
+    },
+    {
+        title: "Doubles match",
+        start: "2020-11-14T17:00:00.000Z",
+        end: "2020-11-14T19:00:00.000Z",
+        eventStatus: "available",
+        UserId: "3"
+    }
+];
