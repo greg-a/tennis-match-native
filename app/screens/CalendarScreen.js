@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { eventSeed } from '../../data/ProfileData';
+import EventCard from '../components/EventCard';
 
 const CalendarScreen = props => {
     let today = moment(new Date()).format('YYYY-MM-DD');
@@ -10,7 +11,7 @@ const CalendarScreen = props => {
     let eventView = eventSeed.filter(match => moment(match.start).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD'));
 
     return (
-        <View>
+        <ScrollView>
             <CalendarStrip
                 scrollable
                 calendarAnimation={{ type: 'sequence', duration: 30 }}
@@ -28,13 +29,15 @@ const CalendarScreen = props => {
                 onDateSelected={date => setSelectedDate(date)}
             />
             {eventView.length > 0 ? eventView.map((item, i) => (
-                <View>
-                    <Text>{item.title}</Text>
-                    <Text>Start: {moment(item.start).format('hh:mm a')}</Text>
-                    <Text>End: {moment(item.end).format('hh:mm a')}</Text>
-                    <Text>Status: {item.eventStatus}</Text>
-                </View>
-            )) : <Text>No Events</Text>}
+                    <EventCard 
+                        key={i}
+                        title={item.title}
+                        start={moment(item.start).format('hh:mm a')}
+                        end={moment(item.end).format('hh:mm a')}
+                        status={item.eventStatus}
+                        image='https://photoresources.wtatennis.com/photo-resources/2019/08/15/dbb59626-9254-4426-915e-57397b6d6635/tennis-origins-e1444901660593.jpg?width=1200&height=630'
+                    />
+            )) : <Text style={styles.text}>No Events</Text>}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={styles.button}
@@ -47,7 +50,7 @@ const CalendarScreen = props => {
                     <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -80,18 +83,24 @@ CalendarScreen.navigationOptions = navData => {
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        padding: 100
+        marginTop: 30,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     },
     button: {
         paddingVertical: 15,
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
-        borderRadius: 5,
-        marginTop: 10
+        borderRadius: 5
     },
     buttonText: {
         textAlign: 'center',
-        fontSize: 18
+        fontSize: 15
+    },
+    text: {
+        fontSize: 20,
+        alignSelf: 'center',
+        margin: 50
     }
 });
 
