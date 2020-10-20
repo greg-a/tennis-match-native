@@ -1,9 +1,15 @@
 import React from 'react';
-import PlacesNavigator from './app/navigation/PlacesNavigator';
+import { NavigationContainer } from "@react-navigation/native";
+
+import { MainStackNavigator } from "./app/navigation/StackNavigator";
+import DrawerNavigator from './app/navigation/DrawerNavigator';
 
 export default function App() {
   return (
-    <PlacesNavigator />
+    // <PlacesNavigator />
+    <NavigationContainer>
+      <DrawerNavigator />
+    </NavigationContainer>
   );
 }
 
