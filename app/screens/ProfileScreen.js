@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { ScrollView, View, StyleSheet, TextInput, Text, Modal } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
@@ -22,6 +22,27 @@ const ProfileScreen = props => {
     //       .then((json) => console.log(json))
     //       .catch((error) => console.error(error))
     //   }, []);
+
+    useLayoutEffect(() => {
+        props.navigation.setOptions({
+            headerRight: () => (
+            <HeaderButtons>
+                <Item
+                    title='SAVE'
+                    onPress={() => {
+                        fetch("http://localhost:3001/api/profile")
+                            .then(res => res.json())
+                            .then((profileInfo) => {
+                                console.log(profileInfo)
+                                console.log("Header Button Works!");
+                            })
+                            .catch(err => console.log(err));
+                    }}
+                />
+            </HeaderButtons>
+            ),
+        });
+    }, [props.navigation]);
 
     getProfileInfo = () => {
         fetch("http://192.168.1.153:3001/api/profile")
@@ -107,7 +128,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         marginBottom: 15,
         paddingVertical: 4,
-        paddingHorizontal: 2
+        paddingHorizontal: 2,
+        color: 'black'
     },
     label: {
         fontSize: 18,

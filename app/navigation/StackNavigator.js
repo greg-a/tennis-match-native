@@ -34,15 +34,21 @@ const Stack = createStackNavigator();
 const MainStackNavigator = () => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#9AC4F8",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#9AC4F8",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerTitle: "Edit Profile"
+        }}
+      />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
     </Stack.Navigator>
@@ -50,7 +56,7 @@ const MainStackNavigator = () => {
 }
 
 export { MainStackNavigator };
-  
+
 // const MainNavigator = createDrawerNavigator (
 // {
 //   Profile: {
