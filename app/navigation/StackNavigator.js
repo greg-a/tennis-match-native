@@ -5,6 +5,7 @@ import { createAppContainer } from 'react-navigation';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
 import AvailabilityScreen from '../screens/AvailabilityScreen';
+import LoginScreen2 from '../screens/LoginScreen2';
 import React from 'react';
 import { Button, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -42,6 +43,8 @@ const MainStackNavigator = () => {
         headerBackTitle: "Back",
       }}
     >
+      <Stack.Screen name="Login" component={LoginScreen2} options={{headerShown: false}}/>
+      <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}}/>
       <Stack.Screen
         name="Profile"
         component={ProfileScreen}
