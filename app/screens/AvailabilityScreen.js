@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Button } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -23,6 +23,9 @@ function AvailabilityScreen() {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
+    console.log(Appearance.getColorScheme());
+    const colorScheme = Appearance.getColorScheme()
+    const isDarkMode = colorScheme === 'dark'
     // useEffect(() => {
     //     console.log('eventTitle: ' + eventTitle);
     //     console.log('eventLocation: ' + eventLocation);
@@ -135,6 +138,7 @@ function AvailabilityScreen() {
                     mode="date"
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
+                    textColor={isDarkMode ? 'white':'black'}
                 />
             </View>
 
@@ -149,6 +153,7 @@ function AvailabilityScreen() {
                     mode="time"
                     onConfirm={handleConfirmStartTime}
                     onCancel={hideStartTimePicker}
+                    textColor={isDarkMode ? 'white':'black'}
                 />
             </View>
 
@@ -163,6 +168,7 @@ function AvailabilityScreen() {
                     mode="time"
                     onConfirm={handleConfirmEndTime}
                     onCancel={hideEndTimePicker}
+                    textColor={isDarkMode ? 'white':'black'}
                 />
             </View>
 
