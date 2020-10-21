@@ -50,6 +50,24 @@ const MainStackNavigator = () => {
 }
 
 export { MainStackNavigator };
+
+const AvailabilityStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#9AC4F8",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="Availability" component={AvailabilityScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export { AvailabilityStackNavigator };
   
 // const MainNavigator = createDrawerNavigator (
 // {
