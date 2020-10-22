@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createAppContainer } from 'react-navigation';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
+import FeedScreen from '../screens/FeedScreen';
 import AvailabilityScreen from '../screens/AvailabilityScreen';
 import React from 'react';
 import { Button, View } from 'react-native';
@@ -44,6 +45,7 @@ const MainStackNavigator = () => {
     >
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
+      <Stack.Screen name="Feed" component={FeedScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
     </Stack.Navigator>
@@ -69,6 +71,24 @@ const AvailabilityStackNavigator = () => {
 }
 
 export { AvailabilityStackNavigator };
+
+const FeedStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#6CE631",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="Feed" component={FeedScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export { FeedStackNavigator };
 
 const ProfileStackNavigator = () => {
   return (

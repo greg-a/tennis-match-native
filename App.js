@@ -6,10 +6,11 @@ import DrawerNavigator from './app/navigation/DrawerNavigator';
 
 export default function App() {
   return (
-    // <PlacesNavigator />
+
     <NavigationContainer>
       <DrawerNavigator />
     </NavigationContainer>
+
   );
 }
 
