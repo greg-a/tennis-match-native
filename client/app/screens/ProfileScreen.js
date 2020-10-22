@@ -40,8 +40,7 @@ const ProfileScreen = props => {
             zipcode: profileUpdate.zipcode,
             skilllevel: profileUpdate.skilllevel
         };
-        console.log("update sent", profileUpdate)
-
+        
         fetch("http://192.168.1.153:3001/api/profileupdate", {
             method: "PUT",
             headers: {
@@ -50,11 +49,11 @@ const ProfileScreen = props => {
             body: JSON.stringify(updateObj)
         })
             .then(res => {
-                console.log("profile updated", res);
+                console.log("profile updated");
 
             })
-            .catch(err => console.log(err));
-    }
+            .catch(err => console.log(JSON.stringify(err)));
+    };
 
     useLayoutEffect(() => {
         props.navigation.setOptions({
@@ -63,7 +62,6 @@ const ProfileScreen = props => {
                     <Item
                         title='SAVE'
                         onPress={handleProfileUpdate}
-                    // onPress={() => console.log(profileUpdate)}
                     />
                 </HeaderButtons>
             ),

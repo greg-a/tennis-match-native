@@ -4,7 +4,7 @@ import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { useLinkProps } from '@react-navigation/native';
 
-const LoginScreen2 = props => {
+const LoginScreen = props => {
     // to load font
     let [fontsLoaded] = useFonts({
         'Coolvetica': require('../../assets/fonts/coolvetica.ttf'),
@@ -31,7 +31,7 @@ const LoginScreen2 = props => {
             .then(res => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
-                    props.navigation.navigate('Profile')
+                    props.navigation.navigate('Calendar')
                 };
             })
             .catch(err => console.log(err));
@@ -160,4 +160,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default LoginScreen2;
+export default LoginScreen;
