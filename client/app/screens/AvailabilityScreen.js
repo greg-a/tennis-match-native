@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Button } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -23,6 +23,9 @@ function AvailabilityScreen() {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
+    console.log(Appearance.getColorScheme());
+    const colorScheme = Appearance.getColorScheme()
+    const isDarkMode = colorScheme === 'dark'
     // useEffect(() => {
     //     console.log('eventTitle: ' + eventTitle);
     //     console.log('eventLocation: ' + eventLocation);
@@ -90,14 +93,14 @@ function AvailabilityScreen() {
         hideEndTimePicker();
     };
 
-    
+
 
 
     return (
         <View style={styles.container}>
             <Text style={styles.baseText}>Availability</Text>
             <View style={styles.instructions}>
-                <Text style={[styles.baseText,styles.instructionsText]}>Please enter the following information to set your availability</Text>
+                <Text style={[styles.baseText, styles.instructionsText]}>Please enter the following information to set your availability</Text>
             </View>
             <ModalSelector
                 data={playTypeData}
@@ -108,7 +111,7 @@ function AvailabilityScreen() {
                     editable={false}
                     value={eventTitle}
                     placeholder={'Play Type'}
-                // placeholderTextColor={'black'}
+                placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
             <ModalSelector
@@ -120,14 +123,14 @@ function AvailabilityScreen() {
                     editable={false}
                     value={eventLocation}
                     placeholder={'Court Location'}
-                // placeholderTextColor={'black'}
+                placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
 
             <View>
                 <TouchableWithoutFeedback onPress={showDatePicker}>
                     <View style={styles.viewInput}>
-                        <Text style={[styles.baseText, styles.viewInputText]}>{newDate !== "" ? conDate : 'Date'}</Text>
+                        {newDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
                     </View>
                 </TouchableWithoutFeedback>
                 <DateTimePickerModal
@@ -135,14 +138,14 @@ function AvailabilityScreen() {
                     mode="date"
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
+                    textColor={isDarkMode ? 'white':'black'}
                 />
             </View>
 
             <View>
                 <TouchableWithoutFeedback onPress={showStartTimePicker}>
                     <View style={styles.viewInput}>
-                        <Text style={[styles.baseText, styles.viewInputText]}>{startTime !== "" ? moment(startTime).format("hh:mm A") : 'Start Time'}</Text>
-                        {/* <Text style={[styles.baseText, styles.viewInputText]}>Start Time</Text> */}
+                        {startTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(startTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Start Time</Text>}
                     </View>
                 </TouchableWithoutFeedback>
                 <DateTimePickerModal
@@ -150,13 +153,14 @@ function AvailabilityScreen() {
                     mode="time"
                     onConfirm={handleConfirmStartTime}
                     onCancel={hideStartTimePicker}
+                    textColor={isDarkMode ? 'white':'black'}
                 />
             </View>
 
             <View>
                 <TouchableWithoutFeedback onPress={showEndTimePicker}>
                     <View style={styles.viewInput}>
-                        <Text style={[styles.baseText, styles.viewInputText]}>{endTime !== "" ? moment(endTime).format("hh:mm A") : 'End Time'}</Text>
+                        {endTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(endTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>End Time</Text>}
                     </View>
                 </TouchableWithoutFeedback>
                 <DateTimePickerModal
@@ -164,6 +168,7 @@ function AvailabilityScreen() {
                     mode="time"
                     onConfirm={handleConfirmEndTime}
                     onCancel={hideEndTimePicker}
+                    textColor={isDarkMode ? 'white':'black'}
                 />
             </View>
 
@@ -193,7 +198,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '300',
         // marginBottom: 20,
-        paddingLeft: 10
+        paddingLeft: 10,
+        color: 'black'
     },
     instructions: {
         width: '80%',
@@ -223,8 +229,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     viewInputText: {
-        color: 'grey'
-    }
+        color: 'lightgrey'
+    },
+    viewInputText2: {
+        color: 'black',
+        fontWeight: "300"
+    },
 });
 
 export default AvailabilityScreen;
