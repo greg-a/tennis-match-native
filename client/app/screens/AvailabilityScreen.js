@@ -6,8 +6,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
 import { playTypeData, courtLocationData } from '../../data/ProfileData';
 
-function AvailabilityScreen() {
-
+const AvailabilityScreen = props => {
     const [eventTitle, setEventTitle] = React.useState("");
     const [eventLocation, setEventLocation] = React.useState("");
     const [newDate, setNewDate] = React.useState("");
@@ -23,20 +22,39 @@ function AvailabilityScreen() {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
-    console.log(Appearance.getColorScheme());
     const colorScheme = Appearance.getColorScheme()
-    const isDarkMode = colorScheme === 'dark'
-    // useEffect(() => {
-    //     console.log('eventTitle: ' + eventTitle);
-    //     console.log('eventLocation: ' + eventLocation);
-    //     console.log('newDate: ' + newDate);
-    //     console.log('conDate: ' + conDate);
-    //     console.log('startTime: ' + startTime);
-    //     console.log('conStartTime: ' + conStartTime);
-    //     console.log('endTime: ' + endTime);
-    //     console.log('conEndTime: ' + conEndTime);
-    //     console.log('-------------');
-    // });
+    const isDarkMode = colorScheme === 'dark';
+
+    
+    const handleFormSubmit = () => {
+        fetch("http://192.168.1.153:3001/api/calendar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: eventTitle,
+                start: startTime,
+                end: endTime,
+                eventStatus: "available",
+                location: eventLocation
+            })
+        }).then(res => {
+            console.log(res);
+        })
+    };
+    
+    useEffect(() => {
+        console.log('eventTitle: ' + eventTitle);
+        console.log('eventLocation: ' + eventLocation);
+        console.log('newDate: ' + newDate);
+        console.log('conDate: ' + conDate);
+        console.log('startTime: ' + startTime);
+        console.log('conStartTime: ' + conStartTime);
+        console.log('endTime: ' + endTime);
+        console.log('conEndTime: ' + conEndTime);
+        console.log('-------------');
+    });    
 
     const convertDatetime = (datetime, type) => {
         if (type === 'date') {
@@ -52,7 +70,7 @@ function AvailabilityScreen() {
             let convertedTime = moment(datetime).format("HH:mm");
             setConEndTime(convertedTime);
         }
-    }
+    };
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -92,8 +110,6 @@ function AvailabilityScreen() {
         console.log("new end: ", time);
         hideEndTimePicker();
     };
-
-
 
 
     return (
@@ -172,7 +188,7 @@ function AvailabilityScreen() {
                 />
             </View>
 
-            <TouchableOpacity style={styles.submitButton}>
+            <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                 <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
             </TouchableOpacity>
         </View>

@@ -40,11 +40,12 @@ const MainStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Feed" component={FeedScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 }
@@ -134,7 +135,8 @@ const CalendarStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}} />
+      <Stack.Screen name="Availability" component={AvailabilityScreen} />
     </Stack.Navigator>
   );
 }
