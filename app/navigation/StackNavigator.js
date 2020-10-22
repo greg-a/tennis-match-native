@@ -36,7 +36,7 @@ const MainStackNavigator = () => {
     <Stack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: "#9AC4F8",
+        backgroundColor: "#6CE631",
       },
       headerTintColor: "white",
       headerBackTitle: "Back",
@@ -45,6 +45,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} />
     </Stack.Navigator>
   );
 }
@@ -56,7 +57,7 @@ const AvailabilityStackNavigator = () => {
     <Stack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: "#9AC4F8",
+        backgroundColor: "#6CE631",
       },
       headerTintColor: "white",
       headerBackTitle: "Back",
@@ -68,6 +69,60 @@ const AvailabilityStackNavigator = () => {
 }
 
 export { AvailabilityStackNavigator };
+
+const ProfileStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#6CE631",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export { ProfileStackNavigator };
+
+const MessengerStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#6CE631",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="Messenger" component={MessengerScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export { MessengerStackNavigator };
+
+const CalendarStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#6CE631",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="Calendar" component={CalendarScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export { CalendarStackNavigator };
   
 // const MainNavigator = createDrawerNavigator (
 // {
