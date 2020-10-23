@@ -25,8 +25,10 @@ const AvailabilityScreen = props => {
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
 
-    
+
     const handleFormSubmit = () => {
+        const newStart = conDate + " " + conStartTime;
+        const newEnd = conDate + " " + conEndTime;
         fetch("http://192.168.1.153:3001/api/calendar", {
             method: "POST",
             headers: {
@@ -34,27 +36,32 @@ const AvailabilityScreen = props => {
             },
             body: JSON.stringify({
                 title: eventTitle,
-                start: startTime,
-                end: endTime,
+                start: moment(newStart).format(),
+                end: moment(newEnd).format(),
                 eventStatus: "available",
                 location: eventLocation
             })
         }).then(res => {
-            console.log(res);
-        })
+            res.json();
+        }).catch(err => console.log(err))
     };
-    
-    useEffect(() => {
-        console.log('eventTitle: ' + eventTitle);
-        console.log('eventLocation: ' + eventLocation);
-        console.log('newDate: ' + newDate);
-        console.log('conDate: ' + conDate);
-        console.log('startTime: ' + startTime);
-        console.log('conStartTime: ' + conStartTime);
-        console.log('endTime: ' + endTime);
-        console.log('conEndTime: ' + conEndTime);
-        console.log('-------------');
-    });    
+
+    useEffect(() => {      
+        if (props.route.params) {
+            const selectedDate = moment(props.route.params.selectedDate).format("MM/DD/YYYY")
+            setConDate(selectedDate);
+            setNewDate(selectedDate);
+        }
+        //     console.log('eventTitle: ' + eventTitle);
+        //     console.log('eventLocation: ' + eventLocation);
+        //     console.log('newDate: ' + newDate);
+        //     console.log('conDate: ' + conDate);
+        //     console.log('startTime: ' + startTime);
+        //     console.log('conStartTime: ' + conStartTime);
+        //     console.log('endTime: ' + endTime);
+        //     console.log('conEndTime: ' + conEndTime);
+        //     console.log('-------------');
+    }, []);
 
     const convertDatetime = (datetime, type) => {
         if (type === 'date') {
@@ -127,7 +134,7 @@ const AvailabilityScreen = props => {
                     editable={false}
                     value={eventTitle}
                     placeholder={'Play Type'}
-                placeholderTextColor={'lightgrey'}
+                    placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
             <ModalSelector
@@ -139,7 +146,7 @@ const AvailabilityScreen = props => {
                     editable={false}
                     value={eventLocation}
                     placeholder={'Court Location'}
-                placeholderTextColor={'lightgrey'}
+                    placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
 
@@ -154,7 +161,7 @@ const AvailabilityScreen = props => {
                     mode="date"
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
-                    textColor={isDarkMode ? 'white':'black'}
+                    textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
 
@@ -169,7 +176,7 @@ const AvailabilityScreen = props => {
                     mode="time"
                     onConfirm={handleConfirmStartTime}
                     onCancel={hideStartTimePicker}
-                    textColor={isDarkMode ? 'white':'black'}
+                    textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
 
@@ -184,7 +191,7 @@ const AvailabilityScreen = props => {
                     mode="time"
                     onConfirm={handleConfirmEndTime}
                     onCancel={hideEndTimePicker}
-                    textColor={isDarkMode ? 'white':'black'}
+                    textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
 
