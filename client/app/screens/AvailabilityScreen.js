@@ -121,9 +121,8 @@ const AvailabilityScreen = props => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.baseText}>Availability</Text>
             <View style={styles.instructions}>
-                <Text style={[styles.baseText, styles.instructionsText]}>Please enter the following information to set your availability</Text>
+                <Text style={[styles.baseText, styles.instructionsText]}>Create an event that others can find</Text>
             </View>
             <ModalSelector
                 data={playTypeData}

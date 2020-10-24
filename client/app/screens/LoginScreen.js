@@ -83,7 +83,7 @@ const LoginScreen = props => {
 
                 <View style={styles.bottomView}>
                     <Text style={styles.baseText}>First time here?</Text>
-                    <TouchableOpacity style={styles.signUpButton}>
+                    <TouchableOpacity style={styles.signUpButton} onPress={() => props.navigation.navigate('SignUp')}>
                         <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
                     </TouchableOpacity>
                 </View>

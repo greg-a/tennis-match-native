@@ -7,6 +7,7 @@ import AvailabilityScreen from '../screens/AvailabilityScreen';
 import LoginScreen from '../screens/LoginScreen';
 import React from 'react';
 import CalendarScreen from '../screens/CalendarScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 
 // const PlacesNavigator = createStackNavigator(
 //     {
@@ -41,6 +42,7 @@ const MainStackNavigator = () => {
     }}
     >
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Feed" component={FeedScreen} />
@@ -136,7 +138,6 @@ const CalendarStackNavigator = () => {
     }}
     >
       <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}} />
-      <Stack.Screen name="Availability" component={AvailabilityScreen} />
     </Stack.Navigator>
   );
 }

@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'reac
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 
-function SignUpScreen() {
+const SignUpScreen = props => {
     // to load font
     let [fontsLoaded] = useFonts({
         'Coolvetica': require('../../assets/fonts/coolvetica.ttf'),
@@ -12,6 +12,39 @@ function SignUpScreen() {
     const [signUpUsername, setSignUpUsername] = React.useState("");
     const [signUpPassword, setSignUpPassword] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
+
+    const handleFormSubmit = () => {
+        fetch("http://192.168.1.153:3001/api", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: signUpUsername,
+                password: signUpPassword,
+                email: signUpEmail
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.statusString === "formNotComplete") {
+                    this.setState({
+                        signupInstructions: "Please complete the registration form",
+                        openSnackbar: true,
+                        severity: "warning"
+                    });
+                } else if (res.statusString === "userAlreadyExists") {
+                    this.setState({
+                        signupInstructions: "Account already exists with that username",
+                        openSnackbar: true,
+                        severity: "error"
+                    });
+                } else if (res.statusString === "userCreateSuccess") {
+                    props.navigation.navigate('Login')
+                }
+                    })
+            .catch(err => console.log(err));
+    };
 
     // checks if font has been loaded
     if (!fontsLoaded) {
@@ -57,14 +90,14 @@ function SignUpScreen() {
                     placeholderTextColor={'black'}
                     secureTextEntry
                     />
-                    <TouchableOpacity style={styles.createAccountButton}>
+                    <TouchableOpacity style={styles.createAccountButton} onPress={handleFormSubmit}>
                         <Text style={[styles.baseText,styles.createAccountButtonText]}>CREATE ACCOUNT</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.bottomView}>
                     <Text style={styles.baseText}>Already a member?</Text>
-                    <TouchableOpacity style={styles.loginButton}>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => props.navigation.navigate('Login')}>
                         <Text style={[styles.loginButtonText]}>LOGIN</Text>
                     </TouchableOpacity>
                 </View>
