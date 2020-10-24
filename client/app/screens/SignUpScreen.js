@@ -3,15 +3,48 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'reac
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 
-function LoginScreen2() {
+const SignUpScreen = props => {
     // to load font
     let [fontsLoaded] = useFonts({
         'Coolvetica': require('../../assets/fonts/coolvetica.ttf'),
     });
 
-    const [loginUsername, setLoginUsername] = React.useState("");
+    const [signUpUsername, setSignUpUsername] = React.useState("");
+    const [signUpPassword, setSignUpPassword] = React.useState("");
+    const [signUpEmail, setSignUpEmail] = React.useState("");
 
-    const [loginPassword, setLoginPassword] = React.useState("");
+    const handleFormSubmit = () => {
+        fetch("http://192.168.1.153:3001/api", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: signUpUsername,
+                password: signUpPassword,
+                email: signUpEmail
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.statusString === "formNotComplete") {
+                    this.setState({
+                        signupInstructions: "Please complete the registration form",
+                        openSnackbar: true,
+                        severity: "warning"
+                    });
+                } else if (res.statusString === "userAlreadyExists") {
+                    this.setState({
+                        signupInstructions: "Account already exists with that username",
+                        openSnackbar: true,
+                        severity: "error"
+                    });
+                } else if (res.statusString === "userCreateSuccess") {
+                    props.navigation.navigate('Login')
+                }
+                    })
+            .catch(err => console.log(err));
+    };
 
     // checks if font has been loaded
     if (!fontsLoaded) {
@@ -29,36 +62,43 @@ function LoginScreen2() {
 
                 <View style={styles.middleView}>
 
-                    <Text style={[styles.baseText,styles.loginText]}>
-                        Login
+                    <Text style={[styles.baseText,styles.createAccountText]}>
+                        Create Account
                     </Text>
                     <Text style={[styles.baseText, styles.instructionText]}>
                         Please enter your details
                     </Text>
                     <TextInput 
                     style={styles.input}
-                    onChangeText={text => setLoginUsername(text)}
-                    value={loginUsername}
+                    onChangeText={text => setSignUpUsername(text)}
+                    value={signUpUsername}
                     placeholder={'Username'}
                     placeholderTextColor={'black'}
                     />
                     <TextInput 
                     style={styles.input}
-                    onChangeText={text => setLoginPassword(text)}
-                    value={loginPassword}
+                    onChangeText={text => setSignUpEmail(text)}
+                    value={signUpEmail}
+                    placeholder={'Email'}
+                    placeholderTextColor={'black'}
+                    />
+                    <TextInput 
+                    style={styles.input}
+                    onChangeText={text => setSignUpPassword(text)}
+                    value={signUpPassword}
                     placeholder={'Password'}
                     placeholderTextColor={'black'}
                     secureTextEntry
                     />
-                    <TouchableOpacity style={styles.signInButton}>
-                        <Text style={[styles.baseText,styles.signInButtonText]}>SIGN IN</Text>
+                    <TouchableOpacity style={styles.createAccountButton} onPress={handleFormSubmit}>
+                        <Text style={[styles.baseText,styles.createAccountButtonText]}>CREATE ACCOUNT</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.bottomView}>
-                    <Text style={styles.baseText}>First time here?</Text>
-                    <TouchableOpacity style={styles.signUpButton}>
-                        <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
+                    <Text style={styles.baseText}>Already a member?</Text>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => props.navigation.navigate('Login')}>
+                        <Text style={[styles.loginButtonText]}>LOGIN</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -92,8 +132,8 @@ const styles = StyleSheet.create({
     instructionText: {
         marginBottom: 15
     },
-    loginText: {
-        fontSize: 40,
+    createAccountText: {
+        fontSize: 32,
         fontFamily: 'Coolvetica',
         marginBottom: 10
     },
@@ -103,26 +143,27 @@ const styles = StyleSheet.create({
         // backgroundColor: 'blue'
     },
     middleView: {
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: -20,
     },
-    signInButton: {
+    createAccountButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
         marginTop: 10
     },
-    signUpButton: {
+    loginButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
         backgroundColor: 'white',
         borderRadius: 5,
         marginTop: 10
     },
-    signInButtonText: {
+    createAccountButtonText: {
         fontSize: 16
     }, 
-    signUpButtonText: {
+    loginButtonText: {
         fontSize: 16,
         color: 'rgb(108,230,49)',
     },
@@ -133,4 +174,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default LoginScreen2;
+export default SignUpScreen;
