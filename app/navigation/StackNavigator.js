@@ -10,25 +10,9 @@ import React from 'react';
 import { Button, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import CalendarScreen from '../screens/CalendarScreen';
+import BottomTabNavigator from './TabNavigator';
 
-// const PlacesNavigator = createStackNavigator(
-//     {
-//       Availability: AvailabilityScreen,
-//       Calendar: {
-//         screen: CalendarScreen
-//       },
-//       Profile: ProfileScreen,
-//       Messenger: MessengerScreen
-//     },
-//     {
-//       defaultNavigationOptions: {
-//         headerStyle: {
-//           backgroundColor: Platform.OS === 'android' ? 'rgb(108,230,49)' : ''
-//         },
-//         headerTintColor: Platform.OS === 'android' ? 'white' : 'rgb(108,230,49)'
-//       }
-//     }
-// );
+
 
 const Stack = createStackNavigator();
 
@@ -43,12 +27,16 @@ const MainStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      {/* <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Feed" component={FeedScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
+      <Stack.Screen name="Feed" component={FeedScreen} />
+      {/* <Stack.Screen name="Availability" component={AvailabilityScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
     </Stack.Navigator>
+    
   );
 }
 
@@ -67,6 +55,7 @@ const AvailabilityStackNavigator = () => {
     >
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
     </Stack.Navigator>
+    
   );
 }
 
@@ -144,23 +133,3 @@ const CalendarStackNavigator = () => {
 
 export { CalendarStackNavigator };
   
-// const MainNavigator = createDrawerNavigator (
-// {
-//   Profile: {
-//     screen: ProfileScreen,
-//     navigationOptions: {
-//       drawerLabel: 'Profile'
-//     }
-//   },
-//   Availability: {
-//     screen: AvailabilityScreen,
-//     navigationOptions: {
-//       drawerLabel: 'Availability'
-//     }
-//   }
-// }
-// );
-
-
-  // export default createAppContainer({PlacesNavigator});
-

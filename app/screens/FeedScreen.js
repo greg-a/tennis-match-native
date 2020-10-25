@@ -3,9 +3,12 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'reac
 
 const FeedScreen = props => {
     return (
-        <View>
-            <Text>Feed</Text>
-        </View>
+        
+            <View>
+                <Text>Feed</Text>
+            </View>
+        
+
     )
 };
 
