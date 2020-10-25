@@ -20,3 +20,5 @@ web-build/
 .env.test.local
 .env.production.local
 
+localhost.js
+

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'react-native';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
+import { localHost } from '../localhost.js';
 
 const SignUpScreen = props => {
     // to load font
@@ -14,7 +15,7 @@ const SignUpScreen = props => {
     const [signUpEmail, setSignUpEmail] = React.useState("");
 
     const handleFormSubmit = () => {
-        fetch("http://192.168.1.153:3001/api", {
+        fetch(localHost+"/api", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

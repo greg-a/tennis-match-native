@@ -5,6 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
 import { playTypeData, courtLocationData } from '../../data/ProfileData';
+import { localHost } from '../localhost.js';
 
 const AvailabilityScreen = props => {
     const [eventTitle, setEventTitle] = React.useState("");
@@ -29,7 +30,7 @@ const AvailabilityScreen = props => {
     const handleFormSubmit = () => {
         const newStart = conDate + " " + conStartTime;
         const newEnd = conDate + " " + conEndTime;
-        fetch("http://192.168.1.153:3001/api/calendar", {
+        fetch(localHost+"/api/calendar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -4,6 +4,7 @@ import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView } from '
 import CalendarStrip from 'react-native-calendar-strip';
 import EventCard from '../components/EventCard';
 import EventModal from '../components/EventModal';
+import { localHost } from '../localhost.js';
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
@@ -20,16 +21,17 @@ const CalendarScreen = props => {
     }, []);
 
     const getCalendarEvents = () => {
-        fetch('http://192.168.1.153:3001/api/calendar')
+        fetch(localHost+'/api/calendar')
             .then(res => res.json())
             .then((dates) => {
-                setMyEvents(dates);                
+                setMyEvents(dates);
+                console.log(dates);                
             })
             .catch(err => console.log(err));
     };
 
     const handleEventDelete = () => {
-        fetch('http://192.168.1.153:3001/api/event/delete/' + selectedEventId, {
+        fetch(localHost+'/api/event/delete/' + selectedEventId, {
             method: "DELETE"
           }).then(res => {
             getCalendarEvents();
