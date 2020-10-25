@@ -1,14 +1,11 @@
 import { Platform } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createAppContainer } from 'react-navigation';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
 import FeedScreen from '../screens/FeedScreen';
 import AvailabilityScreen from '../screens/AvailabilityScreen';
+import LoginScreen from '../screens/LoginScreen';
 import React from 'react';
-import { Button, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import CalendarScreen from '../screens/CalendarScreen';
 import BottomTabNavigator from './TabNavigator';
 
@@ -126,7 +123,7 @@ const CalendarStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 }

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react
 const EventCard = props => {
     return (
         <View style={styles.eventItem}>
-            <TouchableOpacity onPress={props.onSelectEvent}>
+            <TouchableOpacity onLongPress={props.onSelectEvent}>
                 <View>
                     <View style={{ ...styles.eventRow, ...styles.eventHeader }}>
                         <ImageBackground source={{ uri: props.image }} style={styles.bgImage}>

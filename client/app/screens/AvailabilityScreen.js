@@ -6,8 +6,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
 import { playTypeData, courtLocationData } from '../../data/ProfileData';
 
-function AvailabilityScreen() {
-
+const AvailabilityScreen = props => {
     const [eventTitle, setEventTitle] = React.useState("");
     const [eventLocation, setEventLocation] = React.useState("");
     const [newDate, setNewDate] = React.useState("");
@@ -23,20 +22,46 @@ function AvailabilityScreen() {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
-    console.log(Appearance.getColorScheme());
     const colorScheme = Appearance.getColorScheme()
-    const isDarkMode = colorScheme === 'dark'
-    // useEffect(() => {
-    //     console.log('eventTitle: ' + eventTitle);
-    //     console.log('eventLocation: ' + eventLocation);
-    //     console.log('newDate: ' + newDate);
-    //     console.log('conDate: ' + conDate);
-    //     console.log('startTime: ' + startTime);
-    //     console.log('conStartTime: ' + conStartTime);
-    //     console.log('endTime: ' + endTime);
-    //     console.log('conEndTime: ' + conEndTime);
-    //     console.log('-------------');
-    // });
+    const isDarkMode = colorScheme === 'dark';
+
+
+    const handleFormSubmit = () => {
+        const newStart = conDate + " " + conStartTime;
+        const newEnd = conDate + " " + conEndTime;
+        fetch("http://192.168.1.153:3001/api/calendar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: eventTitle,
+                start: moment(newStart).format(),
+                end: moment(newEnd).format(),
+                eventStatus: "available",
+                location: eventLocation
+            })
+        }).then(res => {
+            res.json();
+        }).catch(err => console.log(err))
+    };
+
+    useEffect(() => {      
+        if (props.route.params) {
+            const selectedDate = moment(props.route.params.selectedDate).format("MM/DD/YYYY")
+            setConDate(selectedDate);
+            setNewDate(selectedDate);
+        }
+        //     console.log('eventTitle: ' + eventTitle);
+        //     console.log('eventLocation: ' + eventLocation);
+        //     console.log('newDate: ' + newDate);
+        //     console.log('conDate: ' + conDate);
+        //     console.log('startTime: ' + startTime);
+        //     console.log('conStartTime: ' + conStartTime);
+        //     console.log('endTime: ' + endTime);
+        //     console.log('conEndTime: ' + conEndTime);
+        //     console.log('-------------');
+    }, []);
 
     const convertDatetime = (datetime, type) => {
         if (type === 'date') {
@@ -52,7 +77,7 @@ function AvailabilityScreen() {
             let convertedTime = moment(datetime).format("HH:mm");
             setConEndTime(convertedTime);
         }
-    }
+    };
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -94,13 +119,10 @@ function AvailabilityScreen() {
     };
 
 
-
-
     return (
         <View style={styles.container}>
-            <Text style={styles.baseText}>Availability</Text>
             <View style={styles.instructions}>
-                <Text style={[styles.baseText, styles.instructionsText]}>Please enter the following information to set your availability</Text>
+                <Text style={[styles.baseText, styles.instructionsText]}>Create an event that others can find</Text>
             </View>
             <ModalSelector
                 data={playTypeData}
@@ -111,7 +133,7 @@ function AvailabilityScreen() {
                     editable={false}
                     value={eventTitle}
                     placeholder={'Play Type'}
-                placeholderTextColor={'lightgrey'}
+                    placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
             <ModalSelector
@@ -123,7 +145,7 @@ function AvailabilityScreen() {
                     editable={false}
                     value={eventLocation}
                     placeholder={'Court Location'}
-                placeholderTextColor={'lightgrey'}
+                    placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
 
@@ -138,7 +160,7 @@ function AvailabilityScreen() {
                     mode="date"
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
-                    textColor={isDarkMode ? 'white':'black'}
+                    textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
 
@@ -153,7 +175,7 @@ function AvailabilityScreen() {
                     mode="time"
                     onConfirm={handleConfirmStartTime}
                     onCancel={hideStartTimePicker}
-                    textColor={isDarkMode ? 'white':'black'}
+                    textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
 
@@ -168,11 +190,11 @@ function AvailabilityScreen() {
                     mode="time"
                     onConfirm={handleConfirmEndTime}
                     onCancel={hideEndTimePicker}
-                    textColor={isDarkMode ? 'white':'black'}
+                    textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
 
-            <TouchableOpacity style={styles.submitButton}>
+            <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                 <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
             </TouchableOpacity>
         </View>
