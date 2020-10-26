@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { Messages } from '../../data/ProfileData';
+import { localHost } from '../localhost.js';
 
 const Item = ({ title, sender, timestamp }) => (
     <View style={styles.message}>
@@ -11,14 +12,41 @@ const Item = ({ title, sender, timestamp }) => (
     </View>
 );
 
-const MessengerScreen = props => {
-    const renderItem = ({ item }) => (
-        <Item title={item.message} sender={item.sender} timestamp={moment(item.createdAt).format('M/DD/YY h:mm a')} />
-    );    
+const InboxScreen = props => {
+    const [myId, setMyId] = setState();
 
     useEffect(() => {
-        props.navigation.setOptions({ title: Messages[1].sender})
+        getMessages();
     });
+
+    const getMessages = () => {
+        fetch(localHost + "/api/profile")
+            .then(res => res.json())
+            .then((profileInfo) => {
+                setMyId(profileInfo.id);
+            })
+            .catch(err => console.log(err));
+
+        fetch(localHost + "/api/messages")
+            .then(res => res.json())
+            .then((messages) => {
+                let newArr = [];
+                let existing = [];
+                messages.forEach(message => {
+                    if (!(existing.includes(message.senderId) && existing.includes(message.recipientId))) {
+                        newArr.push(message);
+                        existing.push(message.senderId, message.recipientId)
+                    };
+                });
+                console.log("new array: " + JSON.stringify(newArr))
+                console.log("existing array: " + existing)
+            })
+            .catch(err => console.log(err));
+    };
+
+    const renderItem = ({ item }) => (
+        <Item title={item.message} sender={item.sender} timestamp={moment(item.createdAt).format('M/DD/YY h:mm a')} />
+    );
 
     return (
         <View style={styles.container}>
@@ -32,11 +60,11 @@ const MessengerScreen = props => {
             <View style={styles.sendMessageContainer}>
                 <TextInput
                     style={styles.sendMessage}
-                    placeholder="Type a message"
+                    placeholder="Search for user"
                     multiline={true}
                 />
-                <TouchableOpacity style={styles.sendButton}>
-                    <Text>SEND</Text>
+                <TouchableOpacity style={styles.sendButton} onPress={() => props.navigation.navigate('Messenger')}>
+                    <Text>New</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -97,4 +125,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MessengerScreen;
+export default InboxScreen;

@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import React from 'react';
 import CalendarScreen from '../screens/CalendarScreen';
 import BottomTabNavigator from './TabNavigator';
+import InboxScreen from '../screens/InboxScreen';
 
 
 
@@ -24,6 +25,7 @@ const MainStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Messenger" component={MessengerScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
@@ -102,6 +104,7 @@ const MessengerStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
+      <Stack.Screen name="Inbox" component={InboxScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
     </Stack.Navigator>
   );

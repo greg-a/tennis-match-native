@@ -400,4 +400,94 @@ export const Messages = [
         UserId: 1,
         seconduser: 2
     },
+    {
+        id: 6,
+        message: "yo man",
+        sender: "Greg",
+        read: 1,
+        createdAt: "2020-09-19 13:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 7,
+        message: "hey!",
+        sender: "Patrick",
+        read: 1,
+        createdAt: "2020-09-19 14:54:30",
+        UserId: 2,
+        seconduser: 1
+    },
+    {
+        id: 8,
+        message: "whats up??",
+        sender: "Greg",
+        read: 1,
+        createdAt: "2020-09-19 15:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 9,
+        message: "not much",
+        sender: "Patrick",
+        read: 0,
+        createdAt: "2020-09-19 16:54:30",
+        UserId: 2,
+        seconduser: 1
+    },
+    {
+        id: 10,
+        message: "cool",
+        sender: "Greg",
+        read: 0,
+        createdAt: "2020-09-19 17:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 11,
+        message: "yo man",
+        sender: "Greg",
+        read: 1,
+        createdAt: "2020-09-19 13:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 12,
+        message: "hey!",
+        sender: "Patrick",
+        read: 1,
+        createdAt: "2020-09-19 14:54:30",
+        UserId: 2,
+        seconduser: 1
+    },
+    {
+        id: 13,
+        message: "whats up??",
+        sender: "Greg",
+        read: 1,
+        createdAt: "2020-09-19 15:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 14,
+        message: "not much",
+        sender: "Patrick",
+        read: 0,
+        createdAt: "2020-09-19 16:54:30",
+        UserId: 2,
+        seconduser: 1
+    },
+    {
+        id: 15,
+        message: "cool",
+        sender: "Greg",
+        read: 0,
+        createdAt: "2020-09-19 17:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
 ];
