@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import React from 'react';
 import CalendarScreen from '../screens/CalendarScreen';
 import BottomTabNavigator from './TabNavigator';
+import SearchByDateScreen from '../screens/SearchByDateScreen';
 
 
 
@@ -29,7 +30,9 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Feed" component={FeedScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Feed" component={FeedScreen} />
+      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
       {/* <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
     </Stack.Navigator>
@@ -129,6 +132,24 @@ const CalendarStackNavigator = () => {
 }
 
 export { CalendarStackNavigator };
+
+const SearchByDateStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#6CE631",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export { SearchByDateStackNavigator };
   
 // SPLIT -------------------
 
