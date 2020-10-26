@@ -3,6 +3,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { ScrollView, View, StyleSheet, TextInput, Text, Button } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
+import { localHost } from '../localhost.js';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -17,7 +18,7 @@ const ProfileScreen = props => {
     });
 
     useEffect(() => {
-        fetch('http://192.168.1.153:3001/api/profile')
+        fetch(localHost+'/api/profile')
             .then((response) => response.json())
             .then((res) => setProfileUpdate({
                 ...profileUpdate,
@@ -41,7 +42,7 @@ const ProfileScreen = props => {
             skilllevel: profileUpdate.skilllevel
         };
         
-        fetch("http://192.168.1.153:3001/api/profileupdate", {
+        fetch(localHost+"/api/profileupdate", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -69,7 +70,7 @@ const ProfileScreen = props => {
     }, [props.navigation, profileUpdate]);
 
     getProfileInfo = () => {
-        fetch("http://192.168.1.153:3001/api/profile")
+        fetch(localHost+"/api/profile")
             .then(res => res.json())
             .then((profileInfo) => {
                 console.log(profileInfo)
@@ -153,7 +154,7 @@ ProfileScreen.navigationOptions = navData => {
             <Item
                 title='SAVE'
                 onPress={() => {
-                    fetch("http://localhost:3001/api/profile")
+                    fetch(localHost+"/api/profile")
                         .then(res => res.json())
                         .then((profileInfo) => {
                             console.log(profileInfo)

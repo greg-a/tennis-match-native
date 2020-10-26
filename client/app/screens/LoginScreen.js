@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'reac
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { useLinkProps } from '@react-navigation/native';
+import { localHost } from '../localhost.js';
 
 const LoginScreen = props => {
     // to load font
@@ -20,7 +21,9 @@ const LoginScreen = props => {
             password: loginPassword
         }
 
-        fetch("http://192.168.1.153:3001/api/login", {
+        
+
+        fetch(localHost+"/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
