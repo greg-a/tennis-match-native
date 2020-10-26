@@ -353,3 +353,51 @@ export const courtLocationData = [
     { key: 6, label: 'Allens Lane Park' },
     { key: 7, label: 'Seger Park' },
 ];
+
+export const Messages = [
+    {
+        id: 1,
+        message: "yo man",
+        sender: "Greg",
+        read: 1,
+        createdAt: "2020-09-19 13:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 2,
+        message: "hey!",
+        sender: "Patrick",
+        read: 1,
+        createdAt: "2020-09-19 14:54:30",
+        UserId: 2,
+        seconduser: 1
+    },
+    {
+        id: 3,
+        message: "whats up??",
+        sender: "Greg",
+        read: 1,
+        createdAt: "2020-09-19 15:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+    {
+        id: 4,
+        message: "not much",
+        sender: "Patrick",
+        read: 0,
+        createdAt: "2020-09-19 16:54:30",
+        UserId: 2,
+        seconduser: 1
+    },
+    {
+        id: 5,
+        message: "cool",
+        sender: "Greg",
+        read: 0,
+        createdAt: "2020-09-19 17:54:30",
+        UserId: 1,
+        seconduser: 2
+    },
+];
