@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import moment from 'moment';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import { Messages } from '../../data/ProfileData';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { localHost } from '../localhost.js';
+import { handleTimeStamp } from '../../utils/handleTimeStamp';
 
-const Item = ({ title, sender, timestamp }) => (
-    <View style={styles.message}>
+const Item = ({ title, sender, timestamp, onPress }) => (
+    <TouchableOpacity style={styles.message} onPress={onPress}>
         <Text style={styles.senderText}>{sender}</Text>
         <Text style={styles.messageText}>{title}</Text>
         <Text style={styles.timeStamp}>{timestamp}</Text>
-    </View>
+    </TouchableOpacity>
 );
 
 const InboxScreen = props => {
-    const [myId, setMyId] = setState();
+    const [myUserId, setMyUserId] = useState();
+    const [inboxMessages, setInboxMessages] = useState([]);
 
     useEffect(() => {
         getMessages();
-    });
+    }, []);
 
     const getMessages = () => {
         fetch(localHost + "/api/profile")
             .then(res => res.json())
             .then((profileInfo) => {
-                setMyId(profileInfo.id);
+                setMyUserId(profileInfo.id);
+                console.log("My ID: " + profileInfo.id)
             })
             .catch(err => console.log(err));
 
@@ -35,27 +36,35 @@ const InboxScreen = props => {
                 messages.forEach(message => {
                     if (!(existing.includes(message.senderId) && existing.includes(message.recipientId))) {
                         newArr.push(message);
-                        existing.push(message.senderId, message.recipientId)
+                        existing.push(message.senderId, message.recipientId);
                     };
                 });
+                setInboxMessages(newArr);
                 console.log("new array: " + JSON.stringify(newArr))
-                console.log("existing array: " + existing)
             })
             .catch(err => console.log(err));
     };
 
+    const handleUserSelect = key => {
+        console.log(this.id)
+    }
+
     const renderItem = ({ item }) => (
-        <Item title={item.message} sender={item.sender} timestamp={moment(item.createdAt).format('M/DD/YY h:mm a')} />
+        <Item
+            title={item.message}
+            sender={item.senderId == myUserId ? item.recipient.username : item.User.username}
+            timestamp={handleTimeStamp(item.createdAt)}
+            onPress={() => props.navigation.navigate('Messenger', {recipientId: item.senderId == myUserId ? item.recipientId : item.senderId})}
+        />
     );
 
     return (
         <View style={styles.container}>
             <FlatList
                 style={styles.messagesContainer}
-                data={Messages}
+                data={inboxMessages}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
-                inverted={true}
             />
             <View style={styles.sendMessageContainer}>
                 <TextInput
@@ -80,20 +89,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: 'black',
         borderStyle: 'solid',
+        borderTopColor: 'white',
         borderWidth: .5,
-        marginBottom: 5,
-        borderRadius: 30,
-        padding: 5,
-        paddingLeft: 20,
-        marginLeft: 5,
-        width: '80%'
+        padding: 16
     },
     senderText: {
-        fontSize: 12
+        fontSize: 18
     },
     messageText: {
-        fontSize: 16,
-        marginTop: 3
+        fontSize: 12,
+        marginTop: 3,
+        color: 'grey'
     },
     timeStamp: {
         fontSize: 12,

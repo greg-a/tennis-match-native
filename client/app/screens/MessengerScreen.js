@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import moment from 'moment';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { Messages } from '../../data/ProfileData';
+import { handleTimeStamp } from '../../utils/handleTimeStamp';
 
 const Item = ({ title, sender, timestamp }) => (
     <View style={styles.message}>
@@ -13,11 +13,11 @@ const Item = ({ title, sender, timestamp }) => (
 
 const MessengerScreen = props => {
     const renderItem = ({ item }) => (
-        <Item title={item.message} sender={item.sender} timestamp={moment(item.createdAt).format('M/DD/YY h:mm a')} />
+        <Item title={item.message} sender={item.sender} timestamp={handleTimeStamp(item.createdAt)} />
     );    
 
     useEffect(() => {
-        props.navigation.setOptions({ title: Messages[1].sender})
+        props.navigation.setOptions({ title: props.route.params.recipientId})
     });
 
     return (
