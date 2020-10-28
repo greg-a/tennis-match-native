@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import { Messages } from '../../data/ProfileData';
+import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
+import { localHost } from '../localhost.js';
+import { createRoom } from '../../utils/createRoom';
+
+const socket = io(localHost);
 
 const Item = ({ title, sender, timestamp }) => (
     <View style={styles.message}>
@@ -12,19 +16,121 @@ const Item = ({ title, sender, timestamp }) => (
 );
 
 const MessengerScreen = props => {
+    const recipientId = props.route.params.recipientId;
+    const recipientUsername = props.route.params.recipientUsername;
+    const myUserId = props.route.params.myUserId;
+    const thisRoom = createRoom(myUserId, recipientId);
+    const [messages, setMessages] = useState();
+    const [newMessage, setNewMessage] = useState();
+
     const renderItem = ({ item }) => (
-        <Item title={item.message} sender={item.sender} timestamp={handleTimeStamp(item.createdAt)} />
-    );    
+        <Item title={item.message} sender={item.User.username} timestamp={handleTimeStamp(item.createdAt)} />
+    );
 
     useEffect(() => {
-        props.navigation.setOptions({ title: props.route.params.recipientId})
-    });
+        getMessages(recipientId);
+        connectToSocket();
+    }, []);
+
+    const getMessages = recipient => {
+        fetch(localHost + "/api/conversation/" + recipient)
+            .then(res => res.json())
+            .then((messages) => {
+
+                props.navigation.setOptions({ title: recipientUsername });
+                setMessages(messages);
+            })
+            .catch(err => console.log(err));
+    };
+
+    const connectToSocket = () => {
+        socket.on("output", data => {
+            data.createdAt = new Date();
+            data.id = new Date();
+            console.log("socket data: " + JSON.stringify(data))
+            setMessages(oldMessages => [data, ...oldMessages])
+            // let allMessages = this.state.allMessages;
+            // allMessages.unshift(data);
+
+            // let newArr = [];
+            // let existing = [];
+
+            // allMessages.forEach(message => {
+            //     if (!(existing.includes(message.senderId) && existing.includes(message.recipientId))) {
+            //         newArr.push(message);
+            //         existing.push(message.senderId, message.recipientId)
+            //     };
+            // });
+
+            // this.setState({ allMessages: allMessages, showMessages: allMessages.filter(message => message.recipientId == this.state.sendTo.id || message.senderId == this.state.sendTo.id), conversations: newArr });
+
+
+            return () => {
+                socket.disconnect()
+            };
+
+
+        });
+        socket.emit('joinRoom', { username: myUserId, room: thisRoom, userId: myUserId });
+        // socket.on("active", data => {
+        //     const sendToUpdate = this.state.sendTo;
+
+        //     if (data === 2) {
+        //         // sets recipient to active if both users are connected to room
+        //         sendToUpdate.active = true;
+
+        //         this.setState({ sendTo: sendToUpdate })
+        //     }
+        //     else {
+        //         // sets recipient to inactive if other user is not connected
+        //         sendToUpdate.active = false;
+
+        //         this.setState({ sendTo: sendToUpdate })
+        //     }
+        //     return () => {
+        //         socket.disconnect()
+        //     };
+        // });
+    };
+
+
+    const handleMessageSend = () => {
+        if (newMessage !== '') {
+            socket.emit("input", {
+                User: {
+                    username: myUserId
+                },
+                message: newMessage,
+                room: thisRoom,
+                senderId: myUserId,
+                recipientId: recipientId,
+                recipient: recipientUsername
+            });
+
+            fetch(localHost + "/api/message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: newMessage,
+                    secondUser: recipientId,
+                    read: 0
+                })
+            })
+                .then(res => {
+                    console.log("Your message was sent!");
+                })
+                .catch(err => console.log(err));
+            setNewMessage("")
+        };
+    };
 
     return (
         <View style={styles.container}>
             <FlatList
                 style={styles.messagesContainer}
-                data={Messages}
+                data={messages}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
                 inverted={true}
@@ -34,8 +140,10 @@ const MessengerScreen = props => {
                     style={styles.sendMessage}
                     placeholder="Type a message"
                     multiline={true}
+                    onChangeText={setNewMessage}
+                    value={newMessage}
                 />
-                <TouchableOpacity style={styles.sendButton}>
+                <TouchableOpacity style={styles.sendButton} onPress={handleMessageSend} disabled={newMessage === '' ? true : false}>
                     <Text>SEND</Text>
                 </TouchableOpacity>
             </View>

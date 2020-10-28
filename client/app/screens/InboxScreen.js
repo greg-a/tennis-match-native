@@ -24,7 +24,6 @@ const InboxScreen = props => {
             .then(res => res.json())
             .then((profileInfo) => {
                 setMyUserId(profileInfo.id);
-                console.log("My ID: " + profileInfo.id)
             })
             .catch(err => console.log(err));
 
@@ -40,21 +39,20 @@ const InboxScreen = props => {
                     };
                 });
                 setInboxMessages(newArr);
-                console.log("new array: " + JSON.stringify(newArr))
             })
             .catch(err => console.log(err));
     };
-
-    const handleUserSelect = key => {
-        console.log(this.id)
-    }
 
     const renderItem = ({ item }) => (
         <Item
             title={item.message}
             sender={item.senderId == myUserId ? item.recipient.username : item.User.username}
             timestamp={handleTimeStamp(item.createdAt)}
-            onPress={() => props.navigation.navigate('Messenger', {recipientId: item.senderId == myUserId ? item.recipientId : item.senderId})}
+            onPress={() => props.navigation.navigate('Messenger', {
+                recipientId: item.senderId == myUserId ? item.recipientId : item.senderId, 
+                recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username, 
+                myUserId: myUserId
+            })}
         />
     );
 
