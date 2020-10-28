@@ -9,6 +9,7 @@ import React from 'react';
 import CalendarScreen from '../screens/CalendarScreen';
 import BottomTabNavigator from './TabNavigator';
 import InboxScreen from '../screens/InboxScreen';
+import UserSearchScreen from '../screens/UserSearchScreen';
 
 
 
@@ -106,6 +107,7 @@ const MessengerStackNavigator = () => {
     >
       <Stack.Screen name="Inbox" component={InboxScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
   );
 }

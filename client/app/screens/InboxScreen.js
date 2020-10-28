@@ -13,6 +13,7 @@ const Item = ({ title, sender, timestamp, onPress }) => (
 
 const InboxScreen = props => {
     const [myUserId, setMyUserId] = useState();
+    const [myUsername, setMyUsername] = useState();
     const [inboxMessages, setInboxMessages] = useState([]);
 
     useEffect(() => {
@@ -24,6 +25,7 @@ const InboxScreen = props => {
             .then(res => res.json())
             .then((profileInfo) => {
                 setMyUserId(profileInfo.id);
+                setMyUsername(profileInfo.username);
             })
             .catch(err => console.log(err));
 
@@ -49,9 +51,10 @@ const InboxScreen = props => {
             sender={item.senderId == myUserId ? item.recipient.username : item.User.username}
             timestamp={handleTimeStamp(item.createdAt)}
             onPress={() => props.navigation.navigate('Messenger', {
-                recipientId: item.senderId == myUserId ? item.recipientId : item.senderId, 
-                recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username, 
-                myUserId: myUserId
+                recipientId: item.senderId == myUserId ? item.recipientId : item.senderId,
+                recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username,
+                myUserId: myUserId,
+                myUsername: myUsername
             })}
         />
     );
@@ -65,13 +68,23 @@ const InboxScreen = props => {
                 keyExtractor={item => item.id.toString()}
             />
             <View style={styles.sendMessageContainer}>
-                <TextInput
+                {/* <TextInput
                     style={styles.sendMessage}
                     placeholder="Search for user"
                     multiline={true}
-                />
-                <TouchableOpacity style={styles.sendButton} onPress={() => props.navigation.navigate('Messenger')}>
-                    <Text>New</Text>
+                    onFocus={() => props.navigation.navigate('User Search', {
+                        myUserId: myUserId,
+                        myUsername: myUsername
+                    })}
+                /> */}
+                <TouchableOpacity
+                    style={styles.sendMessage}
+                    onPress={() => props.navigation.navigate('User Search', {
+                        myUserId: myUserId,
+                        myUsername: myUsername
+                    })}
+                >
+                    <Text style={{color: 'grey'}}>Search for user</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -108,7 +121,7 @@ const styles = StyleSheet.create({
     sendMessage: {
         borderColor: 'black',
         backgroundColor: 'white',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         height: 40,
         width: '80%',
         borderRadius: 30,

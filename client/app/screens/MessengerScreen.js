@@ -19,6 +19,7 @@ const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
     const recipientUsername = props.route.params.recipientUsername;
     const myUserId = props.route.params.myUserId;
+    const myUsername = props.route.params.myUsername;
     const thisRoom = createRoom(myUserId, recipientId);
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
@@ -47,52 +48,11 @@ const MessengerScreen = props => {
         socket.on("output", data => {
             data.createdAt = new Date();
             data.id = new Date();
-            console.log("socket data: " + JSON.stringify(data))
-            setMessages(oldMessages => [data, ...oldMessages])
-            // let allMessages = this.state.allMessages;
-            // allMessages.unshift(data);
-
-            // let newArr = [];
-            // let existing = [];
-
-            // allMessages.forEach(message => {
-            //     if (!(existing.includes(message.senderId) && existing.includes(message.recipientId))) {
-            //         newArr.push(message);
-            //         existing.push(message.senderId, message.recipientId)
-            //     };
-            // });
-
-            // this.setState({ allMessages: allMessages, showMessages: allMessages.filter(message => message.recipientId == this.state.sendTo.id || message.senderId == this.state.sendTo.id), conversations: newArr });
-
-
-            return () => {
-                socket.disconnect()
-            };
-
-
+            console.log("socket data: " + JSON.stringify(data));
+            setMessages(oldMessages => [data, ...oldMessages]);
         });
-        socket.emit('joinRoom', { username: myUserId, room: thisRoom, userId: myUserId });
-        // socket.on("active", data => {
-        //     const sendToUpdate = this.state.sendTo;
-
-        //     if (data === 2) {
-        //         // sets recipient to active if both users are connected to room
-        //         sendToUpdate.active = true;
-
-        //         this.setState({ sendTo: sendToUpdate })
-        //     }
-        //     else {
-        //         // sets recipient to inactive if other user is not connected
-        //         sendToUpdate.active = false;
-
-        //         this.setState({ sendTo: sendToUpdate })
-        //     }
-        //     return () => {
-        //         socket.disconnect()
-        //     };
-        // });
+        socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
     };
-
 
     const handleMessageSend = () => {
         if (newMessage !== '') {
@@ -115,7 +75,7 @@ const MessengerScreen = props => {
                 body: JSON.stringify({
                     message: newMessage,
                     secondUser: recipientId,
-                    read: 0
+                    read: false
                 })
             })
                 .then(res => {
