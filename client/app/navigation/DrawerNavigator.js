@@ -1,6 +1,6 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { MainStackNavigator, ProfileStackNavigator, AvailabilityStackNavigator, FeedStackNavigator, MessengerStackNavigator, CalendarStackNavigator } from "./StackNavigator";
+import { MainStackNavigator, ProfileStackNavigator, AvailabilityStackNavigator, FeedStackNavigator, MessengerStackNavigator, CalendarStackNavigator, SearchByDateStackNavigator } from "./StackNavigator";
 import BottomTabNavigator from "./TabNavigator";
 
 const Drawer = createDrawerNavigator();
@@ -19,6 +19,7 @@ const DrawerNavigator = () => {
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
       <Drawer.Screen name="Messenger" component={MessengerStackNavigator} />
       <Drawer.Screen name="Profile" component={ProfileStackNavigator} />
+      <Drawer.Screen name="FindMatch" component={SearchByDateStackNavigator} />
     </Drawer.Navigator>
     
   );
