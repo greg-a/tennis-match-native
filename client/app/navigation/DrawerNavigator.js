@@ -1,4 +1,6 @@
 import React from "react";
+import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { MainStackNavigator, ProfileStackNavigator, AvailabilityStackNavigator, FeedStackNavigator, MessengerStackNavigator, CalendarStackNavigator, SearchByDateStackNavigator } from "./StackNavigator";
 import BottomTabNavigator from "./TabNavigator";
@@ -16,9 +18,25 @@ const DrawerNavigator = () => {
     // </Drawer.Navigator>
 
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={BottomTabNavigator} />
-      <Drawer.Screen name="Messenger" component={MessengerStackNavigator} />
-      <Drawer.Screen name="FindMatch" component={SearchByDateStackNavigator} />
+      <Drawer.Screen name="Home" component={BottomTabNavigator} 
+      options={{ drawerLabel: 'Home',
+      drawerIcon: (({focused}) => <Icon name="home" size={30} color="#6CE631" />)
+      }}/>
+      <Drawer.Screen name="Profile" component={ProfileStackNavigator} 
+      options={{ drawerLabel: 'Profile',
+      drawerIcon: (({focused}) => <Icon name="account-circle" size={30} color="#6CE631" />)
+      }}
+      />
+      <Drawer.Screen name="Messenger" component={MessengerStackNavigator} 
+      options={{ drawerLabel: 'Messenger',
+      drawerIcon: (({focused}) => <Icon name="message" size={30} color="#6CE631" />)
+      }}
+      />
+      <Drawer.Screen name="Find Match" component={SearchByDateStackNavigator} 
+      options={{ drawerLabel: 'Find Match',
+      drawerIcon: (({focused}) => <Icon name="call-merge" size={30} color="#6CE631" />)
+      }}
+      />
     </Drawer.Navigator>
     
   );
