@@ -8,9 +8,8 @@ import { localHost } from '../localhost.js';
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
-    const initialEvent = [{id: 0, start: null}]
     const [selectedDate, setSelectedDate] = useState(today);
-    const [myEvents, setMyEvents] = useState(initialEvent);
+    const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
     
@@ -91,6 +90,7 @@ const CalendarScreen = props => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={() => props.navigation.navigate('FindMatch', {selectedDate: selectedDate})}
                 >
                     <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
                 </TouchableOpacity>

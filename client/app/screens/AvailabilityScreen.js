@@ -47,9 +47,11 @@ const AvailabilityScreen = props => {
         }).catch(err => console.log(err))
     };
 
-    useEffect(() => {      
+    useEffect(() => {     
+        console.log("params: " + JSON.stringify(props.route)) 
         if (props.route.params) {
-            const selectedDate = moment(props.route.params.selectedDate).format("MM/DD/YYYY")
+            const selectedDate = moment(props.route.params.selectedDate).format("MM/DD/YYYY");
+            console.log("selected date: " + selectedDate)
             setConDate(selectedDate);
             setNewDate(selectedDate);
         }

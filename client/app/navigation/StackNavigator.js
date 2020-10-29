@@ -130,6 +130,8 @@ const CalendarStackNavigator = () => {
     }}
     >
       <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}} />
+      <Stack.Screen name="Availability" component={AvailabilityScreen} />
+      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
     </Stack.Navigator>
   );
 }
