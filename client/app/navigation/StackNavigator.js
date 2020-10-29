@@ -31,8 +31,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Messenger" component={MessengerScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
-      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
+      <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Feed" component={FeedScreen} />
       <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
       {/* <Stack.Screen name="Availability" component={AvailabilityScreen} />
