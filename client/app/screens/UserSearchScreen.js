@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { localHost } from '../localhost.js';
-import { handleTimeStamp } from '../../utils/handleTimeStamp';
-
-// user list: [{"username":"Patrick","firstname":null,"lastname":null,"id":2}]
 
 const Item = ({ username, name, onPress }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
