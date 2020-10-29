@@ -52,24 +52,10 @@ const CalendarScreen = props => {
     };
 
     return (
+        <View style={styles.container}>
         <ScrollView>            
             <EventModal modalVisible={modalVisible} cancelModal={handleCancelModal} deleteEvent={handleEventDelete} />
-            <CalendarStrip
-                scrollable
-                calendarAnimation={{ type: 'sequence', duration: 30 }}
-                daySelectionAnimation={{ type: 'background', duration: 300, highlightColor: '#8dfc9c' }}
-                style={{ height: 120, paddingTop: 30, paddingBottom: 0 }}
-                calendarHeaderStyle={{ color: 'white', fontSize: 20 }}
-                highlightDateNumberStyle={{ color: 'white' }}
-                highlightDateNameStyle={{ color: 'white' }}
-                calendarColor={Platform.OS === 'android' ? 'rgb(108,230,49)' : ''}
-                dateNumberStyle={{ color: Platform.OS === 'android' ? 'white' : 'black' }}
-                dateNameStyle={{ color: Platform.OS === 'android' ? 'white' : 'black' }}
-                iconContainer={{ flex: 0.1 }}
-                useIsoWeekday={false}
-                selectedDate={today}
-                onDateSelected={date => setSelectedDate(date)}
-            />
+            
             {eventView.length > 0 ? eventView.map((item, i) => (
                 <EventCard
                     key={item.id}
@@ -96,10 +82,31 @@ const CalendarScreen = props => {
                 </TouchableOpacity>
             </View>
         </ScrollView>
+            <CalendarStrip
+                scrollable
+                calendarAnimation={{ type: 'sequence', duration: 30 }}
+                daySelectionAnimation={{ type: 'background', duration: 300, highlightColor: '#8dfc9c' }}
+                style={{ height: 120, paddingTop: 30, paddingBottom: 0 }}
+                calendarHeaderStyle={{ color: 'white', fontSize: 20 }}
+                highlightDateNumberStyle={{ color: 'white' }}
+                highlightDateNameStyle={{ color: 'white' }}
+                calendarColor={Platform.OS === 'android' ? 'rgb(108,230,49)' : ''}
+                dateNumberStyle={{ color: Platform.OS === 'android' ? 'white' : 'black' }}
+                dateNameStyle={{ color: Platform.OS === 'android' ? 'white' : 'black' }}
+                iconContainer={{ flex: 0.1 }}
+                useIsoWeekday={false}
+                selectedDate={today}
+                onDateSelected={date => setSelectedDate(date)}
+            />
+            </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'space-between',
+        flex: 1
+    },
     buttonContainer: {
         marginTop: 30,
         flexDirection: 'row',

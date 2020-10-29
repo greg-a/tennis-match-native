@@ -27,7 +27,7 @@ const DrawerNavigator = () => {
       drawerIcon: (({focused}) => <Icon name="account-circle" size={30} color="#6CE631" />)
       }}
       />
-      <Drawer.Screen name="Messenger" component={MessengerStackNavigator} 
+      <Drawer.Screen name="Inbox" component={MessengerStackNavigator} 
       options={{ drawerLabel: 'Messenger',
       drawerIcon: (({focused}) => <Icon name="message" size={30} color="#6CE631" />)
       }}
