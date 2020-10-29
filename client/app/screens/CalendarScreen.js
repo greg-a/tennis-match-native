@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import EventCard from '../components/EventCard';
 import EventModal from '../components/EventModal';
 import { localHost } from '../localhost.js';
+
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
@@ -12,33 +18,41 @@ const CalendarScreen = props => {
     const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
-    
+    const [refreshing, setRefreshing] = useState(false);
+
+
     let eventView = myEvents.filter(event => moment(event.start).format("YYYY-MM-DD") === moment(selectedDate).format("YYYY-MM-DD"));
-    
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+        getCalendarEvents();
+    }, []);
+
     useEffect(() => {
         getCalendarEvents();
     }, []);
 
     const getCalendarEvents = () => {
-        fetch(localHost+'/api/calendar')
+        fetch(localHost + '/api/calendar')
             .then(res => res.json())
             .then((dates) => {
                 setMyEvents(dates);
-                console.log(dates);                
+                console.log(dates);
             })
             .catch(err => console.log(err));
     };
 
     const handleEventDelete = () => {
-        fetch(localHost+'/api/event/delete/' + selectedEventId, {
+        fetch(localHost + '/api/event/delete/' + selectedEventId, {
             method: "DELETE"
-          }).then(res => {
+        }).then(res => {
             getCalendarEvents();
-          }).catch(err => {
+        }).catch(err => {
             console.log(err)
-          })
-          setModalVisible(false);
-          setSelectedEventId();
+        })
+        setModalVisible(false);
+        setSelectedEventId();
     }
 
     const handleEventSelect = key => {
@@ -53,35 +67,39 @@ const CalendarScreen = props => {
 
     return (
         <View style={styles.container}>
-        <ScrollView>            
-            <EventModal modalVisible={modalVisible} cancelModal={handleCancelModal} deleteEvent={handleEventDelete} />
-            
-            {eventView.length > 0 ? eventView.map((item, i) => (
-                <EventCard
-                    key={item.id}
-                    title={item.title}
-                    start={moment(item.start).format('hh:mm a')}
-                    end={moment(item.end).format('hh:mm a')}
-                    status={item.eventStatus}
-                    image='https://photoresources.wtatennis.com/photo-resources/2019/08/15/dbb59626-9254-4426-915e-57397b6d6635/tennis-origins-e1444901660593.jpg?width=1200&height=630'
-                    onSelectEvent={() => handleEventSelect(item.id)}
-                />
-            )) : <Text style={styles.text}>No Events</Text>}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => props.navigation.navigate('Availability', {selectedDate: selectedDate})}
-                >
-                    <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => props.navigation.navigate('FindMatch', {selectedDate: selectedDate})}
-                >
-                    <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
+                <EventModal modalVisible={modalVisible} cancelModal={handleCancelModal} deleteEvent={handleEventDelete} />
+
+                {eventView.length > 0 ? eventView.map((item, i) => (
+                    <EventCard
+                        key={item.id}
+                        title={item.title}
+                        start={moment(item.start).format('hh:mm a')}
+                        end={moment(item.end).format('hh:mm a')}
+                        status={item.eventStatus}
+                        image='https://photoresources.wtatennis.com/photo-resources/2019/08/15/dbb59626-9254-4426-915e-57397b6d6635/tennis-origins-e1444901660593.jpg?width=1200&height=630'
+                        onSelectEvent={() => handleEventSelect(item.id)}
+                    />
+                )) : <Text style={styles.text}>No Events</Text>}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate })}
+                    >
+                        <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => props.navigation.navigate('FindMatch', { selectedDate: selectedDate })}
+                    >
+                        <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
             <CalendarStrip
                 scrollable
                 calendarAnimation={{ type: 'sequence', duration: 30 }}
@@ -98,7 +116,7 @@ const CalendarScreen = props => {
                 selectedDate={today}
                 onDateSelected={date => setSelectedDate(date)}
             />
-            </View>
+        </View>
     );
 };
 

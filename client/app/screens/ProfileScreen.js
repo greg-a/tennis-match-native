@@ -136,7 +136,7 @@ const ProfileScreen = props => {
                         onChange={(option) => setProfileUpdate({ ...profileUpdate, skilllevel: option.value })}>
                         <TextInput
                             style={styles.input}
-                            value={profileUpdate.skilllevel.toString()}
+                            value={profileUpdate.skilllevel}
                             editable={false}
                             placeholder={"Choose Skill Level..."}
                         />

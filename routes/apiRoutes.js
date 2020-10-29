@@ -205,6 +205,7 @@ module.exports = function (app) {
                     ]
 
                 },
+                order: [["start"]],
                 include: [
                     { model: db.User,
                     attributes: ["username", "firstname", "lastname", "id"]
