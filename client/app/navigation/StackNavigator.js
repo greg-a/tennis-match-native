@@ -1,4 +1,6 @@
-import { Platform } from 'react-native';
+import { View, Platform } from 'react-native';
+// import { Icon } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
@@ -16,7 +18,7 @@ import SearchByDateScreen from '../screens/SearchByDateScreen';
 
 const Stack = createStackNavigator();
 
-const MainStackNavigator = () => {
+const MainStackNavigator = ({navigation}) => {
   return (
     <Stack.Navigator
     screenOptions={{
@@ -29,13 +31,23 @@ const MainStackNavigator = () => {
     >
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Messenger" component={MessengerScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
+      {/* <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/> */}
+      <Stack.Screen name="Feed" component={FeedScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }}/>
+      {/* <Stack.Screen name="FindMatch" component={SearchByDateScreen} /> */}
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
-      <Stack.Screen name="Feed" component={FeedScreen} />
-      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
-      {/* <Stack.Screen name="Availability" component={AvailabilityScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
     </Stack.Navigator>
     
   );
@@ -43,7 +55,7 @@ const MainStackNavigator = () => {
 
 export { MainStackNavigator };
 
-const AvailabilityStackNavigator = () => {
+const AvailabilityStackNavigator = ({navigation}) => {
   return (
     <Stack.Navigator
     screenOptions={{
@@ -54,7 +66,18 @@ const AvailabilityStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Availability" component={AvailabilityScreen} />
+      <Stack.Screen name="Availability" component={AvailabilityScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }}/>
     </Stack.Navigator>
     
   );
@@ -62,7 +85,7 @@ const AvailabilityStackNavigator = () => {
 
 export { AvailabilityStackNavigator };
 
-const FeedStackNavigator = () => {
+const CalendarStackNavigator = ({navigation}) => {
   return (
     <Stack.Navigator
     screenOptions={{
@@ -73,12 +96,41 @@ const FeedStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Feed" component={FeedScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }}/>
     </Stack.Navigator>
   );
 }
 
-export { FeedStackNavigator };
+export { CalendarStackNavigator };
+
+// const FeedStackNavigator = () => {
+//   return (
+//     <Stack.Navigator
+//     screenOptions={{
+//       headerStyle: {
+//         backgroundColor: "#6CE631",
+//       },
+//       headerTintColor: "white",
+//       headerBackTitle: "Back",
+//     }}
+//     >
+//       <Stack.Screen name="Feed" component={FeedScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// export { FeedStackNavigator };
 
 const ProfileStackNavigator = () => {
   return (
@@ -98,7 +150,7 @@ const ProfileStackNavigator = () => {
 
 export { ProfileStackNavigator };
 
-const MessengerStackNavigator = () => {
+const MessengerStackNavigator = ({navigation}) => {
   return (
     <Stack.Navigator
     screenOptions={{
@@ -109,32 +161,23 @@ const MessengerStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Inbox" component={InboxScreen} />
-      <Stack.Screen name="Messenger" component={MessengerScreen} />
-      <Stack.Screen name="User Search" component={UserSearchScreen} />
+      <Stack.Screen name="Messenger" component={MessengerScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }}/>
     </Stack.Navigator>
   );
 }
 
 export { MessengerStackNavigator };
-
-const CalendarStackNavigator = () => {
-  return (
-    <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
-    >
-      <Stack.Screen name="Calendar" component={CalendarScreen} options={{headerShown: false}} />
-    </Stack.Navigator>
-  );
-}
-
-export { CalendarStackNavigator };
 
 const SearchByDateStackNavigator = () => {
   return (
@@ -147,7 +190,7 @@ const SearchByDateStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
+      <Stack.Screen name="Find Match" component={SearchByDateScreen} />
     </Stack.Navigator>
   );
 }
