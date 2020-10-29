@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'react-native';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
-import { useLinkProps } from '@react-navigation/native';
 import { localHost } from '../localhost.js';
 
 const LoginScreen = props => {
@@ -34,7 +33,7 @@ const LoginScreen = props => {
             .then(res => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
-                    props.navigation.navigate('Feed');
+                    props.navigation.replace('Feed')
                 };
             })
             .catch(err => console.log(err));
