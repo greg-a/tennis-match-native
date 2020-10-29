@@ -8,6 +8,8 @@ import LoginScreen from '../screens/LoginScreen';
 import React from 'react';
 import CalendarScreen from '../screens/CalendarScreen';
 import BottomTabNavigator from './TabNavigator';
+import InboxScreen from '../screens/InboxScreen';
+import UserSearchScreen from '../screens/UserSearchScreen';
 import SearchByDateScreen from '../screens/SearchByDateScreen';
 
 
@@ -25,10 +27,10 @@ const MainStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      {/* <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Availability" component={AvailabilityScreen} />
-      <Stack.Screen name="Feed" component={FeedScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Messenger" component={MessengerScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Feed" component={FeedScreen} />
@@ -108,7 +110,9 @@ const MessengerStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
+      <Stack.Screen name="Inbox" component={InboxScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
   );
 }

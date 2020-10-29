@@ -18,6 +18,7 @@ const DrawerNavigator = () => {
     <Drawer.Navigator>
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
       <Drawer.Screen name="Messenger" component={MessengerStackNavigator} />
+      <Drawer.Screen name="Profile" component={ProfileStackNavigator} />
       <Drawer.Screen name="FindMatch" component={SearchByDateStackNavigator} />
     </Drawer.Navigator>
     

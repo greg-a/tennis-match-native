@@ -34,7 +34,7 @@ const LoginScreen = props => {
             .then(res => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
-                    props.navigation.navigate('Feed');
+                    props.navigation.replace('Feed')
                 };
             })
             .catch(err => console.log(err));
