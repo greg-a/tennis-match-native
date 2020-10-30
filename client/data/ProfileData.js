@@ -343,6 +343,10 @@ export const playTypeData = [
     { key: 1, label: 'Casual' },
     { key: 2, label: 'Competitive' }
 ];
+export const eventTypeData = [
+    { key: 1, label: 'Private' },
+    { key: 2, label: 'Public' }
+];
 
 export const courtLocationData = [
     { key: 1, label: 'any' },

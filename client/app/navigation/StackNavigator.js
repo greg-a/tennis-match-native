@@ -75,7 +75,8 @@ const AvailabilityStackNavigator = ({navigation}) => {
             />
           </View>
         ),
-      }}/>
+      }}/>      
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
     
   );

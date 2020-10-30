@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, Button } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
-import { playTypeData, courtLocationData } from '../../data/ProfileData';
+import { playTypeData, courtLocationData, eventTypeData } from '../../data/ProfileData';
 import { localHost } from '../localhost.js';
 
 const AvailabilityScreen = props => {
     const [eventTitle, setEventTitle] = React.useState("");
+    const [eventType, setEventType] = React.useState("");
     const [eventLocation, setEventLocation] = React.useState("");
     const [newDate, setNewDate] = React.useState("");
     const [conDate, setConDate] = React.useState("");
@@ -16,6 +17,8 @@ const AvailabilityScreen = props => {
     const [conStartTime, setConStartTime] = React.useState("");
     const [endTime, setEndTime] = React.useState("");
     const [conEndTime, setConEndTime] = React.useState("");
+    const [recipientId, setRecipientId] = React.useState("");
+    const [recipientUsername, setRecipientUsername] = React.useState("Send Invite");
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
@@ -30,7 +33,7 @@ const AvailabilityScreen = props => {
     const handleFormSubmit = () => {
         const newStart = conDate + " " + conStartTime;
         const newEnd = conDate + " " + conEndTime;
-        fetch(localHost+"/api/calendar", {
+        fetch(localHost + "/api/calendar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -39,16 +42,17 @@ const AvailabilityScreen = props => {
                 title: eventTitle,
                 start: moment(newStart).format(),
                 end: moment(newEnd).format(),
-                eventStatus: "available",
-                location: eventLocation
+                eventStatus: eventType === "public" ? "available" : "propose",
+                location: eventLocation,
+                confirmedByUser: recipientId
             })
         }).then(res => {
             res.json();
         }).catch(err => console.log(err))
     };
 
-    useEffect(() => {     
-        console.log("params: " + JSON.stringify(props.route)) 
+    useEffect(() => {
+        console.log("params: " + JSON.stringify(props.route))
         if (props.route.params) {
             const selectedDate = moment(props.route.params.selectedDate).format("MM/DD/YYYY");
             console.log("selected date: " + selectedDate)
@@ -121,6 +125,10 @@ const AvailabilityScreen = props => {
         hideEndTimePicker();
     };
 
+    const setUserInfo = (id, username) => {
+        setRecipientId(id);
+        setRecipientUsername(username);
+    }
 
     return (
         <View style={styles.container}>
@@ -196,7 +204,28 @@ const AvailabilityScreen = props => {
                     textColor={isDarkMode ? 'white' : 'black'}
                 />
             </View>
-
+            <View>
+                <ModalSelector
+                    data={eventTypeData}
+                    initValue='Event Type'
+                    onChange={(option) => setEventType(option.label)}>
+                    <TextInput
+                        style={styles.input}
+                        editable={false}
+                        value={eventType}
+                        placeholder={'Event Type'}
+                        placeholderTextColor={'lightgrey'}
+                    />
+                </ModalSelector>
+            </View>
+            <View style={styles.input}>
+                <Text
+                    style={{ color: recipientId === '' ? 'lightgrey' : 'black', fontSize: 16 }}
+                    onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
+                >
+                    {recipientUsername}
+                </Text>
+            </View>
             <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                 <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
             </TouchableOpacity>
@@ -224,7 +253,8 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         // marginBottom: 20,
         paddingLeft: 10,
-        color: 'black'
+        color: 'black',
+        justifyContent: 'center'
     },
     instructions: {
         width: '80%',

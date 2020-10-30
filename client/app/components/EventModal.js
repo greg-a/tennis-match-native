@@ -15,13 +15,16 @@ const EventModal = props => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <TouchableOpacity style={styles.button}>
-                            <Text>Edit Details</Text>
+                            <Text style={styles.buttonText}>Send Invite</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Edit Details</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={props.deleteEvent}>
-                            <Text>Delete</Text>
+                            <Text style={styles.buttonText}>Delete</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={props.cancelModal}>
-                            <Text>Cancel</Text>
+                            <Text style={styles.buttonText}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -57,7 +60,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 5
+        marginTop: 5,
+        minWidth: 120
+    },
+    buttonText: {
+        alignSelf: 'center'
     },
     openButton: {
         backgroundColor: "#F194FF",

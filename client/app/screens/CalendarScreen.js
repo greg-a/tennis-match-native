@@ -69,10 +69,17 @@ const CalendarScreen = props => {
         <View style={styles.container}>
             <ScrollView
                 refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
                 }
             >
-                <EventModal modalVisible={modalVisible} cancelModal={handleCancelModal} deleteEvent={handleEventDelete} />
+                <EventModal
+                    modalVisible={modalVisible}
+                    cancelModal={handleCancelModal}
+                    deleteEvent={handleEventDelete}
+                />
 
                 {eventView.length > 0 ? eventView.map((item, i) => (
                     <EventCard

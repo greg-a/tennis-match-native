@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { localHost } from '../localhost.js';
 
@@ -10,8 +10,10 @@ const Item = ({ username, name, onPress }) => (
 );
 
 const UserSearchScreen = props => {
-    const myUserId = props.route.params.myUserId;
-    const myUsername = props.route.params.myUsername;
+    const myUserId = props.route.params ? props.route.params.myUserId : '';
+    const myUsername = props.route.params ? props.route.params.myUsername : '';
+    const searchType = props.route.params.searchType;
+    const setUserInfo = props.route.params.setUserInfo;
     const [userSearchList, setUserList] = useState();
 
     const handleUserSearch = search => {
@@ -32,12 +34,18 @@ const UserSearchScreen = props => {
         <Item
             username={`@${item.username}`}
             name={`${item.firstname === null ? '' : item.firstname} ${item.lastname === null ? '' : item.lastname}`}
-            onPress={() => props.navigation.navigate('Messenger', {
+            onPress={searchType === 'message' ? () => props.navigation.navigate('Messenger', {
                 recipientId: item.id,
                 recipientUsername: item.username,
                 myUserId: myUserId,
                 myUsername: myUsername
-            })}
+            })
+                :
+                () => {
+                    setUserInfo(item.id, item.username)
+                    props.navigation.goBack()
+                }
+            }
         />
     );
 
