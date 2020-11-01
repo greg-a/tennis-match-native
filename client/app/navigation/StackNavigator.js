@@ -33,7 +33,7 @@ const MainStackNavigator = ({navigation}) => {
     >
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Messenger" component={MessengerScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} /> 
+      {/* <Stack.Screen name="Calendar" component={CalendarScreen} />  */}
       {/* <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/> */}
       <Stack.Screen name="Feed" component={FeedScreen} options={{
         headerLeft: () => (
