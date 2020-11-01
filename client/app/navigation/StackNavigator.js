@@ -11,6 +11,8 @@ import BottomTabNavigator from './TabNavigator';
 import InboxScreen from '../screens/InboxScreen';
 import UserSearchScreen from '../screens/UserSearchScreen';
 import SearchByDateScreen from '../screens/SearchByDateScreen';
+import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
+import SearchDatePropose from '../screens/SearchDatePropose';
 
 
 
@@ -148,6 +150,8 @@ const SearchByDateStackNavigator = () => {
     }}
     >
       <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
+      <Stack.Screen name="DateResults" component={SearchDateResultsScreen} />
+      <Stack.Screen name="ProposeDate" component={SearchDatePropose} />
     </Stack.Navigator>
   );
 }
