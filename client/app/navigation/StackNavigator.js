@@ -13,6 +13,8 @@ import BottomTabNavigator from './TabNavigator';
 import InboxScreen from '../screens/InboxScreen';
 import UserSearchScreen from '../screens/UserSearchScreen';
 import SearchByDateScreen from '../screens/SearchByDateScreen';
+import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
+import SearchDatePropose from '../screens/SearchDatePropose';
 
 
 
@@ -31,7 +33,7 @@ const MainStackNavigator = ({navigation}) => {
     >
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Messenger" component={MessengerScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} /> */}
+      {/* <Stack.Screen name="Calendar" component={CalendarScreen} />  */}
       {/* <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/> */}
       <Stack.Screen name="Feed" component={FeedScreen} options={{
         headerLeft: () => (
@@ -190,7 +192,9 @@ const SearchByDateStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Find Match" component={SearchByDateScreen} />
+      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
+      <Stack.Screen name="DateResults" component={SearchDateResultsScreen} />
+      <Stack.Screen name="ProposeDate" component={SearchDatePropose} />
     </Stack.Navigator>
   );
 }
