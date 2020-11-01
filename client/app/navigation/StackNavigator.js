@@ -13,6 +13,7 @@ import BottomTabNavigator from './TabNavigator';
 import InboxScreen from '../screens/InboxScreen';
 import UserSearchScreen from '../screens/UserSearchScreen';
 import SearchByDateScreen from '../screens/SearchByDateScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 
 
 
@@ -30,6 +31,7 @@ const MainStackNavigator = ({navigation}) => {
     }}
     >
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="SignUp" component={SignUpScreen}/>
       <Stack.Screen name="Inbox" component={InboxScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Feed" component={FeedScreen} options={{
@@ -107,6 +109,8 @@ const CalendarStackNavigator = ({navigation}) => {
           </View>
         ),
       }}/>
+      <Stack.Screen name="Availability" component={AvailabilityScreen} />
+      <Stack.Screen name="Find Match" component={SearchByDateScreen} />
     </Stack.Navigator>
   );
 }

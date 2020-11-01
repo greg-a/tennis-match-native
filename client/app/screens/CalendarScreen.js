@@ -18,6 +18,7 @@ const CalendarScreen = props => {
     const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
+    const [eventTitle, setEventTitle] = useState();
     const [refreshing, setRefreshing] = useState(false);
 
 
@@ -55,9 +56,10 @@ const CalendarScreen = props => {
         setSelectedEventId();
     }
 
-    const handleEventSelect = key => {
+    const handleEventSelect = (key, title, start, end) => {
         setModalVisible(true);
         setSelectedEventId(key);
+        setEventTitle(`${title}: ${moment(start).format('h:mm a')}-${moment(end).format('h:mm a')}`);
     };
 
     const handleCancelModal = () => {
@@ -79,17 +81,18 @@ const CalendarScreen = props => {
                     modalVisible={modalVisible}
                     cancelModal={handleCancelModal}
                     deleteEvent={handleEventDelete}
+                    title={eventTitle}
                 />
 
                 {eventView.length > 0 ? eventView.map((item, i) => (
                     <EventCard
                         key={item.id}
                         title={item.title}
-                        start={moment(item.start).format('hh:mm a')}
-                        end={moment(item.end).format('hh:mm a')}
+                        start={moment(item.start).format('h:mm a')}
+                        end={moment(item.end).format('h:mm a')}
                         status={item.eventStatus}
                         image='https://photoresources.wtatennis.com/photo-resources/2019/08/15/dbb59626-9254-4426-915e-57397b6d6635/tennis-origins-e1444901660593.jpg?width=1200&height=630'
-                        onSelectEvent={() => handleEventSelect(item.id)}
+                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end)}
                     />
                 )) : <Text style={styles.text}>No Events</Text>}
                 <View style={styles.buttonContainer}>
@@ -101,7 +104,7 @@ const CalendarScreen = props => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => props.navigation.navigate('FindMatch', { selectedDate: selectedDate })}
+                        onPress={() => props.navigation.navigate('Find Match', { selectedDate: selectedDate })}
                     >
                         <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
                     </TouchableOpacity>
