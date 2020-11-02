@@ -5,12 +5,15 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
 import { playTypeData, courtLocationData, eventTypeData } from '../../data/ProfileData';
-import { localHost } from '../localhost.js';
+import { localHost, googleMapsAPI } from '../localhost.js';
+
+const locationQuery = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.03339786241084,-75.18151277315162&radius=20000&keyword=tennis%20court&key=' + googleMapsAPI;
 
 const AvailabilityScreen = props => {
     const [eventTitle, setEventTitle] = React.useState("");
     const [eventType, setEventType] = React.useState("");
     const [eventLocation, setEventLocation] = React.useState("");
+    const [courtLocations, setCourtLocations] = React.useState([]);
     const [newDate, setNewDate] = React.useState("");
     const [conDate, setConDate] = React.useState("");
     const [startTime, setStartTime] = React.useState("");
@@ -52,13 +55,22 @@ const AvailabilityScreen = props => {
     };
 
     useEffect(() => {
-        console.log("params: " + JSON.stringify(props.route))
-        if (props.route.params) {
-            const selectedDate = moment(props.route.params.selectedDate).format("MM/DD/YYYY");
-            console.log("selected date: " + selectedDate)
-            setConDate(selectedDate);
-            setNewDate(selectedDate);
-        }
+        fetch(locationQuery)
+        .then(res => res.json())
+        .then(courts => {
+            let courtSearch = [];
+            courts.results.forEach((court, i) => {
+                courtSearch.push({
+                    key: i,
+                    label: `${court.name} near ${court.vicinity}`,
+                    lat: court.geometry.location.lat,
+                    lng: court.geometry.location.lng
+                })
+            })
+            setCourtLocations(courtSearch)
+            console.log(courtSearch)
+        })
+        .catch(err => console.log(err))
         //     console.log('eventTitle: ' + eventTitle);
         //     console.log('eventLocation: ' + eventLocation);
         //     console.log('newDate: ' + newDate);
@@ -148,22 +160,21 @@ const AvailabilityScreen = props => {
                 />
             </ModalSelector>
             <ModalSelector
-                data={courtLocationData}
+                data={courtLocations}
                 initValue='Court Location'
-                onChange={(option) => setEventLocation(option.label)}>
+                onChange={(option) => setEventLocation(option)}>
                 <TextInput
                     style={styles.input}
                     editable={false}
-                    value={eventLocation}
+                    value={eventLocation.label}
                     placeholder={'Court Location'}
                     placeholderTextColor={'lightgrey'}
                 />
             </ModalSelector>
-
             <View>
                 <TouchableWithoutFeedback onPress={showDatePicker}>
                     <View style={styles.viewInput}>
-                        {newDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
+                        {conDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
                     </View>
                 </TouchableWithoutFeedback>
                 <DateTimePickerModal
