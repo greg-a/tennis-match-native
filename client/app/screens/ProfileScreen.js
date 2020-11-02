@@ -14,7 +14,8 @@ const ProfileScreen = props => {
         city: '',
         state: '',
         zipcode: '',
-        skilllevel: ''
+        skilllevel: '',
+        skillLabel: ''
     });
 
     useEffect(() => {
@@ -27,7 +28,7 @@ const ProfileScreen = props => {
                 city: res.city,
                 state: res.state,
                 zipcode: res.zipcode,
-                skilllevel: res.skilllevel
+                skilllevel: res.skilllevel.toString()
             }))
             .catch((error) => console.error(error))
     }, []);
@@ -133,10 +134,10 @@ const ProfileScreen = props => {
                     <ModalSelector
                         pickerStyle={styles.input}
                         data={Skills}
-                        onChange={(option) => setProfileUpdate({ ...profileUpdate, skilllevel: option.value })}>
+                        onChange={(option) => setProfileUpdate({ ...profileUpdate, skilllevel: option.value, skillLabel: option.label })}>
                         <TextInput
                             style={styles.input}
-                            value={profileUpdate.skilllevel.toString()}
+                            value={profileUpdate.skillLabel}
                             editable={false}
                             placeholder={"Choose Skill Level..."}
                         />

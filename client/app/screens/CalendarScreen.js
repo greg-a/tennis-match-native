@@ -1,50 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import EventCard from '../components/EventCard';
 import EventModal from '../components/EventModal';
-import { localHost } from '../localhost.js';
+import { localHost, googleMapsAPI } from '../localhost.js';
+
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
-    const initialEvent = [{id: 0, start: null}]
+    const mapTile = 'https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue|label:S|40.702147,-74.015794&markers=color:green|label:G|40.711614,-74.012318&markers=color:red|label:C|40.718217,-73.998284&key=' + googleMapsAPI;
     const [selectedDate, setSelectedDate] = useState(today);
-    const [myEvents, setMyEvents] = useState(initialEvent);
+    const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
-    
+    const [eventTitle, setEventTitle] = useState();
+    const [refreshing, setRefreshing] = useState(false);
+
+
     let eventView = myEvents.filter(event => moment(event.start).format("YYYY-MM-DD") === moment(selectedDate).format("YYYY-MM-DD"));
-    
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+        getCalendarEvents();
+    }, []);
+
     useEffect(() => {
         getCalendarEvents();
     }, []);
 
     const getCalendarEvents = () => {
-        fetch(localHost+'/api/calendar')
+        fetch(localHost + '/api/calendar')
             .then(res => res.json())
             .then((dates) => {
                 setMyEvents(dates);
-                console.log(dates);                
+                console.log(dates);
             })
             .catch(err => console.log(err));
     };
 
     const handleEventDelete = () => {
-        fetch(localHost+'/api/event/delete/' + selectedEventId, {
+        fetch(localHost + '/api/event/delete/' + selectedEventId, {
             method: "DELETE"
-          }).then(res => {
+        }).then(res => {
             getCalendarEvents();
-          }).catch(err => {
+        }).catch(err => {
             console.log(err)
-          })
-          setModalVisible(false);
-          setSelectedEventId();
+        })
+        setModalVisible(false);
+        setSelectedEventId();
     }
 
-    const handleEventSelect = key => {
+    const handleEventSelect = (key, title, start, end) => {
         setModalVisible(true);
         setSelectedEventId(key);
+        setEventTitle(`${title}: ${moment(start).format('h:mm a')}-${moment(end).format('h:mm a')}`);
     };
 
     const handleCancelModal = () => {
@@ -53,8 +69,48 @@ const CalendarScreen = props => {
     };
 
     return (
-        <ScrollView>            
-            <EventModal modalVisible={modalVisible} cancelModal={handleCancelModal} deleteEvent={handleEventDelete} />
+        <View style={styles.container}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
+                <EventModal
+                    modalVisible={modalVisible}
+                    cancelModal={handleCancelModal}
+                    deleteEvent={handleEventDelete}
+                    title={eventTitle}
+                />
+
+                {eventView.length > 0 ? eventView.map((item, i) => (
+                    <EventCard
+                        key={item.id}
+                        title={item.title}
+                        start={moment(item.start).format('h:mm a')}
+                        end={moment(item.end).format('h:mm a')}
+                        status={item.eventStatus}
+                        image={`https://maps.googleapis.com/maps/api/staticmap?center=19132&zoom=12&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
+                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end)}
+                    />
+                )) : <Text style={styles.text}>No Events</Text>}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate })}
+                    >
+                        <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => props.navigation.navigate('Find Match', { selectedDate: selectedDate })}
+                    >
+                        <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
             <CalendarStrip
                 scrollable
                 calendarAnimation={{ type: 'sequence', duration: 30 }}
@@ -71,35 +127,15 @@ const CalendarScreen = props => {
                 selectedDate={today}
                 onDateSelected={date => setSelectedDate(date)}
             />
-            {eventView.length > 0 ? eventView.map((item, i) => (
-                <EventCard
-                    key={item.id}
-                    title={item.title}
-                    start={moment(item.start).format('hh:mm a')}
-                    end={moment(item.end).format('hh:mm a')}
-                    status={item.eventStatus}
-                    image='https://photoresources.wtatennis.com/photo-resources/2019/08/15/dbb59626-9254-4426-915e-57397b6d6635/tennis-origins-e1444901660593.jpg?width=1200&height=630'
-                    onSelectEvent={() => handleEventSelect(item.id)}
-                />
-            )) : <Text style={styles.text}>No Events</Text>}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => props.navigation.navigate('Availability', {selectedDate: selectedDate})}
-                >
-                    <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text style={[styles.baseText, styles.buttonText]}>Find Match</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'space-between',
+        flex: 1
+    },
     buttonContainer: {
         marginTop: 30,
         flexDirection: 'row',

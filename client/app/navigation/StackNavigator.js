@@ -13,6 +13,7 @@ import BottomTabNavigator from './TabNavigator';
 import InboxScreen from '../screens/InboxScreen';
 import UserSearchScreen from '../screens/UserSearchScreen';
 import SearchByDateScreen from '../screens/SearchByDateScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
 import SearchDatePropose from '../screens/SearchDatePropose';
 
@@ -32,9 +33,10 @@ const MainStackNavigator = ({navigation}) => {
     }}
     >
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="SignUp" component={SignUpScreen}/>
+      <Stack.Screen name="Inbox" component={InboxScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
-      {/* <Stack.Screen name="Calendar" component={CalendarScreen} />  */}
-      {/* <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/> */}
       <Stack.Screen name="Feed" component={FeedScreen} options={{
         headerLeft: () => (
           <View>
@@ -49,7 +51,6 @@ const MainStackNavigator = ({navigation}) => {
       }}/>
       {/* <Stack.Screen name="FindMatch" component={SearchByDateScreen} /> */}
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
     </Stack.Navigator>
     
   );
@@ -79,7 +80,8 @@ const AvailabilityStackNavigator = ({navigation}) => {
             />
           </View>
         ),
-      }}/>
+      }}/>      
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
     
   );
@@ -110,6 +112,9 @@ const CalendarStackNavigator = ({navigation}) => {
           </View>
         ),
       }}/>
+      <Stack.Screen name="Availability" component={AvailabilityScreen} />
+      <Stack.Screen name="Find Match" component={SearchByDateScreen} />
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
   );
 }
@@ -163,7 +168,7 @@ const MessengerStackNavigator = ({navigation}) => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Messenger" component={MessengerScreen} options={{
+      <Stack.Screen name="Inbox" component={InboxScreen} options={{
         headerLeft: () => (
           <View>
             <Icon
@@ -175,6 +180,8 @@ const MessengerStackNavigator = ({navigation}) => {
           </View>
         ),
       }}/>
+      <Stack.Screen name="Messenger" component={MessengerScreen} />
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
   );
 }

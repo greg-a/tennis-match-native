@@ -81,7 +81,8 @@ const InboxScreen = props => {
                     style={styles.sendMessage}
                     onPress={() => props.navigation.navigate('User Search', {
                         myUserId: myUserId,
-                        myUsername: myUsername
+                        myUsername: myUsername,
+                        searchType: 'message'
                     })}
                 >
                     <Text style={{color: 'grey'}}>Search for user</Text>
