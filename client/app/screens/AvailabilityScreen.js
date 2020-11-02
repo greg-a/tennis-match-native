@@ -6,6 +6,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
 import { playTypeData, courtLocationData, eventTypeData } from '../../data/ProfileData';
 import { localHost, googleMapsAPI } from '../localhost.js';
+import ModalItem from '../components/ModalItem';
 
 const locationQuery = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.03339786241084,-75.18151277315162&radius=20000&keyword=tennis%20court&key=' + googleMapsAPI;
 
@@ -55,22 +56,7 @@ const AvailabilityScreen = props => {
     };
 
     useEffect(() => {
-        fetch(locationQuery)
-        .then(res => res.json())
-        .then(courts => {
-            let courtSearch = [];
-            courts.results.forEach((court, i) => {
-                courtSearch.push({
-                    key: i,
-                    label: `${court.name} near ${court.vicinity}`,
-                    lat: court.geometry.location.lat,
-                    lng: court.geometry.location.lng
-                })
-            })
-            setCourtLocations(courtSearch)
-            console.log(courtSearch)
-        })
-        .catch(err => console.log(err))
+        getCourtData();
         //     console.log('eventTitle: ' + eventTitle);
         //     console.log('eventLocation: ' + eventLocation);
         //     console.log('newDate: ' + newDate);
@@ -81,6 +67,25 @@ const AvailabilityScreen = props => {
         //     console.log('conEndTime: ' + conEndTime);
         //     console.log('-------------');
     }, []);
+
+    const getCourtData = () => {
+        fetch(locationQuery)
+        .then(res => res.json())
+        .then(courts => {
+            let courtSearch = [{key: 1, label: 'Any Court', component: <ModalItem title='Any Court' subtitle='near Philadelphia' />}];
+            courts.results.forEach((court, i) => {
+                courtSearch.push({
+                    key: i + 2,
+                    label: court.name,
+                    lat: court.geometry.location.lat,
+                    lng: court.geometry.location.lng,
+                    component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
+                })
+            })
+            setCourtLocations(courtSearch)
+        })
+        .catch(err => console.log(err))
+    };
 
     const convertDatetime = (datetime, type) => {
         if (type === 'date') {
@@ -150,7 +155,8 @@ const AvailabilityScreen = props => {
             <ModalSelector
                 data={playTypeData}
                 initValue='Play Type'
-                onChange={(option) => setEventTitle(option.label)}>
+                onChange={(option) => setEventTitle(option.label)}
+                >
                 <TextInput
                     style={styles.input}
                     editable={false}
@@ -169,12 +175,13 @@ const AvailabilityScreen = props => {
                     value={eventLocation.label}
                     placeholder={'Court Location'}
                     placeholderTextColor={'lightgrey'}
+                    multiline={true}
                 />
             </ModalSelector>
             <View>
                 <TouchableWithoutFeedback onPress={showDatePicker}>
                     <View style={styles.viewInput}>
-                        {conDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
+                        {newDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
                     </View>
                 </TouchableWithoutFeedback>
                 <DateTimePickerModal

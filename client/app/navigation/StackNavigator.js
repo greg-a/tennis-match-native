@@ -111,6 +111,7 @@ const CalendarStackNavigator = ({navigation}) => {
       }}/>
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Find Match" component={SearchByDateScreen} />
+      <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
   );
 }
