@@ -5,7 +5,7 @@ import { MainStackNavigator, AvailabilityStackNavigator, FeedStackNavigator, Cal
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FeedScreen } from "./../screens/FeedScreen";
 import { AvailabilityScreen } from "./../screens/AvailabilityScreen";
-import { CalendarScreen } from "./../screens/CalendarScreen";
+// import { CalendarScreen } from "./../screens/CalendarScreen";
 
 const Tabs = createBottomTabNavigator();
 

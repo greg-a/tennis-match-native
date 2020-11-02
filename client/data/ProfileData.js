@@ -358,6 +358,38 @@ export const courtLocationData = [
     { key: 7, label: 'Seger Park' },
 ];
 
+export const courtLocationNoAnyData = [
+    { key: 2, label: 'Fairmount Park' },
+    { key: 3, label: 'Temple' },
+    { key: 4, label: 'FDR Park' },
+    { key: 5, label: 'Chaminoux' },
+    { key: 6, label: 'Allens Lane Park' },
+    { key: 7, label: 'Seger Park' },
+];
+
+export const minuteArray = [
+    {
+        key: 0,
+        value: '00',
+        label: ':00'
+    },
+    {
+        key: 1,
+        value: '15',
+        label: ':15'
+    },
+    {
+        key: 2,
+        value: '30',
+        label: ':30'
+    },
+    {
+        key: 3,
+        value: '45',
+        label: ':45'
+    },
+];
+
 export const Messages = [
     {
         id: 1,
