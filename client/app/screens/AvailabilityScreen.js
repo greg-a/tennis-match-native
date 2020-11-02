@@ -21,7 +21,7 @@ const AvailabilityScreen = props => {
     const [conStartTime, setConStartTime] = React.useState("");
     const [endTime, setEndTime] = React.useState("");
     const [conEndTime, setConEndTime] = React.useState("");
-    const [recipientId, setRecipientId] = React.useState("");
+    const [recipientId, setRecipientId] = React.useState(null);
     const [recipientUsername, setRecipientUsername] = React.useState("Send Invite");
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
@@ -47,7 +47,7 @@ const AvailabilityScreen = props => {
                 start: moment(newStart).format(),
                 end: moment(newEnd).format(),
                 eventStatus: eventType === "public" ? "available" : "propose",
-                location: eventLocation,
+                location: eventLocation.label,
                 confirmedByUser: recipientId
             })
         }).then(res => {
@@ -72,7 +72,7 @@ const AvailabilityScreen = props => {
         fetch(locationQuery)
         .then(res => res.json())
         .then(courts => {
-            let courtSearch = [{key: 1, label: 'Any Court', component: <ModalItem title='Any Court' subtitle='near Philadelphia' />}];
+        let courtSearch = [{ key: 1, label: 'Any Court', component: <ModalItem title='Any Court' subtitle='near Philadelphia' />}];
             courts.results.forEach((court, i) => {
                 courtSearch.push({
                     key: i + 2,
