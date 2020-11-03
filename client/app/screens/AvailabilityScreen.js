@@ -22,7 +22,7 @@ const AvailabilityScreen = props => {
     const [endTime, setEndTime] = React.useState("");
     const [conEndTime, setConEndTime] = React.useState("");
     const [recipientId, setRecipientId] = React.useState(null);
-    const [recipientUsername, setRecipientUsername] = React.useState("Send Invite");
+    const [recipientUsername, setRecipientUsername] = React.useState("");
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
@@ -35,8 +35,9 @@ const AvailabilityScreen = props => {
 
 
     const handleFormSubmit = () => {
-        const newStart = conDate + " " + conStartTime;
-        const newEnd = conDate + " " + conEndTime;
+        const newStart = convertEventTime(startTime);
+        const newEnd = convertEventTime(endTime);
+        console.log("new start: " + newStart)
         fetch(localHost + "/api/calendar", {
             method: "POST",
             headers: {
@@ -44,9 +45,9 @@ const AvailabilityScreen = props => {
             },
             body: JSON.stringify({
                 title: eventTitle,
-                start: moment(newStart).format(),
-                end: moment(newEnd).format(),
-                eventStatus: eventType === "public" ? "available" : "propose",
+                start: newStart,
+                end: newEnd,
+                eventStatus: recipientId === null ? "available" : "propose",
                 location: eventLocation.label,
                 confirmedByUser: recipientId
             })
@@ -57,34 +58,48 @@ const AvailabilityScreen = props => {
 
     useEffect(() => {
         getCourtData();
-        //     console.log('eventTitle: ' + eventTitle);
-        //     console.log('eventLocation: ' + eventLocation);
-        //     console.log('newDate: ' + newDate);
-        //     console.log('conDate: ' + conDate);
-        //     console.log('startTime: ' + startTime);
-        //     console.log('conStartTime: ' + conStartTime);
-        //     console.log('endTime: ' + endTime);
-        //     console.log('conEndTime: ' + conEndTime);
-        //     console.log('-------------');
+        // console.log('eventTitle: ' + eventTitle);
+        // console.log('eventLocation: ' + eventLocation);
+        // console.log('newDate: ' + newDate);
+        // console.log('conDate: ' + conDate);
+        // console.log('startTime: ' + startTime);
+        // console.log('conStartTime: ' + conStartTime);
+        // console.log('endTime: ' + endTime);
+        // console.log('conEndTime: ' + conEndTime);
+        // console.log('-------------');
     }, []);
 
     const getCourtData = () => {
         fetch(locationQuery)
-        .then(res => res.json())
-        .then(courts => {
-        let courtSearch = [{ key: 1, label: 'Any Court', component: <ModalItem title='Any Court' subtitle='near Philadelphia' />}];
-            courts.results.forEach((court, i) => {
-                courtSearch.push({
-                    key: i + 2,
-                    label: court.name,
-                    lat: court.geometry.location.lat,
-                    lng: court.geometry.location.lng,
-                    component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
+            .then(res => res.json())
+            .then(courts => {
+                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' /> }];
+                courts.results.forEach((court, i) => {
+                    courtSearch.push({
+                        key: i + 2,
+                        label: court.name,
+                        lat: court.geometry.location.lat,
+                        lng: court.geometry.location.lng,
+                        component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
+                    })
                 })
+                setCourtLocations(courtSearch)
             })
-            setCourtLocations(courtSearch)
-        })
-        .catch(err => console.log(err))
+            .catch(err => console.log(err))
+    };
+
+    const convertEventTime = time => {
+        let currentYear = moment(newDate).format().substring(0, 4);
+
+        let currentMonth = moment(newDate).format().substring(5, 7);
+        let currentMonthAdj = parseInt(currentMonth) - 1;
+
+        let currentDay = moment(newDate).format().substring(8, 10);
+        let currentHour = parseInt(moment(time).format('HH'));
+        let currentMinute = parseInt(moment(time).format('mm'));
+        let convertedEventTime = new Date(parseInt(currentYear), currentMonthAdj, parseInt(currentDay), currentHour, currentMinute);
+        console.log(convertedEventTime);
+        return convertedEventTime;
     };
 
     const convertDatetime = (datetime, type) => {
@@ -156,7 +171,7 @@ const AvailabilityScreen = props => {
                 data={playTypeData}
                 initValue='Play Type'
                 onChange={(option) => setEventTitle(option.label)}
-                >
+            >
                 <TextInput
                     style={styles.input}
                     editable={false}
@@ -236,14 +251,16 @@ const AvailabilityScreen = props => {
                     />
                 </ModalSelector>
             </View>
-            <View style={styles.input}>
-                <Text
-                    style={{ color: recipientId === '' ? 'lightgrey' : 'black', fontSize: 16 }}
-                    onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
-                >
-                    {recipientUsername}
-                </Text>
-            </View>
+            {eventType === 'Private' ?
+                <View style={styles.input}>
+                    <Text
+                        style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16 }}
+                        onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
+                    >
+                        {recipientUsername === '' ? 'Find User' : recipientUsername}
+                    </Text>
+                </View> : null
+            }
             <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                 <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
             </TouchableOpacity>
