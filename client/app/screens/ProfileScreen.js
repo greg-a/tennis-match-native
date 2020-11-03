@@ -14,23 +14,30 @@ const ProfileScreen = props => {
         city: '',
         state: '',
         zipcode: '',
-        skilllevel: '',
+        skilllevel: 0,
         skillLabel: ''
     });
 
+    function skillConversion(skillLevel) {
+        if (skillLevel === 1) {
+            return "1.0-1.5 - New Player";
+        } else if (skillLevel === 2) {
+            return "2.0 - Beginner";
+        } else if (skillLevel === 3) {
+            return "2.5 - Beginner +";
+        } else if (skillLevel === 4) {
+            return "3.0 - Beginner-Intermediate";
+        } else if (skillLevel === 5) {
+            return "3.5 - Intermediate";
+        } else if (skillLevel === 6) {
+            return "4.0 - Intermediate-Advanced";
+        } else if (skillLevel === 7) {
+            return "4.5 - Advanced";
+        }
+    };
+
     useEffect(() => {
-        fetch(localHost+'/api/profile')
-            .then((response) => response.json())
-            .then((res) => setProfileUpdate({
-                ...profileUpdate,
-                firstname: res.firstname,
-                lastname: res.lastname,
-                city: res.city,
-                state: res.state,
-                zipcode: res.zipcode,
-                skilllevel: res.skilllevel.toString()
-            }))
-            .catch((error) => console.error(error))
+        getProfileInfo();
     }, []);
 
     const handleProfileUpdate = () => {
@@ -70,14 +77,21 @@ const ProfileScreen = props => {
         });
     }, [props.navigation, profileUpdate]);
 
-    getProfileInfo = () => {
-        fetch(localHost+"/api/profile")
-            .then(res => res.json())
-            .then((profileInfo) => {
-                console.log(profileInfo)
-            })
-            .catch(err => console.log(err));
-    }
+    const getProfileInfo = () => {
+        fetch(localHost+'/api/profile')
+            .then((response) => response.json())
+            .then((res) => setProfileUpdate({
+                ...profileUpdate,
+                firstname: res.firstname,
+                lastname: res.lastname,
+                city: res.city,
+                state: res.state,
+                zipcode: res.zipcode,
+                skilllevel: res.skilllevel,
+                skillLabel: skillConversion(res.skilllevel)
+            }))
+            .catch((error) => console.error(error))
+    };
 
     return (
         <ScrollView>
