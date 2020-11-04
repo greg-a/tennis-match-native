@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList} from 'react-native';
 import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     sendButton: {
-        backgroundColor: 'green',
+        backgroundColor: '#6CE631',
         padding: 5,
         justifyContent: 'center',
         alignItems: 'center',

@@ -68,15 +68,6 @@ const InboxScreen = props => {
                 keyExtractor={item => item.id.toString()}
             />
             <View style={styles.sendMessageContainer}>
-                {/* <TextInput
-                    style={styles.sendMessage}
-                    placeholder="Search for user"
-                    multiline={true}
-                    onFocus={() => props.navigation.navigate('User Search', {
-                        myUserId: myUserId,
-                        myUsername: myUsername
-                    })}
-                /> */}
                 <TouchableOpacity
                     style={styles.sendMessage}
                     onPress={() => props.navigation.navigate('User Search', {
@@ -85,7 +76,7 @@ const InboxScreen = props => {
                         searchType: 'message'
                     })}
                 >
-                    <Text style={{color: 'grey'}}>Search for user</Text>
+                    <Text style={{ color: 'grey' }}>Search for user</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -132,14 +123,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 10,
         justifyContent: 'space-around'
-    },
-    sendButton: {
-        backgroundColor: 'green',
-        padding: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 30,
-        width: 50
     }
 });
 

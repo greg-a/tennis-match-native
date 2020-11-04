@@ -49,6 +49,8 @@ const AvailabilityScreen = props => {
                 end: newEnd,
                 eventStatus: recipientId === null ? "available" : "propose",
                 location: eventLocation.label,
+                latitude: eventLocation.lat,
+                longitude: eventLocation.lng,
                 confirmedByUser: recipientId
             })
         }).then(res => {

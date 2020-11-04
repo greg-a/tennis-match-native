@@ -14,7 +14,6 @@ const wait = (timeout) => {
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
-    const mapTile = 'https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue|label:S|40.702147,-74.015794&markers=color:green|label:G|40.711614,-74.012318&markers=color:red|label:C|40.718217,-73.998284&key=' + googleMapsAPI;
     const [selectedDate, setSelectedDate] = useState(today);
     const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -92,7 +91,8 @@ const CalendarScreen = props => {
                         start={moment(item.start).format('h:mm a')}
                         end={moment(item.end).format('h:mm a')}
                         status={item.eventStatus}
-                        image={`https://maps.googleapis.com/maps/api/staticmap?center=19132&zoom=12&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
+                        location={item.location}
+                        image={`https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=14&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
                         onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end)}
                     />
                 )) : <Text style={styles.text}>No Events</Text>}

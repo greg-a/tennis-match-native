@@ -42,7 +42,6 @@ module.exports = function (app) {
                 statusString: "noPassOrUser"
             });
         }
-
     });
 
     //authenticate user logged in w react router

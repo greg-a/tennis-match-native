@@ -34,7 +34,7 @@ const UserSearchScreen = props => {
         <Item
             username={`@${item.username}`}
             name={`${item.firstname === null ? '' : item.firstname} ${item.lastname === null ? '' : item.lastname}`}
-            onPress={searchType === 'message' ? () => props.navigation.navigate('Messenger', {
+            onPress={searchType === 'message' ? () => props.navigation.replace('Messenger', {
                 recipientId: item.id,
                 recipientUsername: item.username,
                 myUserId: myUserId,
