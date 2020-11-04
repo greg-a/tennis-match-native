@@ -27,11 +27,18 @@ io.on('connection', (socket) => {
       io.in(user.room).emit("active", io.sockets.adapter.rooms[room].length);
     }
 
+    socket.on('disconnecting', () => {
+      const rooms = Object.keys(socket.rooms);
+      // the rooms array contains at least the socket ID
+      console.log("disconnecting: " + rooms)
+    });
+
     //updates number of users connected to room when someone leaves
     socket.on("disconnect", () => {
       if (io.sockets.adapter.rooms[room]) {
         io.in(user.room).emit("active", io.sockets.adapter.rooms[room].length);
       }
+      console.log("user disconnected")
     })
   });
 
@@ -57,10 +64,6 @@ io.on('connection', (socket) => {
     socket.to(userid).emit("output", "update");
     console.log("new match notification!", userid)
   });
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected")
-  })
 
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList} from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
@@ -20,7 +20,9 @@ const MessengerScreen = props => {
     const recipientUsername = props.route.params.recipientUsername;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
+    const updateInbox = props.route.params.getMessages;
     const thisRoom = createRoom(myUserId, recipientId);
+    const [recId, updateRecId] = useState(recipientId);
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
 
@@ -45,20 +47,28 @@ const MessengerScreen = props => {
     };
 
     const connectToSocket = () => {
+        socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
+
         socket.on("output", data => {
             data.createdAt = new Date();
             data.id = new Date();
             console.log("socket data: " + JSON.stringify(data));
-            setMessages(oldMessages => [data, ...oldMessages]);
+            if (data.senderId == recipientId || data.recipientId == recipientId) {
+                setMessages(oldMessages => [data, ...oldMessages]);
+                updateInbox();
+            };
         });
-        socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
+
+        return () => {
+            socket.disconnect()
+        };
     };
 
     const handleMessageSend = () => {
         if (newMessage !== '') {
             socket.emit("input", {
                 User: {
-                    username: myUserId
+                    username: myUsername
                 },
                 message: newMessage,
                 room: thisRoom,
