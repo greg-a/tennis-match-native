@@ -33,7 +33,6 @@ const LoginScreen = props => {
         })
             .then(res => res.json())
             .then(res => {
-                console.log("client login feedback: " + res.statusString)
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
                     props.navigation.replace('Feed')
