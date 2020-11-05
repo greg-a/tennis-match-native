@@ -62,11 +62,18 @@ const ProfileScreen = props => {
                 Alert.alert(
                     "Success!",
                     "Your profile was updated",
-                      [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+                      [{ text: "OK" }]
                   );
 
             })
-            .catch(err => console.log(JSON.stringify(err)));
+            .catch(err => {
+                console.log(JSON.stringify(err));
+                Alert.alert(
+                    "Uh oh",
+                    "Something went wrong. Try again.",
+                      [{ text: "OK" }]
+                  );
+            });
     };
 
     useLayoutEffect(() => {

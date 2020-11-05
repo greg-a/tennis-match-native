@@ -1,15 +1,19 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, Button } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, ScrollView } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import moment from "moment";
-import { playTypeData, courtLocationData, eventTypeData } from '../../data/ProfileData';
+import { playTypeData, eventTypeData } from '../../data/ProfileData';
 import { localHost, googleMapsAPI } from '../localhost.js';
 import ModalItem from '../components/ModalItem';
 
 
 const AvailabilityScreen = props => {
+    eventTypeData.forEach(item => item.component = <ModalItem title={item.label} />);
+    playTypeData.forEach(item => item.component = <ModalItem title={item.label} />);
+    const initialTime = new Date();
+    initialTime.setHours(initialTime.getHours() + 1);
     const [eventTitle, setEventTitle] = React.useState("");
     const [eventType, setEventType] = React.useState("");
     const [eventLocation, setEventLocation] = React.useState("");
@@ -24,13 +28,15 @@ const AvailabilityScreen = props => {
     const [recipientUsername, setRecipientUsername] = React.useState("");
     const [currentLat, setCurrentLat] = React.useState("39.953");
     const [currentLng, setCurrentLng] = React.useState("-75.166");
-    
+    const [userInstructions, setUserInstructions] = React.useState('Select event details');
+    const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
+
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-    
+
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = React.useState(false);
-    
+
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
-    
+
     const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLat},${currentLng}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
@@ -128,10 +134,10 @@ const AvailabilityScreen = props => {
         setDatePickerVisibility(false);
     };
     const handleConfirmDate = (date) => {
+        hideDatePicker();
         setNewDate(date);
         convertDatetime(date, 'date');
         console.log("new date: ", date);
-        hideDatePicker();
     };
 
     const showStartTimePicker = () => {
@@ -141,10 +147,11 @@ const AvailabilityScreen = props => {
         setStartTimePickerVisibility(false);
     };
     const handleConfirmStartTime = (time) => {
+        hideStartTimePicker();
         setStartTime(time);
+        setInitialEndTime(time);
         convertDatetime(time, 'startTime');
         console.log("new start: ", time);
-        hideStartTimePicker();
     };
 
     const showEndTimePicker = () => {
@@ -154,10 +161,10 @@ const AvailabilityScreen = props => {
         setEndTimePickerVisibility(false);
     };
     const handleConfirmEndTime = (time) => {
+        hideEndTimePicker();
         setEndTime(time);
         convertDatetime(time, 'endTime');
         console.log("new end: ", time);
-        hideEndTimePicker();
     };
 
     const setUserInfo = (id, username) => {
@@ -166,108 +173,116 @@ const AvailabilityScreen = props => {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.instructions}>
-                <Text style={[styles.baseText, styles.instructionsText]}>Create an event that others can find</Text>
-            </View>
-            <ModalSelector
-                data={playTypeData}
-                initValue='Play Type'
-                onChange={(option) => setEventTitle(option.label)}
-            >
-                <TextInput
-                    style={styles.input}
-                    editable={false}
-                    value={eventTitle}
-                    placeholder={'Play Type'}
-                    placeholderTextColor={'lightgrey'}
-                />
-            </ModalSelector>
-            <ModalSelector
-                data={courtLocations}
-                initValue='Court Location'
-                onChange={(option) => setEventLocation(option)}>
-                <TextInput
-                    style={styles.input}
-                    editable={false}
-                    value={eventLocation.label}
-                    placeholder={'Court Location'}
-                    placeholderTextColor={'lightgrey'}
-                    multiline={true}
-                />
-            </ModalSelector>
-            <View>
-                <TouchableWithoutFeedback onPress={showDatePicker}>
-                    <View style={styles.viewInput}>
-                        {newDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
-                    </View>
-                </TouchableWithoutFeedback>
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleConfirmDate}
-                    onCancel={hideDatePicker}
-                    textColor={isDarkMode ? 'white' : 'black'}
-                />
-            </View>
-
-            <View>
-                <TouchableWithoutFeedback onPress={showStartTimePicker}>
-                    <View style={styles.viewInput}>
-                        {startTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(startTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Start Time</Text>}
-                    </View>
-                </TouchableWithoutFeedback>
-                <DateTimePickerModal
-                    isVisible={isStartTimePickerVisible}
-                    mode="time"
-                    onConfirm={handleConfirmStartTime}
-                    onCancel={hideStartTimePicker}
-                    textColor={isDarkMode ? 'white' : 'black'}
-                />
-            </View>
-
-            <View>
-                <TouchableWithoutFeedback onPress={showEndTimePicker}>
-                    <View style={styles.viewInput}>
-                        {endTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(endTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>End Time</Text>}
-                    </View>
-                </TouchableWithoutFeedback>
-                <DateTimePickerModal
-                    isVisible={isEndTimePickerVisible}
-                    mode="time"
-                    onConfirm={handleConfirmEndTime}
-                    onCancel={hideEndTimePicker}
-                    textColor={isDarkMode ? 'white' : 'black'}
-                />
-            </View>
-            <View>
+        <ScrollView>
+            <View style={styles.container}>
+                <View style={styles.instructions}>
+    <Text style={[styles.baseText, styles.instructionsText]}>{userInstructions}</Text>
+                </View>
                 <ModalSelector
-                    data={eventTypeData}
-                    initValue='Event Type'
-                    onChange={(option) => setEventType(option.label)}>
+                    data={playTypeData}
+                    initValue='Play Type'
+                    onChange={(option) => setEventTitle(option.label)}
+                >
                     <TextInput
                         style={styles.input}
                         editable={false}
-                        value={eventType}
-                        placeholder={'Event Type'}
-                        placeholderTextColor={'lightgrey'}
+                        value={eventTitle}
+                        placeholder={'Play Type'}
+                        placeholderTextColor='grey'
                     />
                 </ModalSelector>
+                <ModalSelector
+                    data={courtLocations}
+                    initValue='Court Location'
+                    onChange={(option) => setEventLocation(option)}>
+                    <TextInput
+                        style={styles.input}
+                        editable={false}
+                        value={eventLocation.label}
+                        placeholder={'Court Location'}
+                        placeholderTextColor='grey'
+                        multiline={true}
+                    />
+                </ModalSelector>
+                <View>
+                    <TouchableWithoutFeedback onPress={showDatePicker}>
+                        <View style={styles.input}>
+                            {newDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleConfirmDate}
+                        onCancel={hideDatePicker}
+                        textColor={isDarkMode ? 'white' : 'black'}
+                        date={props.route.params ? new Date(props.route.params.selectedDate) : new Date()}
+                    />
+                </View>
+
+                <View>
+                    <TouchableWithoutFeedback onPress={showStartTimePicker}>
+                        <View style={styles.input}>
+                            {startTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(startTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Start Time</Text>}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <DateTimePickerModal
+                        isVisible={isStartTimePickerVisible}
+                        mode="time"
+                        onConfirm={handleConfirmStartTime}
+                        onCancel={hideStartTimePicker}
+                        textColor={isDarkMode ? 'white' : 'black'}
+                        date={new Date(initialTime.setMinutes('00'))}
+                    />
+                </View>
+
+                <View>
+                    <TouchableWithoutFeedback onPress={showEndTimePicker}>
+                        <View style={styles.input}>
+                            {endTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(endTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>End Time</Text>}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <DateTimePickerModal
+                        isVisible={isEndTimePickerVisible}
+                        mode="time"
+                        onConfirm={handleConfirmEndTime}
+                        onCancel={hideEndTimePicker}
+                        textColor={isDarkMode ? 'white' : 'black'}
+                        date={initialEndTime}
+                    />
+                </View>
+                <View>
+                    <ModalSelector
+                        data={eventTypeData}
+                        initValue='Event Type'
+                        onChange={(option) => {
+                            setEventType(option.label);
+                            setUserInstructions(option.instructions);
+                            }}>
+                        <TextInput
+                            style={styles.input}
+                            editable={false}
+                            value={eventType}
+                            placeholder={'Event Type'}
+                            placeholderTextColor='grey'
+                        />
+                    </ModalSelector>
+                </View>
+                {eventType === 'Private' ?
+                    <View style={styles.input}>
+                        <Text
+                            style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16 }}
+                            onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
+                        >
+                            {recipientUsername === '' ? 'Find User' : recipientUsername}
+                        </Text>
+                    </View> : null
+                }
+                <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
+                    <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
+                </TouchableOpacity>
             </View>
-            {eventType === 'Private' ?
-                <View style={styles.input}>
-                    <Text
-                        style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16 }}
-                        onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
-                    >
-                        {recipientUsername === '' ? 'Find User' : recipientUsername}
-                    </Text>
-                </View> : null
-            }
-            <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
-                <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
-            </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 
 };
@@ -284,19 +299,19 @@ const styles = StyleSheet.create({
     input: {
         height: 60,
         width: 180,
-        borderColor: 'lightgrey',
-        borderWidth: 1,
-        borderRadius: 5,
+        borderBottomColor: 'lightgrey',
+        borderBottomWidth: 1,
         fontSize: 16,
         fontWeight: '300',
-        // marginBottom: 20,
+        marginTop: 10,
         paddingLeft: 10,
         color: 'black',
         justifyContent: 'center'
     },
     instructions: {
         width: '80%',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 20
     },
     instructionsText: {
         textAlign: 'center',
@@ -306,23 +321,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 10
+        marginTop: 25
     },
     submitButtonText: {
         fontSize: 16,
-        color: 'white',
-    },
-    viewInput: {
-        height: 60,
-        width: 180,
-        borderColor: 'lightgrey',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingLeft: 10,
-        justifyContent: 'center'
+        color: 'white'
     },
     viewInputText: {
-        color: 'lightgrey'
+        color: 'grey'
     },
     viewInputText2: {
         color: 'black',
