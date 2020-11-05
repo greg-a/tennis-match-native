@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { ScrollView, View, StyleSheet, TextInput, Text, Button } from 'react-native';
+import { ScrollView, View, StyleSheet, TextInput, Text, Alert } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost } from '../localhost.js';
@@ -59,6 +59,11 @@ const ProfileScreen = props => {
         })
             .then(res => {
                 console.log("profile updated");
+                Alert.alert(
+                    "Success!",
+                    "Your profile was updated",
+                      [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+                  );
 
             })
             .catch(err => console.log(JSON.stringify(err)));
