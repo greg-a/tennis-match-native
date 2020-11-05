@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, ScrollView, Alert, Button } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -7,6 +7,7 @@ import moment from "moment";
 import { playTypeData, eventTypeData } from '../../data/ProfileData';
 import { localHost, googleMapsAPI } from '../localhost.js';
 import ModalItem from '../components/ModalItem';
+import LocationPicker from '../components/LocationPicker';
 
 
 const AvailabilityScreen = props => {
@@ -30,6 +31,7 @@ const AvailabilityScreen = props => {
     const [currentLng, setCurrentLng] = React.useState("-75.166");
     const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
     const [userInstructions, setUserInstructions] = React.useState("Fill out event details");
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
@@ -42,7 +44,7 @@ const AvailabilityScreen = props => {
     const isDarkMode = colorScheme === 'dark';
 
     const formReset = () => {
-        setUserInstructions('Fill out event details');
+        setUserInstructions("Fill out event details");
         setEventTitle("");
         setEventLocation("");
         setNewDate("");
@@ -218,6 +220,10 @@ const AvailabilityScreen = props => {
 
     return (
         <ScrollView>
+            <LocationPicker 
+            modalVisible={modalVisible}
+            cancelModal={() => setModalVisible(false)} 
+            />
             <View style={styles.container}>
                 <View style={styles.instructions}>
                     <Text style={[styles.baseText, styles.instructionsText]}>{userInstructions}</Text>
@@ -248,6 +254,9 @@ const AvailabilityScreen = props => {
                         multiline={true}
                     />
                 </ModalSelector>
+                <View style={styles.locationButton}>
+                <Button title='Set Location' onPress={() => setModalVisible(true)} />
+                </View>
                 <View>
                     <TouchableWithoutFeedback onPress={showDatePicker}>
                         <View style={styles.input}>
@@ -378,6 +387,9 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: "300"
     },
+    locationButton: {
+        marginTop: 10
+    }
 });
 
 export default AvailabilityScreen;
