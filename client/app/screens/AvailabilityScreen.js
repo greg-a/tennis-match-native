@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, ScrollView, Alert } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -10,7 +10,7 @@ import ModalItem from '../components/ModalItem';
 
 
 const AvailabilityScreen = props => {
-    eventTypeData.forEach(item => item.component = <ModalItem title={item.label} />);
+    eventTypeData.forEach(item => item.component = <ModalItem title={item.label} subtitle={item.descripton} />);
     playTypeData.forEach(item => item.component = <ModalItem title={item.label} />);
     const initialTime = new Date();
     initialTime.setHours(initialTime.getHours() + 1);
@@ -28,8 +28,8 @@ const AvailabilityScreen = props => {
     const [recipientUsername, setRecipientUsername] = React.useState("");
     const [currentLat, setCurrentLat] = React.useState("39.953");
     const [currentLng, setCurrentLng] = React.useState("-75.166");
-    const [userInstructions, setUserInstructions] = React.useState('Select event details');
     const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
+    const [userInstructions, setUserInstructions] = React.useState("Fill out event details");
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
@@ -40,6 +40,22 @@ const AvailabilityScreen = props => {
     const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLat},${currentLng}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
+
+    const formReset = () => {
+        setUserInstructions('Fill out event details');
+        setEventTitle("");
+        setEventLocation("");
+        setNewDate("");
+        setConDate("");
+        setStartTime("");
+        setConStartTime("");
+        setEndTime("");
+        setConEndTime("");
+        setRecipientId(null);
+        setRecipientUsername("");
+        setInitialEndTime(initialTime);
+        setEventType("");
+    };
 
     const handleFormSubmit = () => {
         const newStart = convertEventTime(startTime);
@@ -60,13 +76,37 @@ const AvailabilityScreen = props => {
                 longitude: eventLocation.lng,
                 confirmedByUser: recipientId
             })
-        }).then(res => {
-            res.json();
-            if (props.route.params) {
-                props.route.params.updateCalendar();
-                props.navigation.goBack();
-            }
-        }).catch(err => console.log(err))
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.statusString === "eventCreated") {
+                    if (props.route.params) {
+                        props.route.params.updateCalendar();
+                        props.navigation.goBack();
+                    }
+                    else {
+                        Alert.alert(
+                            "Success!",
+                            "Your availability was posted",
+                            [{ text: "OK" }]
+                        );
+                        formReset();
+                    }
+                }
+                else {
+                    Alert.alert(
+                        "Uh oh",
+                        "Something went wrong. Make sure all fields are selected.",
+                        [{ text: "OK" }]
+                    );
+                }
+            }).catch(err => {
+                Alert.alert(
+                    "Uh oh",
+                    "Something went wrong. Please Try Again.",
+                    [{ text: "OK" }]
+                );
+            })
     };
 
     useEffect(() => {
@@ -267,13 +307,13 @@ const AvailabilityScreen = props => {
                             style={styles.input}
                             editable={false}
                             value={eventType}
-                            placeholder={'Event Type'}
+                            placeholder={'Visibility'}
                             placeholderTextColor='grey'
                         />
                     </ModalSelector>
                 </View>
-                {eventType === 'Private' ?
-                    <View style={styles.input}>
+                {eventType === 'Invite Only' ?
+                    <View style={[styles.input]}>
                         <Text
                             style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16 }}
                             onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
