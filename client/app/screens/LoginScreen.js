@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
@@ -12,6 +12,8 @@ const LoginScreen = props => {
 
     const [loginUsername, setLoginUsername] = React.useState("");
     const [loginPassword, setLoginPassword] = React.useState("");
+    const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
+    const [warningText, setWarningText] = React.useState(false);
 
     const handleSignIn = () => {
 
@@ -31,10 +33,19 @@ const LoginScreen = props => {
         })
             .then(res => res.json())
             .then(res => {
+                console.log("client login feedback: " + res.statusString)
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
                     props.navigation.replace('Feed')
-                };
+                }
+                else if (res.statusString === 'noPassOrUser') {
+                    setUserInstructions("Missing username or password");
+                    setWarningText(true);
+                }
+                else if (res.statusString === 'wrongPassOrUser') {
+                    setUserInstructions('Incorrect username or password');
+                    setWarningText(true);
+                }
             })
             .catch(err => console.log(err));
     }
@@ -44,7 +55,7 @@ const LoginScreen = props => {
         return <AppLoading />;
     } else {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.topView}>
                     <Image
                         resizeMode="contain"
@@ -58,8 +69,8 @@ const LoginScreen = props => {
                     <Text style={[styles.baseText, styles.loginText]}>
                         Login
                     </Text>
-                    <Text style={[styles.baseText, styles.instructionText]}>
-                        Please enter your details
+                    <Text style={[warningText ? styles.warningText : styles.baseText, styles.instructionText]}>
+                        {userInstructions}
                     </Text>
                     <TextInput
                         style={styles.input}
@@ -89,7 +100,7 @@ const LoginScreen = props => {
                         <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 };
@@ -99,14 +110,19 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16
     },
+    warningText: {
+        color: '#d30000',
+        fontSize: 16
+    },
     bottomView: {
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 50
     },
     container: {
         flex: 1,
         backgroundColor: 'rgb(108,230,49)',
-        alignItems: 'center',
-        justifyContent: 'space-around'
+        // alignItems: 'center',
+        // justifyContent: 'space-around'
     },
     input: {
         height: 40,
@@ -131,7 +147,8 @@ const styles = StyleSheet.create({
         // backgroundColor: 'blue'
     },
     middleView: {
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 30
     },
     signInButton: {
         paddingVertical: 15,
@@ -158,7 +175,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 60,
         alignItems: 'center',
-        marginTop: 25
+        marginTop: 50
     }
 });
 

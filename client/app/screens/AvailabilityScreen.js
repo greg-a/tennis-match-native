@@ -8,7 +8,6 @@ import { playTypeData, courtLocationData, eventTypeData } from '../../data/Profi
 import { localHost, googleMapsAPI } from '../localhost.js';
 import ModalItem from '../components/ModalItem';
 
-const locationQuery = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.03339786241084,-75.18151277315162&radius=20000&keyword=tennis%20court&key=' + googleMapsAPI;
 
 const AvailabilityScreen = props => {
     const [eventTitle, setEventTitle] = React.useState("");
@@ -23,16 +22,18 @@ const AvailabilityScreen = props => {
     const [conEndTime, setConEndTime] = React.useState("");
     const [recipientId, setRecipientId] = React.useState(null);
     const [recipientUsername, setRecipientUsername] = React.useState("");
-
+    const [currentLat, setCurrentLat] = React.useState("39.953");
+    const [currentLng, setCurrentLng] = React.useState("-75.166");
+    
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-
+    
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = React.useState(false);
-
+    
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
-
+    
+    const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLat},${currentLng}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
-
 
     const handleFormSubmit = () => {
         const newStart = convertEventTime(startTime);
@@ -75,7 +76,7 @@ const AvailabilityScreen = props => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' /> }];
+                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' />, lat: currentLat, lng: currentLng }];
                 courts.results.forEach((court, i) => {
                     courtSearch.push({
                         key: i + 2,

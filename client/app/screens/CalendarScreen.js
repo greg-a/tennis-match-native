@@ -91,9 +91,9 @@ const CalendarScreen = props => {
                         start={moment(item.start).format('h:mm a')}
                         end={moment(item.end).format('h:mm a')}
                         status={item.eventStatus}
-                        players={item.secondUser.username}
+                        players={item.secondUser === null ? 'public' : item.secondUser.username}
                         location={item.location}
-                        image={`https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
+                        image={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x200&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
                         onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end)}
                     />
                 )) : <Text style={styles.text}>No Events</Text>}
