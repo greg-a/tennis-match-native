@@ -62,6 +62,10 @@ const AvailabilityScreen = props => {
             })
         }).then(res => {
             res.json();
+            if (props.route.params) {
+                props.route.params.updateCalendar();
+                props.navigation.goBack();
+            }
         }).catch(err => console.log(err))
     };
 
@@ -176,7 +180,7 @@ const AvailabilityScreen = props => {
         <ScrollView>
             <View style={styles.container}>
                 <View style={styles.instructions}>
-    <Text style={[styles.baseText, styles.instructionsText]}>{userInstructions}</Text>
+                    <Text style={[styles.baseText, styles.instructionsText]}>{userInstructions}</Text>
                 </View>
                 <ModalSelector
                     data={playTypeData}
@@ -258,7 +262,7 @@ const AvailabilityScreen = props => {
                         onChange={(option) => {
                             setEventType(option.label);
                             setUserInstructions(option.instructions);
-                            }}>
+                        }}>
                         <TextInput
                             style={styles.input}
                             editable={false}

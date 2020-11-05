@@ -100,7 +100,7 @@ const CalendarScreen = props => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate })}
+                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate, updateCalendar: getCalendarEvents })}
                     >
                         <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
                     </TouchableOpacity>
