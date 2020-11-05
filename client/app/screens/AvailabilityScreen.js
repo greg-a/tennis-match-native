@@ -122,12 +122,13 @@ const AvailabilityScreen = props => {
         // console.log('endTime: ' + endTime);
         // console.log('conEndTime: ' + conEndTime);
         // console.log('-------------');
-    }, []);
+    }, [currentLat, currentLng]);
 
     const getCourtData = () => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
+                console.log("court query: " + locationQuery)
                 let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' />, lat: currentLat, lng: currentLng }];
                 courts.results.forEach((court, i) => {
                     courtSearch.push({
@@ -216,13 +217,19 @@ const AvailabilityScreen = props => {
     const setUserInfo = (id, username) => {
         setRecipientId(id);
         setRecipientUsername(username);
-    }
+    };
+
+    const getCurrentLocation = (lat, lng) => {
+        setCurrentLat(lat);
+        setCurrentLng(lng);
+    };
 
     return (
         <ScrollView>
             <LocationPicker 
             modalVisible={modalVisible}
             cancelModal={() => setModalVisible(false)} 
+            location={getCurrentLocation}
             />
             <View style={styles.container}>
                 <View style={styles.instructions}>
