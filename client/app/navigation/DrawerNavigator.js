@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { MainStackNavigator, ProfileStackNavigator, AvailabilityStackNavigator, FeedStackNavigator, MessengerStackNavigator, CalendarStackNavigator, SearchByDateStackNavigator } from "./StackNavigator";
+import { MainStackNavigator, ProfileStackNavigator, AvailabilityStackNavigator, FeedStackNavigator, MessengerStackNavigator, CalendarStackNavigator, SearchByDateStackNavigator, RequestsStackNavigator } from "./StackNavigator";
 import BottomTabNavigator from "./TabNavigator";
 
 const Drawer = createDrawerNavigator();
@@ -34,6 +34,11 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen name="Find Match" component={SearchByDateStackNavigator} 
       options={{ drawerLabel: 'Find Match',
+      drawerIcon: (({focused}) => <Icon name="call-merge" size={30} color="#6CE631" />)
+      }}
+      />
+      <Drawer.Screen name="Requests" component={RequestsStackNavigator} 
+      options={{ drawerLabel: 'Requests',
       drawerIcon: (({focused}) => <Icon name="call-merge" size={30} color="#6CE631" />)
       }}
       />
