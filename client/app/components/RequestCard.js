@@ -46,12 +46,12 @@ function RequestCard(props) {
             <View style={styles.rowContainer}>
 
                 <Text style={[styles.baseText, styles.linkText]}
-                // onPress={()=>props.handleClick(props.eventIndex)}
+                onPress={()=>props.handleConfirm(props.eventIndex)}
                 >
                     CONFIRM
                 </Text>
                 <Text style={[styles.baseText, styles.linkTextDeny]}
-                // onPress={()=>props.handleClick(props.eventIndex)}
+                onPress={()=>props.handleDeny(props.eventIndex)}
                 >
                     DENY
                 </Text>
