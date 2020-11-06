@@ -15,7 +15,8 @@ const EventModal = props => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text>{props.title}</Text>
-                        <TouchableOpacity style={styles.button}>
+                        <Text>{props.subtitle}</Text>
+                        <TouchableOpacity style={styles.button} onPress={props.getDirections}>
                             <Text style={styles.buttonText}>Get Directions</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button}>
@@ -45,7 +46,8 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
+        padding: 30,
+        paddingTop: 25,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -58,11 +60,10 @@ const styles = StyleSheet.create({
     },
     button: {
         paddingVertical: 15,
-        paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
         marginTop: 5,
-        minWidth: 120
+        width: 145
     },
     buttonText: {
         alignSelf: 'center'

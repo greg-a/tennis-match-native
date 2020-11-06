@@ -39,7 +39,7 @@ const AvailabilityScreen = props => {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
-        const colorScheme = Appearance.getColorScheme()
+    const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
 
     const formReset = () => {
@@ -111,15 +111,14 @@ const AvailabilityScreen = props => {
             })
     };
 
-    useEffect(() => {      
+    useEffect(() => {
 
-        if (currentCoordinates.lat && currentCoordinates.lng) {            
+        if (currentCoordinates.lat && currentCoordinates.lng) {
             getCourtData();
             setUserInstructions("Fill out event details");
         }
         else {
             getProfileLocation();
-            setUserInstructions("Enter your location for a list of nearby courts");
         };
         // console.log('eventTitle: ' + eventTitle);
         // console.log('eventLocation: ' + eventLocation);
@@ -135,7 +134,15 @@ const AvailabilityScreen = props => {
     const getProfileLocation = () => {
         fetch(localHost + '/api/profile')
             .then((response) => response.json())
-            .then((res) => setCurrentCoordinates({lat: res.lat, lng: res.lng}))
+            .then((res) => {
+                if (res.lat && res.lng) {
+                    setCurrentCoordinates({ lat: res.lat, lng: res.lng, vicinity: res.city });
+                }
+                else {
+                    setUserInstructions("Enter your location for a list of nearby courts");
+                }
+
+            })
             .catch((error) => console.error(error))
     };
 
@@ -144,7 +151,7 @@ const AvailabilityScreen = props => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near me' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
+                let courtSearch = [{ key: 1, label: 'any', vicinity: currentCoordinates.vicinity, component: <ModalItem title='any' subtitle='near me' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
 
                 courts.results.forEach((court, i) => {
                     courtSearch.push({
@@ -156,7 +163,7 @@ const AvailabilityScreen = props => {
                         component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
                     })
                 })
-                setCourtLocations(courtSearch)
+                setCourtLocations(courtSearch);
             })
             .catch(err => console.log(err))
     };
@@ -171,7 +178,7 @@ const AvailabilityScreen = props => {
         let currentHour = parseInt(moment(time).format('HH'));
         let currentMinute = parseInt(moment(time).format('mm'));
         let convertedEventTime = new Date(parseInt(currentYear), currentMonthAdj, parseInt(currentDay), currentHour, currentMinute);
-        console.log(convertedEventTime);
+        
         return convertedEventTime;
     };
 
@@ -201,7 +208,6 @@ const AvailabilityScreen = props => {
         hideDatePicker();
         setNewDate(date);
         convertDatetime(date, 'date');
-        console.log("new date: ", date);
     };
 
     const showStartTimePicker = () => {
@@ -215,7 +221,6 @@ const AvailabilityScreen = props => {
         setStartTime(time);
         setInitialEndTime(time);
         convertDatetime(time, 'startTime');
-        console.log("new start: ", time);
     };
 
     const showEndTimePicker = () => {
@@ -228,7 +233,6 @@ const AvailabilityScreen = props => {
         hideEndTimePicker();
         setEndTime(time);
         convertDatetime(time, 'endTime');
-        console.log("new end: ", time);
     };
 
     const setUserInfo = (id, username) => {
@@ -251,7 +255,7 @@ const AvailabilityScreen = props => {
                 const geocodeName = res.results[0].address_components[1].short_name;
 
                 if (currentCoordinates.lat !== geocodeCoordinates.lat && currentCoordinates.lng !== geocodeCoordinates.lng) {
-                    setCurrentCoordinates({ lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng, name: geocodeName });
+                    setCurrentCoordinates({ lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng, vicinity: geocodeName });
                 };
                 setModalVisible(false);
             })

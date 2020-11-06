@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, Platform, Linking, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import EventCard from '../components/EventCard';
 import EventModal from '../components/EventModal';
@@ -19,6 +19,7 @@ const CalendarScreen = props => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
     const [eventTitle, setEventTitle] = useState();
+    const [eventLocationInfo, setEventLocationInfo] = useState({});
     const [refreshing, setRefreshing] = useState(false);
 
 
@@ -54,17 +55,31 @@ const CalendarScreen = props => {
         })
         setModalVisible(false);
         setSelectedEventId();
-    }
+        setEventLocationInfo({});
+    };
 
-    const handleEventSelect = (key, title, start, end) => {
+    const handleEventSelect = (key, title, start, end, vicinity, lat, lng) => {
         setModalVisible(true);
         setSelectedEventId(key);
         setEventTitle(`${title}: ${moment(start).format('h:mm a')}-${moment(end).format('h:mm a')}`);
+        setEventLocationInfo({ vicinity: vicinity, lat: lat, lng: lng });
     };
 
     const handleCancelModal = () => {
         setModalVisible(false);
         setSelectedEventId();
+    };
+
+    const handleGetDirections = () => {
+        const scheme = Platform.OS === 'ios' ? 'maps:0,0?q=' : 'geo:0,0?q=';
+        const latLng = `${eventLocationInfo.lat},${eventLocationInfo.lng}`;
+        const label = 'Custom Label';
+        const url = Platform.select({
+            ios: `${scheme}${label}@${latLng}`,
+            android: `${scheme}${latLng}(${label})`
+        });
+
+        Linking.openURL(url);
     };
 
     return (
@@ -79,9 +94,11 @@ const CalendarScreen = props => {
             >
                 <EventModal
                     modalVisible={modalVisible}
+                    getDirections={handleGetDirections}
                     cancelModal={handleCancelModal}
                     deleteEvent={handleEventDelete}
                     title={eventTitle}
+                    subtitle={`near ${eventLocationInfo.vicinity}`}
                 />
 
                 {eventView.length > 0 ? eventView.map((item, i) => (
@@ -94,7 +111,7 @@ const CalendarScreen = props => {
                         players={item.secondUser === null ? 'public' : item.secondUser.username}
                         location={item.location}
                         image={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x200&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
-                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end)}
+                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end, item.vicinity, item.latitude, item.longitude)}
                     />
                 )) : <Text style={styles.text}>No Events</Text>}
                 <View style={styles.buttonContainer}>
