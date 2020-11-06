@@ -27,8 +27,7 @@ const AvailabilityScreen = props => {
     const [conEndTime, setConEndTime] = React.useState("");
     const [recipientId, setRecipientId] = React.useState(null);
     const [recipientUsername, setRecipientUsername] = React.useState("");
-    const [currentLat, setCurrentLat] = React.useState("39.953");
-    const [currentLng, setCurrentLng] = React.useState("-75.166");
+    const [currentCoordinates, setCurrentCoordinates] = React.useState({});
     const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
     const [userInstructions, setUserInstructions] = React.useState("Fill out event details");
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -39,8 +38,7 @@ const AvailabilityScreen = props => {
 
     const [isEndTimePickerVisible, setEndTimePickerVisibility] = React.useState(false);
 
-    const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLat},${currentLng}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
-    const colorScheme = Appearance.getColorScheme()
+        const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
 
     const formReset = () => {
@@ -62,7 +60,7 @@ const AvailabilityScreen = props => {
     const handleFormSubmit = () => {
         const newStart = convertEventTime(startTime);
         const newEnd = convertEventTime(endTime);
-        console.log("new start: " + newStart)
+
         fetch(localHost + "/api/calendar", {
             method: "POST",
             headers: {
@@ -111,8 +109,14 @@ const AvailabilityScreen = props => {
             })
     };
 
-    useEffect(() => {
-        getCourtData();
+    useEffect(() => {      
+
+        if (currentCoordinates.lat && currentCoordinates.lng) {            
+            getCourtData();
+        }
+        else {
+            getProfileLocation();
+        };
         // console.log('eventTitle: ' + eventTitle);
         // console.log('eventLocation: ' + eventLocation);
         // console.log('newDate: ' + newDate);
@@ -122,14 +126,22 @@ const AvailabilityScreen = props => {
         // console.log('endTime: ' + endTime);
         // console.log('conEndTime: ' + conEndTime);
         // console.log('-------------');
-    }, [currentLat, currentLng]);
+    }, [currentCoordinates]);
+
+    const getProfileLocation = () => {
+        fetch(localHost + '/api/profile')
+            .then((response) => response.json())
+            .then((res) => setCurrentCoordinates({lat: res.lat, lng: res.lng}))
+            .catch((error) => console.error(error))
+    };
 
     const getCourtData = () => {
+        const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentCoordinates.lat},${currentCoordinates.lng}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                console.log("court query: " + locationQuery)
-                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' />, lat: currentLat, lng: currentLng }];
+                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
+                
                 courts.results.forEach((court, i) => {
                     courtSearch.push({
                         key: i + 2,
@@ -220,16 +232,34 @@ const AvailabilityScreen = props => {
     };
 
     const getCurrentLocation = (lat, lng) => {
-        setCurrentLat(lat);
-        setCurrentLng(lng);
+        setCurrentCoordinates({ lat: lat, lng: lng });
+        setModalVisible(false);
+    };
+
+    const zipToCoordinates = zip => {
+        const geocodeQuery = `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=${googleMapsAPI}`;
+
+        fetch(geocodeQuery)
+            .then(res => res.json())
+            .then(res => {
+                const geocodeCoordinates = res.results[0].geometry.location;
+                const geocodeName = res.results[0].address_components[1].short_name;
+
+                if (currentCoordinates.lat !== geocodeCoordinates.lat && currentCoordinates.lng !== geocodeCoordinates.lng) {
+                    setCurrentCoordinates({ lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng, name: geocodeName });
+                };
+                setModalVisible(false);
+            })
+            .catch(err => console.log(err))
     };
 
     return (
         <ScrollView>
-            <LocationPicker 
-            modalVisible={modalVisible}
-            cancelModal={() => setModalVisible(false)} 
-            location={getCurrentLocation}
+            <LocationPicker
+                modalVisible={modalVisible}
+                cancelModal={() => setModalVisible(false)}
+                handleLocation={getCurrentLocation}
+                handleZip={zipToCoordinates}
             />
             <View style={styles.container}>
                 <View style={styles.instructions}>
@@ -262,7 +292,7 @@ const AvailabilityScreen = props => {
                     />
                 </ModalSelector>
                 <View style={styles.locationButton}>
-                <Button title='Set Location' onPress={() => setModalVisible(true)} />
+                    <Button title='Change Area' onPress={() => setModalVisible(true)} />
                 </View>
                 <View>
                     <TouchableWithoutFeedback onPress={showDatePicker}>

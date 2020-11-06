@@ -5,7 +5,7 @@ import * as Permissions from 'expo-permissions';
 
 const LocationPicker = props => {
     const [isFetching, setIsFetching] = useState(false);
-    const [pickedLocation, setPickedLocation] = useState();
+    const [zipcode, setZipcode] = useState();
 
     const verifyPermissions = async () => {
         const result = await Permissions.askAsync(Permissions.LOCATION);
@@ -31,11 +31,7 @@ const LocationPicker = props => {
             const location = await Location.getCurrentPositionAsync({
                 timeout: 5000
             });
-            setPickedLocation({
-                lat: location.coords.latitude,
-                lng: location.coords.longitude
-            });
-            props.location(location.coords.latitude, location.coords.longitude);
+            props.handleLocation(location.coords.latitude, location.coords.longitude);
             console.log("coords: " + JSON.stringify(location))
         } catch (err) {
             Alert.alert(
@@ -46,7 +42,7 @@ const LocationPicker = props => {
         }
         setIsFetching(false);
     };
-
+    
     return (
         <View style={styles.centeredView}>
             <Modal
@@ -61,10 +57,10 @@ const LocationPicker = props => {
                     <View style={styles.modalView}>
                         <View style={styles.buttonContainer}>
                             {isFetching ? (
-                                <ActivityIndicator size="large" />
+                                <ActivityIndicator size="large" color='black' />
                             ) : (
                                     <Button 
-                                    title='Get current location' 
+                                    title='Use current location' 
                                     onPress={getLocationHandler}
                                     />
                                 )}
@@ -75,6 +71,8 @@ const LocationPicker = props => {
                                 style={styles.input}
                                 placeholder='Enter ZIP'
                                 keyboardType="numeric"
+                                onChangeText={text => setZipcode(text)}
+                                value={zipcode}
                             />
                         </View>
                         <View style={{ flexDirection: 'row' }}>
@@ -82,7 +80,7 @@ const LocationPicker = props => {
                                 <Text style={styles.buttonText}>Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.button} onPress={props.handleSubmit}>
-                                <Text style={styles.buttonText}>Okay</Text>
+                                <Text style={styles.buttonText} onPress={() => props.handleZip(zipcode)}>Okay</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
