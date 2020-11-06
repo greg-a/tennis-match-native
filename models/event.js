@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        vicinity: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         latitude: DataTypes.STRING,
         longitude: DataTypes.STRING,
         read: {

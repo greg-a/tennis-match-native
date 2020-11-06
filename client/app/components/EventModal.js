@@ -16,7 +16,7 @@ const EventModal = props => {
                     <View style={styles.modalView}>
                         <Text>{props.title}</Text>
                         <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText}>Send Invite</Text>
+                            <Text style={styles.buttonText}>Get Directions</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button}>
                             <Text style={styles.buttonText}>Edit Details</Text>

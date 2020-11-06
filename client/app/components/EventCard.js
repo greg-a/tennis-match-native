@@ -18,7 +18,7 @@ const EventCard = props => {
                         <Text>End: {props.end}</Text>
                     </View>
                     <View style={{ ...styles.eventRow, ...styles.eventDetail }} >
-                        <Text>Sent to: {props.players ? props.players : 'public'}</Text>
+                        <Text>Invited: {props.players ? props.players : 'public'}</Text>
                         <Text>Status: {props.status}</Text>
                     </View>
                 </View>

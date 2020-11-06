@@ -15,6 +15,7 @@ const AvailabilityScreen = props => {
     playTypeData.forEach(item => item.component = <ModalItem title={item.label} />);
     const initialTime = new Date();
     initialTime.setHours(initialTime.getHours() + 1);
+    initialTime.setMinutes('00');
     const [eventTitle, setEventTitle] = React.useState("");
     const [eventType, setEventType] = React.useState("");
     const [eventLocation, setEventLocation] = React.useState("");
@@ -29,7 +30,7 @@ const AvailabilityScreen = props => {
     const [recipientUsername, setRecipientUsername] = React.useState("");
     const [currentCoordinates, setCurrentCoordinates] = React.useState({});
     const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
-    const [userInstructions, setUserInstructions] = React.useState("Fill out event details");
+    const [userInstructions, setUserInstructions] = React.useState("");
     const [modalVisible, setModalVisible] = React.useState(false);
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
@@ -72,6 +73,7 @@ const AvailabilityScreen = props => {
                 end: newEnd,
                 eventStatus: recipientId === null ? "available" : "propose",
                 location: eventLocation.label,
+                vicinity: eventLocation.vicinity,
                 latitude: eventLocation.lat,
                 longitude: eventLocation.lng,
                 confirmedByUser: recipientId
@@ -113,9 +115,11 @@ const AvailabilityScreen = props => {
 
         if (currentCoordinates.lat && currentCoordinates.lng) {            
             getCourtData();
+            setUserInstructions("Fill out event details");
         }
         else {
             getProfileLocation();
+            setUserInstructions("Enter your location for a list of nearby courts");
         };
         // console.log('eventTitle: ' + eventTitle);
         // console.log('eventLocation: ' + eventLocation);
@@ -140,12 +144,13 @@ const AvailabilityScreen = props => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near Philadelphia' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
-                
+                let courtSearch = [{ key: 1, label: 'any', component: <ModalItem title='any' subtitle='near me' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
+
                 courts.results.forEach((court, i) => {
                     courtSearch.push({
                         key: i + 2,
                         label: court.name,
+                        vicinity: court.vicinity,
                         lat: court.geometry.location.lat,
                         lng: court.geometry.location.lng,
                         component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
@@ -292,7 +297,7 @@ const AvailabilityScreen = props => {
                     />
                 </ModalSelector>
                 <View style={styles.locationButton}>
-                    <Button title='Change Area' onPress={() => setModalVisible(true)} />
+                    <Button title='Set Location' onPress={() => setModalVisible(true)} />
                 </View>
                 <View>
                     <TouchableWithoutFeedback onPress={showDatePicker}>
@@ -322,7 +327,7 @@ const AvailabilityScreen = props => {
                         onConfirm={handleConfirmStartTime}
                         onCancel={hideStartTimePicker}
                         textColor={isDarkMode ? 'white' : 'black'}
-                        date={new Date(initialTime.setMinutes('00'))}
+                        date={initialTime}
                     />
                 </View>
 
