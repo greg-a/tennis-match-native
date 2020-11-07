@@ -151,6 +151,8 @@ const AvailabilityScreen = props => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
+                
+                console.log("courts query: " + locationQuery)
                 let courtSearch = [{ key: 1, label: 'any', vicinity: currentCoordinates.vicinity, component: <ModalItem title='any' subtitle='near me' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
 
                 courts.results.forEach((court, i) => {
