@@ -17,23 +17,38 @@ import SignUpScreen from '../screens/SignUpScreen';
 import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
 import SearchDatePropose from '../screens/SearchDatePropose';
 
+// const AuthStack = createStackNavigator();
+// const AuthStackScreen = () => (
+//   <AuthStack.Navigator>
+//     <AuthStack.Screen
+//       name="Login"
+//       component={LoginScreen}
+//       // options={{ title: "Login" }}
+//     />
+//     <AuthStack.Screen
+//       name="Create Account"
+//       component={SignUpScreen}
+//       // options={{ title: "Sign Up" }}
+//     />
 
+//   </AuthStack.Navigator>
+// )
 
 const Stack = createStackNavigator();
 
-const MainStackNavigator = ({navigation}) => {
+const MainStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#6CE631",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
-      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="SignUp" component={SignUpScreen}/>
+      {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} /> */}
       <Stack.Screen name="Inbox" component={InboxScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
@@ -48,26 +63,26 @@ const MainStackNavigator = ({navigation}) => {
             />
           </View>
         ),
-      }}/>
+      }} />
       {/* <Stack.Screen name="FindMatch" component={SearchByDateScreen} /> */}
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
     </Stack.Navigator>
-    
+
   );
 }
 
 export { MainStackNavigator };
 
-const AvailabilityStackNavigator = ({navigation}) => {
+const AvailabilityStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#6CE631",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
       <Stack.Screen name="Availability" component={AvailabilityScreen} options={{
         headerLeft: () => (
@@ -80,25 +95,25 @@ const AvailabilityStackNavigator = ({navigation}) => {
             />
           </View>
         ),
-      }}/>      
+      }} />
       <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
-    
+
   );
 }
 
 export { AvailabilityStackNavigator };
 
-const CalendarStackNavigator = ({navigation}) => {
+const CalendarStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#6CE631",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
       <Stack.Screen name="Calendar" component={CalendarScreen} options={{
         headerLeft: () => (
@@ -111,7 +126,7 @@ const CalendarStackNavigator = ({navigation}) => {
             />
           </View>
         ),
-      }}/>
+      }} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
       <Stack.Screen name="Find Match" component={SearchByDateScreen} />
       <Stack.Screen name="User Search" component={UserSearchScreen} />
@@ -142,13 +157,13 @@ export { CalendarStackNavigator };
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#6CE631",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
       <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
@@ -157,16 +172,16 @@ const ProfileStackNavigator = () => {
 
 export { ProfileStackNavigator };
 
-const MessengerStackNavigator = ({navigation}) => {
+const MessengerStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#6CE631",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
       <Stack.Screen name="Inbox" component={InboxScreen} options={{
         headerLeft: () => (
@@ -179,7 +194,7 @@ const MessengerStackNavigator = ({navigation}) => {
             />
           </View>
         ),
-      }}/>
+      }} />
       <Stack.Screen name="Messenger" component={MessengerScreen} />
       <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
@@ -191,13 +206,13 @@ export { MessengerStackNavigator };
 const SearchByDateStackNavigator = () => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#6CE631",
-      },
-      headerTintColor: "white",
-      headerBackTitle: "Back",
-    }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#6CE631",
+        },
+        headerTintColor: "white",
+        headerBackTitle: "Back",
+      }}
     >
       <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
       <Stack.Screen name="DateResults" component={SearchDateResultsScreen} />
@@ -207,7 +222,7 @@ const SearchByDateStackNavigator = () => {
 }
 
 export { SearchByDateStackNavigator };
-  
+
 // SPLIT -------------------
 
 // import { Platform } from 'react-native';
@@ -355,7 +370,7 @@ export { SearchByDateStackNavigator };
 // }
 
 // export { CalendarStackNavigator };
-  
+
 // // const MainNavigator = createDrawerNavigator (
 // // {
 // //   Profile: {

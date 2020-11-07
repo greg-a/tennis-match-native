@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'reac
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
+import { AuthContext } from './../../context';
 
 const LoginScreen = props => {
     // to load font
@@ -33,11 +34,14 @@ const LoginScreen = props => {
             .then(res => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
-                    props.navigation.replace('Feed')
+                    // props.navigation.replace('Feed')
+                    signIn();
                 };
             })
             .catch(err => console.log(err));
     }
+
+    const { signIn } = React.useContext(AuthContext);
 
     // checks if font has been loaded
     if (!fontsLoaded) {
