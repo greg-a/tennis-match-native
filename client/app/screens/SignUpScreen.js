@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from 'reac
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
+import { AuthContext } from './../../context';
 
 const SignUpScreen = props => {
     // to load font
@@ -13,6 +14,8 @@ const SignUpScreen = props => {
     const [signUpUsername, setSignUpUsername] = React.useState("");
     const [signUpPassword, setSignUpPassword] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
+
+    const { signUp } = React.useContext(AuthContext);
 
     const handleFormSubmit = () => {
         fetch(localHost+"/api", {
@@ -41,6 +44,7 @@ const SignUpScreen = props => {
                         severity: "error"
                     });
                 } else if (res.statusString === "userCreateSuccess") {
+                    signUp();
                     props.navigation.navigate('Login')
                 }
                     })
