@@ -16,6 +16,7 @@ import SearchByDateScreen from '../screens/SearchByDateScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
 import SearchDatePropose from '../screens/SearchDatePropose';
+import RequestsScreen from '../screens/RequestsScreen';
 
 // const AuthStack = createStackNavigator();
 // const AuthStackScreen = () => (
@@ -222,6 +223,26 @@ const SearchByDateStackNavigator = () => {
 }
 
 export { SearchByDateStackNavigator };
+
+
+const RequestsStackNavigator = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#6CE631",
+      },
+      headerTintColor: "white",
+      headerBackTitle: "Back",
+    }}
+    >
+      <Stack.Screen name="Requests" component={RequestsScreen} />
+    </Stack.Navigator>
+  )
+};
+
+export { RequestsStackNavigator };
+  
 
 // SPLIT -------------------
 
