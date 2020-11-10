@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView 
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
+import { AuthContext } from './../../context';
 
 const LoginScreen = props => {
     // to load font
@@ -35,7 +36,8 @@ const LoginScreen = props => {
             .then(res => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
-                    props.navigation.replace('Feed')
+                    // props.navigation.replace('Feed');
+                    signIn();
                 }
                 else if (res.statusString === 'noPassOrUser') {
                     setUserInstructions("Missing username or password");
@@ -44,10 +46,12 @@ const LoginScreen = props => {
                 else if (res.statusString === 'wrongPassOrUser') {
                     setUserInstructions('Incorrect username or password');
                     setWarningText(true);
-                }
+                };
             })
             .catch(err => console.log(err));
     }
+
+    const { signIn } = React.useContext(AuthContext);
 
     // checks if font has been loaded
     if (!fontsLoaded) {
