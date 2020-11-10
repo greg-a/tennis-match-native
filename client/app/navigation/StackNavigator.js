@@ -50,9 +50,6 @@ const MainStackNavigator = ({ navigation }) => {
     >
       {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="SignUp" component={SignUpScreen} /> */}
-      <Stack.Screen name="Inbox" component={InboxScreen} />
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
-      <Stack.Screen name="Messenger" component={MessengerScreen} />
       <Stack.Screen name="Feed" component={FeedScreen} options={{
         headerLeft: () => (
           <View>
@@ -65,6 +62,9 @@ const MainStackNavigator = ({ navigation }) => {
           </View>
         ),
       }} />
+      <Stack.Screen name="Inbox" component={InboxScreen} />
+      <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="Messenger" component={MessengerScreen} />
       {/* <Stack.Screen name="FindMatch" component={SearchByDateScreen} /> */}
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
     </Stack.Navigator>
