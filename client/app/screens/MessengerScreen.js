@@ -20,7 +20,9 @@ const MessengerScreen = props => {
     const recipientUsername = props.route.params.recipientUsername;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
+    const updateInbox = props.route.params.getMessages;
     const thisRoom = createRoom(myUserId, recipientId);
+    const [recId, updateRecId] = useState(recipientId);
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
 
@@ -45,20 +47,28 @@ const MessengerScreen = props => {
     };
 
     const connectToSocket = () => {
+        socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
+
         socket.on("output", data => {
             data.createdAt = new Date();
             data.id = new Date();
             console.log("socket data: " + JSON.stringify(data));
-            setMessages(oldMessages => [data, ...oldMessages]);
+            if (data.senderId == recipientId || data.recipientId == recipientId) {
+                setMessages(oldMessages => [data, ...oldMessages]);
+                updateInbox();
+            };
         });
-        socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
+
+        return () => {
+            socket.disconnect()
+        };
     };
 
     const handleMessageSend = () => {
         if (newMessage !== '') {
             socket.emit("input", {
                 User: {
-                    username: myUserId
+                    username: myUsername
                 },
                 message: newMessage,
                 room: thisRoom,
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     sendButton: {
-        backgroundColor: 'green',
+        backgroundColor: '#6CE631',
         padding: 5,
         justifyContent: 'center',
         alignItems: 'center',

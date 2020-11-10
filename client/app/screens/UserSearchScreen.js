@@ -12,6 +12,7 @@ const Item = ({ username, name, onPress }) => (
 const UserSearchScreen = props => {
     const myUserId = props.route.params ? props.route.params.myUserId : '';
     const myUsername = props.route.params ? props.route.params.myUsername : '';
+    const getMessages = props.route.params ? props.route.params.getMessages : '';
     const searchType = props.route.params.searchType;
     const setUserInfo = props.route.params.setUserInfo;
     const [userSearchList, setUserList] = useState();
@@ -34,11 +35,12 @@ const UserSearchScreen = props => {
         <Item
             username={`@${item.username}`}
             name={`${item.firstname === null ? '' : item.firstname} ${item.lastname === null ? '' : item.lastname}`}
-            onPress={searchType === 'message' ? () => props.navigation.navigate('Messenger', {
+            onPress={searchType === 'message' ? () => props.navigation.replace('Messenger', {
                 recipientId: item.id,
                 recipientUsername: item.username,
                 myUserId: myUserId,
-                myUsername: myUsername
+                myUsername: myUsername,
+                getMessages: getMessages
             })
                 :
                 () => {

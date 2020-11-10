@@ -9,18 +9,17 @@ const EventCard = props => {
                     <View style={{ ...styles.eventRow, ...styles.eventHeader }}>
                         <ImageBackground source={{ uri: props.image }} style={styles.bgImage}>
                             <View style={styles.titleContainer}>
-                                <Text lines={1} style={styles.title}>{props.title}</Text>
+                                <Text lines={1} style={styles.title}>{props.title}: {props.location}</Text>
                             </View>
                         </ImageBackground>
                     </View>
                     <View style={{ ...styles.eventRow, ...styles.eventDetail }} >
                         <Text>Start: {props.start}</Text>
                         <Text>End: {props.end}</Text>
-                        <Text>Status: {props.status}</Text>
                     </View>
                     <View style={{ ...styles.eventRow, ...styles.eventDetail }} >
-                        <Text>{props.players}</Text>
-                        <Text>{props.location}</Text>
+                        <Text>Invited: {props.players ? props.players : 'public'}</Text>
+                        <Text>Status: {props.status}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -30,23 +29,27 @@ const EventCard = props => {
 
 const styles = StyleSheet.create({
     eventItem: {
-        height: 200,
+        height: 180,
         width: '100%',
         backgroundColor: '#f5f5f5',
-        borderRadius: 10,
+        borderRadius: 15,
         overflow: 'hidden',
-        marginTop: 20
+        marginBottom: 20
     },
     eventRow: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingLeft: 5,
+        paddingRight: 5
     },
     eventHeader: {
         height: '75%'
     },
     eventDetail: {
         paddingHorizontal: 10,
-        justifyContent: 'space-between',
-        alignItems: 'center'
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        // paddingRight: 40,
+        // paddingLeft: 15
     },
     bgImage: {
         width: '100%',

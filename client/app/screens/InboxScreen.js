@@ -17,10 +17,11 @@ const InboxScreen = props => {
     const [inboxMessages, setInboxMessages] = useState([]);
 
     useEffect(() => {
+        getProfileInfo();
         getMessages();
     }, []);
 
-    const getMessages = () => {
+    const getProfileInfo = () => {
         fetch(localHost + "/api/profile")
             .then(res => res.json())
             .then((profileInfo) => {
@@ -28,7 +29,9 @@ const InboxScreen = props => {
                 setMyUsername(profileInfo.username);
             })
             .catch(err => console.log(err));
+    };
 
+    const getMessages = () => {
         fetch(localHost + "/api/messages")
             .then(res => res.json())
             .then((messages) => {
@@ -54,7 +57,8 @@ const InboxScreen = props => {
                 recipientId: item.senderId == myUserId ? item.recipientId : item.senderId,
                 recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username,
                 myUserId: myUserId,
-                myUsername: myUsername
+                myUsername: myUsername,
+                getMessages: getMessages
             })}
         />
     );
@@ -68,24 +72,16 @@ const InboxScreen = props => {
                 keyExtractor={item => item.id.toString()}
             />
             <View style={styles.sendMessageContainer}>
-                {/* <TextInput
-                    style={styles.sendMessage}
-                    placeholder="Search for user"
-                    multiline={true}
-                    onFocus={() => props.navigation.navigate('User Search', {
-                        myUserId: myUserId,
-                        myUsername: myUsername
-                    })}
-                /> */}
                 <TouchableOpacity
                     style={styles.sendMessage}
                     onPress={() => props.navigation.navigate('User Search', {
                         myUserId: myUserId,
                         myUsername: myUsername,
-                        searchType: 'message'
+                        searchType: 'message',
+                        getMessages: getMessages
                     })}
                 >
-                    <Text style={{color: 'grey'}}>Search for user</Text>
+                    <Text style={{ color: 'grey' }}>Search for user</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -132,14 +128,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 10,
         justifyContent: 'space-around'
-    },
-    sendButton: {
-        backgroundColor: 'green',
-        padding: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 30,
-        width: 50
     }
 });
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { ScrollView, View, StyleSheet, TextInput, Text, Button } from 'react-native';
+import { ScrollView, View, StyleSheet, TextInput, Text, Alert } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
-import { localHost } from '../localhost.js';
+import { localHost, googleMapsAPI } from '../localhost.js';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -15,8 +15,10 @@ const ProfileScreen = props => {
         state: '',
         zipcode: '',
         skilllevel: 0,
-        skillLabel: ''
+        lat: '',
+        lng: ''
     });
+    const [skillLabel, setSkillLabel] = useState('');
 
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
@@ -37,31 +39,37 @@ const ProfileScreen = props => {
     };
 
     useEffect(() => {
-        getProfileInfo();
-    }, []);
+        if (profileUpdate.username === '') {
+            getProfileInfo();
+        }
+        zipToCoordinates();
+    }, [profileUpdate.zipcode]);
 
     const handleProfileUpdate = () => {
-        let updateObj = {
-            firstname: profileUpdate.firstname,
-            lastname: profileUpdate.lastname,
-            city: profileUpdate.city,
-            state: profileUpdate.state,
-            zipcode: profileUpdate.zipcode,
-            skilllevel: profileUpdate.skilllevel
-        };
-        
-        fetch(localHost+"/api/profileupdate", {
+        fetch(localHost + "/api/profileupdate", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(updateObj)
+            body: JSON.stringify(profileUpdate)
         })
             .then(res => {
                 console.log("profile updated");
+                Alert.alert(
+                    "Success!",
+                    "Your profile was updated",
+                    [{ text: "OK" }]
+                );
 
             })
-            .catch(err => console.log(JSON.stringify(err)));
+            .catch(err => {
+                console.log(JSON.stringify(err));
+                Alert.alert(
+                    "Uh oh",
+                    "Something went wrong. Try again.",
+                    [{ text: "OK" }]
+                );
+            });
     };
 
     useLayoutEffect(() => {
@@ -78,19 +86,40 @@ const ProfileScreen = props => {
     }, [props.navigation, profileUpdate]);
 
     const getProfileInfo = () => {
-        fetch(localHost+'/api/profile')
+        fetch(localHost + '/api/profile')
             .then((response) => response.json())
-            .then((res) => setProfileUpdate({
-                ...profileUpdate,
-                firstname: res.firstname,
-                lastname: res.lastname,
-                city: res.city,
-                state: res.state,
-                zipcode: res.zipcode,
-                skilllevel: res.skilllevel,
-                skillLabel: skillConversion(res.skilllevel)
-            }))
+            .then((res) => {
+                setProfileUpdate({
+                    ...profileUpdate,
+                    username: res.username,
+                    email: res.email,
+                    firstname: res.firstname,
+                    lastname: res.lastname,
+                    city: res.city,
+                    state: res.state,
+                    zipcode: res.zipcode,
+                    skilllevel: res.skilllevel,
+                    lat: res.lat,
+                    lng: res.lng
+                });
+                setSkillLabel(skillConversion(res.skilllevel));
+            })
             .catch((error) => console.error(error))
+    };
+
+    const zipToCoordinates = () => {
+        const geocodeQuery = `https://maps.googleapis.com/maps/api/geocode/json?address=${profileUpdate.zipcode}&key=${googleMapsAPI}`;
+
+        if (profileUpdate.zipcode !== null && profileUpdate.zipcode.length === 5) {
+            fetch(geocodeQuery)
+                .then(res => res.json())
+                .then(res => {
+                    const geocodeCoordinates = res.results[0].geometry.location;
+
+                    setProfileUpdate({ ...profileUpdate, lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng });
+                })
+                .catch(err => console.log(err))
+        }
     };
 
     return (
@@ -148,10 +177,13 @@ const ProfileScreen = props => {
                     <ModalSelector
                         pickerStyle={styles.input}
                         data={Skills}
-                        onChange={(option) => setProfileUpdate({ ...profileUpdate, skilllevel: option.value, skillLabel: option.label })}>
+                        onChange={(option) => {
+                            setProfileUpdate({ ...profileUpdate, skilllevel: option.value });
+                            setSkillLabel(option.label)
+                        }}>
                         <TextInput
                             style={styles.input}
-                            value={profileUpdate.skillLabel}
+                            value={skillLabel}
                             editable={false}
                             placeholder={"Choose Skill Level..."}
                         />
@@ -169,7 +201,7 @@ ProfileScreen.navigationOptions = navData => {
             <Item
                 title='SAVE'
                 onPress={() => {
-                    fetch(localHost+"/api/profile")
+                    fetch(localHost + "/api/profile")
                         .then(res => res.json())
                         .then((profileInfo) => {
                             console.log(profileInfo)
