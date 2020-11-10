@@ -21,7 +21,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen
       name="Sign Up"
       component={SignUpScreen}
-      options={{ title: "Sign Up" }}
+      // options={{ title: "Sign Up" }}
     />
   </AuthStack.Navigator>
 );
