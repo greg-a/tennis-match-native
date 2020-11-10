@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import moment from 'moment';
 import { View, Text, Platform, Linking, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
+import moment from 'moment';
 import EventCard from '../components/EventCard';
 import EventModal from '../components/EventModal';
 import { localHost, googleMapsAPI } from '../localhost.js';
@@ -15,6 +15,7 @@ const wait = (timeout) => {
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
     const [selectedDate, setSelectedDate] = useState(today);
+    const [myUserId, setMyUserId] = useState();
     const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
@@ -38,9 +39,9 @@ const CalendarScreen = props => {
     const getCalendarEvents = () => {
         fetch(localHost + '/api/calendar')
             .then(res => res.json())
-            .then((dates) => {
-                setMyEvents(dates);
-                console.log(dates);
+            .then((res) => {
+                setMyEvents(res.results);
+                setMyUserId(res.myUserId);
             })
             .catch(err => console.log(err));
     };
@@ -82,6 +83,15 @@ const CalendarScreen = props => {
         Linking.openURL(url);
     };
 
+    const handleSecondUser = (user, userId, secondUser) => {
+        if (userId === myUserId) {
+            return secondUser
+        }
+        else {
+            return user
+        }
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView
@@ -100,7 +110,6 @@ const CalendarScreen = props => {
                     title={eventTitle}
                     subtitle={`near ${eventLocationInfo.vicinity}`}
                 />
-
                 {eventView.length > 0 ? eventView.map((item, i) => (
                     <EventCard
                         key={item.id}
@@ -108,7 +117,7 @@ const CalendarScreen = props => {
                         start={moment(item.start).format('h:mm a')}
                         end={moment(item.end).format('h:mm a')}
                         status={item.eventStatus}
-                        players={item.secondUser === null ? 'public' : item.secondUser.username}
+                        players={item.secondUser === null ? 'public' : handleSecondUser(item.User.username, item.User.id, item.secondUser.username)}
                         location={item.location}
                         image={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x200&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
                         onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end, item.vicinity, item.latitude, item.longitude)}
