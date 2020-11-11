@@ -35,11 +35,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        skilllevel: {
-            type: DataTypes.INTEGER,
+        lat: {
+            type: DataTypes.STRING,
             allowNull: true
         },
-        oppskilllevel: {
+        lng: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        skilllevel: {
             type: DataTypes.INTEGER,
             allowNull: true
         }

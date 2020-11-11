@@ -42,7 +42,6 @@ module.exports = function (app) {
                 statusString: "noPassOrUser"
             });
         }
-
     });
 
     //authenticate user logged in w react router
@@ -216,7 +215,7 @@ module.exports = function (app) {
                         attributes: ["username", "firstname", "lastname", "id"]
                     }]
             }).then(function (results) {
-                res.json(results);
+                res.json({results: results, myUserId: req.session.userID });
             });
         } else {
             res.status(400).end();

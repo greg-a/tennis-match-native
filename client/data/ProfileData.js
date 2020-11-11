@@ -344,8 +344,8 @@ export const playTypeData = [
     { key: 2, label: 'Competitive' }
 ];
 export const eventTypeData = [
-    { key: 1, label: 'Private' },
-    { key: 2, label: 'Public' }
+    { key: 1, label: 'Invite Only', description: 'Will only be seen by invited user', instructions: 'Select user to invite' },
+    { key: 2, label: 'Everyone', description: 'Can be viewed by anyone', instructions: 'Fill out event details' }
 ];
 
 export const courtLocationData = [

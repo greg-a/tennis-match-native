@@ -35,7 +35,9 @@
     "react-navigation": "^4.4.2",
     "react-navigation-header-buttons": "^5.0.2",
     "react-navigation-stack": "^2.8.4",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "expo-location": "~9.0.0",
+    "expo-permissions": "~9.3.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

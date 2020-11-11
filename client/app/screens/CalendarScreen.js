@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, Platform, Linking, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
+import moment from 'moment';
 import EventCard from '../components/EventCard';
 import EventModal from '../components/EventModal';
 import { localHost, googleMapsAPI } from '../localhost.js';
@@ -14,12 +14,13 @@ const wait = (timeout) => {
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');
-    const mapTile = 'https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue|label:S|40.702147,-74.015794&markers=color:green|label:G|40.711614,-74.012318&markers=color:red|label:C|40.718217,-73.998284&key=' + googleMapsAPI;
     const [selectedDate, setSelectedDate] = useState(today);
+    const [myUserId, setMyUserId] = useState();
     const [myEvents, setMyEvents] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState();
     const [eventTitle, setEventTitle] = useState();
+    const [eventLocationInfo, setEventLocationInfo] = useState({});
     const [refreshing, setRefreshing] = useState(false);
 
 
@@ -38,9 +39,9 @@ const CalendarScreen = props => {
     const getCalendarEvents = () => {
         fetch(localHost + '/api/calendar')
             .then(res => res.json())
-            .then((dates) => {
-                setMyEvents(dates);
-                console.log(dates);
+            .then((res) => {
+                setMyEvents(res.results);
+                setMyUserId(res.myUserId);
             })
             .catch(err => console.log(err));
     };
@@ -55,17 +56,40 @@ const CalendarScreen = props => {
         })
         setModalVisible(false);
         setSelectedEventId();
-    }
+        setEventLocationInfo({});
+    };
 
-    const handleEventSelect = (key, title, start, end) => {
+    const handleEventSelect = (key, title, start, end, vicinity, lat, lng) => {
         setModalVisible(true);
         setSelectedEventId(key);
         setEventTitle(`${title}: ${moment(start).format('h:mm a')}-${moment(end).format('h:mm a')}`);
+        setEventLocationInfo({ vicinity: vicinity, lat: lat, lng: lng });
     };
 
     const handleCancelModal = () => {
         setModalVisible(false);
         setSelectedEventId();
+    };
+
+    const handleGetDirections = () => {
+        const scheme = Platform.OS === 'ios' ? 'maps:0,0?q=' : 'geo:0,0?q=';
+        const latLng = `${eventLocationInfo.lat},${eventLocationInfo.lng}`;
+        const label = 'Custom Label';
+        const url = Platform.select({
+            ios: `${scheme}${label}@${latLng}`,
+            android: `${scheme}${latLng}(${label})`
+        });
+
+        Linking.openURL(url);
+    };
+
+    const handleSecondUser = (user, userId, secondUser) => {
+        if (userId === myUserId) {
+            return secondUser
+        }
+        else {
+            return user
+        }
     };
 
     return (
@@ -80,11 +104,12 @@ const CalendarScreen = props => {
             >
                 <EventModal
                     modalVisible={modalVisible}
+                    getDirections={handleGetDirections}
                     cancelModal={handleCancelModal}
                     deleteEvent={handleEventDelete}
                     title={eventTitle}
+                    subtitle={`near ${eventLocationInfo.vicinity}`}
                 />
-
                 {eventView.length > 0 ? eventView.map((item, i) => (
                     <EventCard
                         key={item.id}
@@ -92,14 +117,16 @@ const CalendarScreen = props => {
                         start={moment(item.start).format('h:mm a')}
                         end={moment(item.end).format('h:mm a')}
                         status={item.eventStatus}
-                        image={`https://maps.googleapis.com/maps/api/staticmap?center=19132&zoom=12&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
-                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end)}
+                        players={item.secondUser === null ? 'public' : handleSecondUser(item.User.username, item.User.id, item.secondUser.username)}
+                        location={item.location}
+                        image={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x200&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
+                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end, item.vicinity, item.latitude, item.longitude)}
                     />
                 )) : <Text style={styles.text}>No Events</Text>}
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate })}
+                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate, updateCalendar: getCalendarEvents })}
                     >
                         <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
                     </TouchableOpacity>
