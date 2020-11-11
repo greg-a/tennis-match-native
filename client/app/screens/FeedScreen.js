@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, FlatList, SafeAreaView, RefreshControl } from 'react-native';
 import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
 
@@ -8,6 +8,12 @@ const FeedScreen = props => {
     const [confirmedMatches, setConfirmedMatches] = useState([]);
     const [updatedMatches, setUpdatedMatches] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        });
+    }
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -18,6 +24,10 @@ const FeedScreen = props => {
     useEffect(() => {
         getDates();
     }, []);
+
+    // useEffect(() => {
+    //     console.log(JSON.stringify(confirmedMatches));
+    // });
 
     const getDates = () => {
         fetch(localHost + '/api/confirmed')
@@ -37,32 +47,58 @@ const FeedScreen = props => {
             .catch(err => console.log(err));
     };
 
+    const renderItem = ({ item }) => {
+
+        if (confirmedMatches.length > 0) {
+            return (
+                <FeedItem
+                    organizer={item.User.username}
+                    confirmer={item.secondUser.username}
+                    month={item.start.substring(5, 7)}
+                    day={item.start.substring(8, 10)}
+                    hour={moment(item.start).format("h:mm a")}
+                />
+            )
+        }
+
+        else {
+            return (
+                <Text>no scheduled matches</Text>
+            )
+        }
+    }
+
     return (
 
-        <View style={styles.container}>
-            {/* <Text>Feed</Text> */}
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            >
-                {confirmedMatches > 0 ? confirmedMatches.map((item, i) => (
-                    <FeedItem
-                        organizer={item.User.username}
-                        confirmer={item.secondUser.username}
-                        month={item.start.substring(5, 7)}
-                        day={item.start.substring(8, 10)}
-                        hour={moment(item.start).format("h:mm a")}
-                    />
-                )) : <Text>no scheduled matches</Text>
-                }
+        <View>
+            
+                <FlatList
+                    data={confirmedMatches}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
 
 
-            </ScrollView>
         </View>
+
+
+        // {confirmedMatches.length > 0 ? confirmedMatches.map((item, i) => (
+        //         <FeedItem
+        //             key={i}
+        //             organizer={item.User.username}
+        //             confirmer={item.secondUser.username}
+        //             month={item.start.substring(5, 7)}
+        //             day={item.start.substring(8, 10)}
+        //             hour={moment(item.start).format("h:mm a")}
+        //         />
+        //     )) : <Text>no scheduled matches</Text>
+        //     }
 
 
     )
