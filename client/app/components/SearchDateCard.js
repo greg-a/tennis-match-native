@@ -1,20 +1,20 @@
-import React from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 
 function skillConversion(skillLevel) {
-    if (skillLevel===1) {
+    if (skillLevel === 1) {
         return "1.0-1.5 - New Player";
-    } else if (skillLevel===2) {
+    } else if (skillLevel === 2) {
         return "2.0 - Beginner";
-    } else if (skillLevel===3) {
+    } else if (skillLevel === 3) {
         return "2.5 - Beginner +";
-    } else if (skillLevel===4) {
+    } else if (skillLevel === 4) {
         return "3.0 - Beginner-Intermediate";
-    } else if (skillLevel===5) {
+    } else if (skillLevel === 5) {
         return "3.5 - Intermediate";
-    } else if (skillLevel===6) {
+    } else if (skillLevel === 6) {
         return "4.0 - Intermediate-Advanced";
-    } else if (skillLevel===7) {
+    } else if (skillLevel === 7) {
         return "4.5 - Advanced";
     }
 };
@@ -22,28 +22,46 @@ function skillConversion(skillLevel) {
 function SearchDateCard(props) {
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>
-                {props.title}
-            </Text>
-            <Text style={[styles.baseText, styles.subTitle]}>
-                {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
-            </Text>
-            <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
-                Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
-            </Text>
-            <Text style={styles.baseText}>
-                Court Location: {props.eventLocation}
-            </Text>
-            <Text style={styles.baseText}>
-                Start Time: {props.starttime}
-            </Text>
-            <Text style={styles.baseText}>
-                End Time: {props.endtime}
-            </Text>
-            <Text style={[styles.baseText, styles.linkText]}
-                onPress={()=>props.handleClick(props.eventIndex)}>
-                PROPOSE MATCH
-            </Text>
+            {!props.showMap ?
+                <View>
+                    <Text style={styles.titleText}>
+                        {props.title}
+                    </Text>
+                    <Text style={[styles.baseText, styles.subTitle]}>
+                        {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
+                    </Text>
+                    <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
+                        Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
+                    </Text>
+                    <Text style={styles.baseText} numberOfLines={1}>
+                        Court Location: {props.eventLocation}
+                    </Text>
+                    <Text style={styles.baseText}>
+                        Start Time: {props.starttime}
+                    </Text>
+                    <Text style={styles.baseText}>
+                        End Time: {props.endtime}
+                    </Text>
+                </View>
+                :
+                    <View>
+                        <ImageBackground source={{ uri: props.mapLocation }} style={styles.bgImage} />
+                    </View>
+            }
+            <View style={styles.buttonsContainer}>
+                <Text
+                    style={[styles.baseText, styles.linkText]}
+                    onPress={() => props.handleClick(props.eventIndex)}
+                >
+                    PROPOSE MATCH
+                </Text>
+                <Text
+                    style={[styles.baseText, styles.linkText]}
+                    onPress={() => props.seeMapClick(props.eventIndex)}
+                >
+                    {props.showMap ? 'SEE DETAILS' : 'SEE ON MAP'}
+                </Text>
+            </View>
         </View>
     );
 }
@@ -60,6 +78,11 @@ const styles = StyleSheet.create({
         padding: 15,
         marginVertical: 10,
         width: '90%',
+        flex: 1
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     linkText: {
         color: '#269bee',
@@ -71,6 +94,10 @@ const styles = StyleSheet.create({
     },
     subTitle: {
         fontSize: 18,
+    },
+    bgImage: {
+        width: '100%',
+        height: 165
     },
     titleText: {
         fontSize: 24,

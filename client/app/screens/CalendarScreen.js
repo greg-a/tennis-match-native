@@ -10,7 +10,7 @@ const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
     });
-}
+};
 
 const CalendarScreen = props => {
     const today = moment(new Date()).format('YYYY-MM-DD');

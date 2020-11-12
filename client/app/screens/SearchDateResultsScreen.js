@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import SearchDateCard from '../components/SearchDateCard';
-import SearchByDateScreen from './SearchByDateScreen';
 import moment from "moment";
+import { googleMapsAPI } from '../localhost.js';
 
 const SearchDateResultsScreen = ({ route, navigation }) => {
     const [searchResults, setSearchResults] = React.useState(route.params.searchResults);
+    const [showMap, setShowMap] = React.useState(false);
+    const [mapLocation, setMapLocation] = React.useState();
 
     useEffect(() => {
         console.log('Search Result Arr: ' + route.params.searchResults);
@@ -13,16 +15,20 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
-        console.log('searchResults: ' + searchResults);
-    })
+        console.log('searchResults: ' + JSON.stringify(searchResults));
+    });
 
-    const handleClick = (index)=>{
+    const handleClick = (index) => {
         const eventObj = searchResults[index];
         
         navigation.navigate('ProposeDate', {
             eventObj: eventObj,
         });
-    } 
+    };
+
+    const handleSeeMap = (index) => {
+        setShowMap(!showMap);
+    };
 
     return (
         <ScrollView>
@@ -37,10 +43,13 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
                     userLastname={event.User.lastname}
                     userSkill={event.User.skilllevel}
                     eventLocation={event.location}
-                    starttime={moment(event.start).format("hh:mm a")}
-                    endtime={moment(event.end).format("hh:mm a")}
+                    starttime={moment(event.start).format("h:mm a")}
+                    endtime={moment(event.end).format("h:mm a")}
                     eventIndex={i}
                     handleClick={handleClick}
+                    seeMapClick={handleSeeMap}
+                    mapLocation={event.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${event.latitude},${event.longitude}&zoom=10&size=400x300&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${event.latitude},${event.longitude}&markers=color:blue%7Clabel:C%7C${event.latitude},${event.longitude}&zoom=13&size=400x300&maptype=roadmap&key=${googleMapsAPI}`}
+                    showMap={showMap}
                 />
             )) : <Text>No dates</Text>}
 
