@@ -3,7 +3,8 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import ModalSelector from 'react-native-modal-selector';
 import moment from "moment";
 import { courtLocationNoAnyData, minuteArray } from '../../data/ProfileData';
-import { localHost } from '../localhost';
+import { localHost, googleMapsAPI } from '../localhost';
+import ModalItem from '../components/ModalItem';
 
 
 const SearchDatePropose = ({ route, navigation }) => {
@@ -26,21 +27,51 @@ const SearchDatePropose = ({ route, navigation }) => {
     const [endTimeMinuteValue, setEndTimeMinuteValue] = React.useState();
 
     const [eventLocation, setEventLocation] = React.useState(eventObj.location==='any' ? undefined : eventObj.location);
+    
+    const [courtLocations, setCourtLocations] = React.useState([]);
+    const [currentCoordinates, setCurrentCoordinates] = React.useState({ lat: route.params.eventObj.latitude, lng: route.params.eventObj.longitude });
 
     useEffect(() => {
         // console.log('username Test: ' + JSON.stringify(route.params.eventObj));
+        if (eventObj.location === 'any'){
+            getCourtData();
+        };
         addInputTime();
     }, []);
 
     useEffect(() => {
-        console.log('start time hour: ' + startTimeHourValue);
-        console.log('start time minute: ' + startTimeMinuteValue);
-        console.log('end time hour: ' + endTimeHourValue);
-        console.log('end time minute: ' + endTimeMinuteValue);
-        console.log('event location: ' + eventLocation);
-        console.log('event title: ' + eventTitle);
-        console.log('user id: ' + eventObj.User.id);
+        // console.log('start time hour: ' + startTimeHourValue);
+        // console.log('start time minute: ' + startTimeMinuteValue);
+        // console.log('end time hour: ' + endTimeHourValue);
+        // console.log('end time minute: ' + endTimeMinuteValue);
+        // console.log('event location: ' + eventLocation);
+        // console.log('event title: ' + eventTitle);
+        // console.log('user id: ' + eventObj.User.id);
     });
+
+    const getCourtData = () => {
+        const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentCoordinates.lat},${currentCoordinates.lng}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
+        fetch(locationQuery)
+            .then(res => res.json())
+            .then(courts => {
+                
+                console.log("courts query: " + locationQuery)
+                let courtSearch = [];
+
+                courts.results.forEach((court, i) => {
+                    courtSearch.push({
+                        key: i + 1,
+                        label: court.name,
+                        vicinity: court.vicinity,
+                        lat: court.geometry.location.lat,
+                        lng: court.geometry.location.lng,
+                        component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
+                    })
+                })
+                setCourtLocations(courtSearch);
+            })
+            .catch(err => console.log(err))
+    };
 
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
@@ -172,18 +203,19 @@ const SearchDatePropose = ({ route, navigation }) => {
                 {eventObj.location === 'any' ?
 
                     <ModalSelector
-                        data={courtLocationNoAnyData}
+                        data={courtLocations}
                         style={styles.courtInput}
                         initValue='Court Location'
                         onChange={(option) => {
-                            setEventLocation(option.label);
+                            setEventLocation(option);
                         }}>
                         <TextInput
                             style={styles.input}
                             editable={false}
-                            value={eventLocation}
+                            value={eventLocation === undefined ? eventLocation : eventLocation.label}
                             placeholder={'Court Location'}
                             placeholderTextColor={'lightgrey'}
+                            multiline={true}
                         />
                     </ModalSelector>
 

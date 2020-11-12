@@ -56,7 +56,7 @@ const SearchByDateScreen = props => {
             .then(res => res.json())
             .then(res => {
                 // this.addInputTimes(res);
-                console.log(res);
+                console.log("query results: " + JSON.stringify(res));
                 setSearchResult(res);
                 props.navigation.navigate('DateResults', {
                     searchResults: res

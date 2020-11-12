@@ -51,13 +51,15 @@ const FeedScreen = props => {
 
         if (confirmedMatches.length > 0) {
             return (
-                <FeedItem
-                    organizer={item.User.username}
-                    confirmer={item.secondUser.username}
-                    month={item.start.substring(5, 7)}
-                    day={item.start.substring(8, 10)}
-                    hour={moment(item.start).format("h:mm a")}
-                />
+                <View style={styles.container}>
+                    <FeedItem
+                        organizer={item.User.username}
+                        confirmer={item.secondUser.username}
+                        month={item.start.substring(5, 7)}
+                        day={item.start.substring(8, 10)}
+                        hour={moment(item.start).format("h:mm a")}
+                    />
+                </View>
             )
         }
 
@@ -70,21 +72,18 @@ const FeedScreen = props => {
 
     return (
 
-        <View>
-            
-                <FlatList
-                    data={confirmedMatches}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id.toString()}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                />
-
-
+        <View style={styles.container}>
+            <FlatList
+                data={confirmedMatches}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            />
         </View>
 
 
@@ -106,7 +105,6 @@ const FeedScreen = props => {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'space-between',
         flex: 1
     },
     buttonContainer: {

@@ -36,7 +36,7 @@ const LocationPicker = props => {
         } catch (err) {
             Alert.alert(
                 'Could not fetch location!',
-                'Please try again later or pick a location on the map.',
+                'Please try again later or manually enter a zip code.',
                 [{ text: 'Okay' }]
             );
         }
