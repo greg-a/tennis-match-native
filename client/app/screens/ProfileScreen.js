@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { ScrollView, View, StyleSheet, TextInput, Text, Alert } from 'react-native';
+import { ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost, googleMapsAPI } from '../localhost.js';
+import { AuthContext } from './../../context';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -19,6 +20,7 @@ const ProfileScreen = props => {
         lng: ''
     });
     const [skillLabel, setSkillLabel] = useState('');
+    const { signOut } = React.useContext(AuthContext);
 
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
@@ -122,6 +124,14 @@ const ProfileScreen = props => {
         }
     };
 
+    const handleLogout = () => {
+        fetch(localHost + "/logout")
+            .then(res => {
+                signOut();
+            })
+            .catch(err => console.log(err));
+    };
+
     return (
         <ScrollView>
             <View style={styles.form}>
@@ -189,6 +199,9 @@ const ProfileScreen = props => {
                         />
                     </ModalSelector>
                 </View>
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                    <Text style={styles.logoutButtonText}>LOGOUT</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     )
@@ -227,6 +240,18 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 18,
         marginBottom: 15
+    },
+    logoutButton: {
+        paddingVertical: 15,
+        paddingHorizontal: 25,
+        backgroundColor: '#f50057',
+        borderRadius: 5,
+        marginTop: 10,
+        alignSelf: 'flex-start'
+    },
+    logoutButtonText: {
+        fontSize: 16,
+        color: 'white',
     },
     form: {
         margin: 30
