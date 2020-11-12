@@ -54,7 +54,7 @@ export default function App() {
         setUserToken("asdf");
       },
       signUp: () => {
-        setUserToken("asdf");
+        setUserToken(null);
       },
       signOut: () => {
         setUserToken(null);
