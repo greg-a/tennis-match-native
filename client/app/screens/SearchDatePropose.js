@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Button } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import moment from "moment";
-import { courtLocationNoAnyData, minuteArray } from '../../data/ProfileData';
+import { minuteArray } from '../../data/ProfileData';
 import { localHost, googleMapsAPI } from '../localhost';
 import ModalItem from '../components/ModalItem';
+import LocationPicker from '../components/LocationPicker';
 
 
 const SearchDatePropose = ({ route, navigation }) => {
@@ -26,18 +27,19 @@ const SearchDatePropose = ({ route, navigation }) => {
     const [endTimeMinute, setEndTimeMinute] = React.useState();
     const [endTimeMinuteValue, setEndTimeMinuteValue] = React.useState();
 
-    const [eventLocation, setEventLocation] = React.useState(eventObj.location==='any' ? undefined : eventObj.location);
-    
+    const [eventLocation, setEventLocation] = React.useState(eventObj.location === 'any' ? undefined : eventObj.location);
+
     const [courtLocations, setCourtLocations] = React.useState([]);
     const [currentCoordinates, setCurrentCoordinates] = React.useState({ lat: route.params.eventObj.latitude, lng: route.params.eventObj.longitude });
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     useEffect(() => {
         // console.log('username Test: ' + JSON.stringify(route.params.eventObj));
-        if (eventObj.location === 'any'){
+        if (eventObj.location === 'any') {
             getCourtData();
         };
         addInputTime();
-    }, []);
+    }, [currentCoordinates]);
 
     useEffect(() => {
         // console.log('start time hour: ' + startTimeHourValue);
@@ -54,7 +56,7 @@ const SearchDatePropose = ({ route, navigation }) => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                
+
                 console.log("courts query: " + locationQuery)
                 let courtSearch = [];
 
@@ -99,7 +101,7 @@ const SearchDatePropose = ({ route, navigation }) => {
 
         let currentDay = eventObj.start.substring(8, 10);
 
-        let currentStartDate = new Date(parseInt(currentYear),currentMonthAdj,parseInt(currentDay),startTimeHourValue,startTimeMinuteValue);
+        let currentStartDate = new Date(parseInt(currentYear), currentMonthAdj, parseInt(currentDay), startTimeHourValue, startTimeMinuteValue);
         console.log(currentStartDate);
         return currentStartDate;
     };
@@ -112,7 +114,7 @@ const SearchDatePropose = ({ route, navigation }) => {
 
         let currentDay = eventObj.start.substring(8, 10);
 
-        let currentEndDate = new Date(parseInt(currentYear),currentMonthAdj,parseInt(currentDay),endTimeHourValue,endTimeMinuteValue);
+        let currentEndDate = new Date(parseInt(currentYear), currentMonthAdj, parseInt(currentDay), endTimeHourValue, endTimeMinuteValue);
         console.log(currentEndDate);
         return currentEndDate;
     };
@@ -125,7 +127,7 @@ const SearchDatePropose = ({ route, navigation }) => {
         // console.log('end: '+currentEndDate);
         // console.log('confirmedByUser: '+eventObj.User.id);
         // console.log('location: '+eventLocation);
-        fetch(localHost+"/api/calendar", {
+        fetch(localHost + "/api/calendar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -139,10 +141,10 @@ const SearchDatePropose = ({ route, navigation }) => {
                 eventStatus: "propose"
             })
         })
-            .then(res=>res.json())
+            .then(res => res.json())
             .then(res => console.log(res))
-            .catch(err=>console.log(err));
-        
+            .catch(err => console.log(err));
+
     }
 
     function addInputTime() {
@@ -154,15 +156,15 @@ const SearchDatePropose = ({ route, navigation }) => {
                 - parseInt(moment(eventObj.start).format("HH"))); i++
         ) {
             let startHour = i + parseInt(moment(eventObj.start).format("HH"));
-            if (startHour<10) {
-                startHour = '0'+startHour;
+            if (startHour < 10) {
+                startHour = '0' + startHour;
             }
 
             let endHour = parseInt(moment(eventObj.end).format("HH")) - i;
-            if (endHour<10) {
-                endHour = '0'+endHour;
+            if (endHour < 10) {
+                endHour = '0' + endHour;
             }
-            
+
             startIntArr.push(
                 {
                     key: i,
@@ -185,6 +187,27 @@ const SearchDatePropose = ({ route, navigation }) => {
         setEndIntArrState(endIntArr);
     };
 
+    const getCurrentLocation = (lat, lng) => {
+        setCurrentCoordinates({ lat: lat, lng: lng });
+        setModalVisible(false);
+    };
+
+    const zipToCoordinates = zip => {
+        const geocodeQuery = `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=${googleMapsAPI}`;
+
+        fetch(geocodeQuery)
+            .then(res => res.json())
+            .then(res => {
+                const geocodeCoordinates = res.results[0].geometry.location;
+                const geocodeName = res.results[0].address_components[1].short_name;
+
+                if (currentCoordinates.lat !== geocodeCoordinates.lat && currentCoordinates.lng !== geocodeCoordinates.lng) {
+                    setCurrentCoordinates({ lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng, vicinity: geocodeName });
+                };
+                setModalVisible(false);
+            })
+            .catch(err => console.log(err))
+    };
 
     return (
         <View style={styles.container}>
@@ -201,24 +224,33 @@ const SearchDatePropose = ({ route, navigation }) => {
                 </Text>
 
                 {eventObj.location === 'any' ?
-
-                    <ModalSelector
-                        data={courtLocations}
-                        style={styles.courtInput}
-                        initValue='Court Location'
-                        onChange={(option) => {
-                            setEventLocation(option);
-                        }}>
-                        <TextInput
-                            style={styles.input}
-                            editable={false}
-                            value={eventLocation === undefined ? eventLocation : eventLocation.label}
-                            placeholder={'Court Location'}
-                            placeholderTextColor={'lightgrey'}
-                            multiline={true}
+                    <View>
+                        <LocationPicker
+                            modalVisible={modalVisible}
+                            cancelModal={() => setModalVisible(false)}
+                            handleLocation={getCurrentLocation}
+                            handleZip={zipToCoordinates}
                         />
-                    </ModalSelector>
-
+                        <ModalSelector
+                            data={courtLocations}
+                            style={styles.courtInput}
+                            initValue='Court Location'
+                            onChange={(option) => {
+                                setEventLocation(option);
+                            }}>
+                            <TextInput
+                                style={styles.input}
+                                editable={false}
+                                value={eventLocation === undefined ? eventLocation : eventLocation.label}
+                                placeholder={'Court Location'}
+                                placeholderTextColor={'lightgrey'}
+                                multiline={true}
+                            />
+                        </ModalSelector>
+                        <View style={styles.locationButton}>
+                        <Button title='Set Location' onPress={() => setModalVisible(true)} />
+                        </View>
+                    </View>
                     :
 
                     <Text style={styles.baseText}>
@@ -299,7 +331,7 @@ const SearchDatePropose = ({ route, navigation }) => {
             </View>
             <View style={styles.bottomContainer}>
                 <TouchableOpacity style={styles.proposeButton}
-                onPress={handleSubmit}
+                    onPress={handleSubmit}
                 >
                     <Text style={[styles.proposeButtonText]}>PROPOSE MATCH</Text>
                 </TouchableOpacity>
@@ -375,6 +407,10 @@ const styles = StyleSheet.create({
         flex: 2,
 
         justifyContent: 'space-around'
+    },
+    locationButton: {
+        marginTop: 10,
+        alignItems: 'center'
     }
 });
 
