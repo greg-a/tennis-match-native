@@ -16,7 +16,7 @@ const LoginScreen = props => {
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
     
-    const { authContext } = React.useContext(AuthContext);
+    const { signIn } = React.useContext(AuthContext);
 
     const handleSignIn = () => {
 
@@ -39,7 +39,7 @@ const LoginScreen = props => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
                     // props.navigation.replace('Feed');
-                    authContext.signIn();
+                    signIn();
                 }
                 else if (res.statusString === 'noPassOrUser') {
                     setUserInstructions("Missing username or password");

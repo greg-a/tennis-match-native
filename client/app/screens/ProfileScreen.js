@@ -20,7 +20,7 @@ const ProfileScreen = props => {
         lng: ''
     });
     const [skillLabel, setSkillLabel] = useState('');
-    const { authContext } = React.useContext(AuthContext);
+    const { signOut } = React.useContext(AuthContext);
 
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
@@ -125,11 +125,23 @@ const ProfileScreen = props => {
     };
 
     const handleLogout = () => {
+        const token = { pushToken: null};
+
+        fetch(localHost + "/api/profileupdate", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(token)
+        })
+        .then(res => {
         fetch(localHost + "/logout")
             .then(res => {
-                authContext.signOut();
+                signOut();
             })
             .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
     };
 
     return (

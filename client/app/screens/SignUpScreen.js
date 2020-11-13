@@ -17,7 +17,7 @@ const SignUpScreen = props => {
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
 
-    const { authContext } = React.useContext(AuthContext);
+    const { signUp } = React.useContext(AuthContext);
 
     const handleFormSubmit = () => {
         fetch(localHost + "/api", {
@@ -40,7 +40,7 @@ const SignUpScreen = props => {
                     setUserInstructions("Account already exists with that username");
                     setWarningText(true);
                 } else if (res.statusString === "userCreateSuccess") {
-                    authContext.signUp();
+                    signUp();
                     props.navigation.navigate('Login')
                 }
             })
