@@ -20,7 +20,7 @@ const ProfileScreen = props => {
         lng: ''
     });
     const [skillLabel, setSkillLabel] = useState('');
-    const { signOut } = React.useContext(AuthContext);
+    const { authContext } = React.useContext(AuthContext);
 
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
@@ -127,7 +127,7 @@ const ProfileScreen = props => {
     const handleLogout = () => {
         fetch(localHost + "/logout")
             .then(res => {
-                signOut();
+                authContext.signOut();
             })
             .catch(err => console.log(err));
     };

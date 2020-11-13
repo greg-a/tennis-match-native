@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
@@ -15,6 +15,8 @@ const LoginScreen = props => {
     const [loginPassword, setLoginPassword] = React.useState("");
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
+    
+    const { authContext } = React.useContext(AuthContext);
 
     const handleSignIn = () => {
 
@@ -37,7 +39,7 @@ const LoginScreen = props => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
                     // props.navigation.replace('Feed');
-                    signIn();
+                    authContext.signIn();
                 }
                 else if (res.statusString === 'noPassOrUser') {
                     setUserInstructions("Missing username or password");
@@ -49,9 +51,7 @@ const LoginScreen = props => {
                 };
             })
             .catch(err => console.log(err));
-    }
-
-    const { signIn } = React.useContext(AuthContext);
+    };
 
     // checks if font has been loaded
     if (!fontsLoaded) {

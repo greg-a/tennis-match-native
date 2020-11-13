@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
+import { AuthContext } from './../../context';
 import * as Notifications from 'expo-notifications';
 
 const socket = io(localHost);
@@ -27,7 +28,7 @@ const MessengerScreen = props => {
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
 
-    const { myPushToken } = useContext(AuthContext);
+    const { pushToken } = React.useContext(AuthContext);
 
     const renderItem = ({ item }) => (
         <Item title={item.message} sender={item.User.username} timestamp={handleTimeStamp(item.createdAt)} />
@@ -36,6 +37,7 @@ const MessengerScreen = props => {
     useEffect(() => {
         getMessages(recipientId);
         connectToSocket();
+        console.log("my push token: " + pushToken)
     }, []);
 
     const getMessages = recipient => {

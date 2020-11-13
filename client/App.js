@@ -46,6 +46,11 @@ const RootStackScreen = ({ userToken }) => (
 export default function App() {
 
   const [userToken, setUserToken] = React.useState(null);
+  const [pushToken, setPushToken] = React.useState();
+
+  const handlePushToken = token => {
+    setPushToken(token);
+  };
 
   const authContext = React.useMemo(() => {
     return {
@@ -63,7 +68,7 @@ export default function App() {
 
   return (
 
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider value={{ authContext, pushToken, handlePushToken }}>
       <NavigationContainer>
         <RootStackScreen userToken={userToken} />
       </NavigationContainer>

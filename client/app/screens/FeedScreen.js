@@ -3,6 +3,7 @@ import moment from 'moment';
 import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, FlatList, SafeAreaView, RefreshControl } from 'react-native';
 import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
+import { AuthContext } from './../../context';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 
@@ -18,6 +19,8 @@ const FeedScreen = props => {
     const [confirmedMatches, setConfirmedMatches] = useState([]);
     const [updatedMatches, setUpdatedMatches] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+
+    const { handlePushToken } = React.useContext(AuthContext);
 
     const wait = (timeout) => {
         return new Promise(resolve => {
@@ -72,6 +75,7 @@ const FeedScreen = props => {
         })
         .then(response => {
             const token = response.data;
+            handlePushToken(token);
         })
         .catch((err) => {
             return null;
