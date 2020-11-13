@@ -461,8 +461,8 @@ module.exports = function (app) {
                 limit: 100, 
                 order: [["createdAt", "DESC"]],
                 include: [
-                    { model: db.User, attributes: ["username", "firstname", "lastname"] },
-                    { model: db.User, as: "recipient", attributes: ["username", "firstname", "lastname"] }
+                    { model: db.User, attributes: ["username", "firstname", "lastname", "pushToken"] },
+                    { model: db.User, as: "recipient", attributes: ["username", "firstname", "lastname", "pushToken"] }
                 ]
             })
                 .then(function (results) {

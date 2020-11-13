@@ -19,7 +19,7 @@ const Item = ({ title, sender, timestamp }) => (
 const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
     const recipientUsername = props.route.params.recipientUsername;
-    const recipientPushToken = props.route.params.pushToken;
+    const recipientPushToken = props.route.params.recipientPushToken;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
     const updateInbox = props.route.params.getMessages;
@@ -35,6 +35,7 @@ const MessengerScreen = props => {
     useEffect(() => {
         getMessages(recipientId);
         connectToSocket();
+        console.log("push token: " + recipientPushToken)
     }, []);
 
     const getMessages = recipient => {
