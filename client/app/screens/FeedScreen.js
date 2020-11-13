@@ -3,6 +3,16 @@ import moment from 'moment';
 import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, FlatList, SafeAreaView, RefreshControl } from 'react-native';
 import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
+import * as Permissions from 'expo-permissions';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => {
+        return {
+            shouldShowAlert: true        
+        };
+    }
+});
 
 const FeedScreen = props => {
     const [confirmedMatches, setConfirmedMatches] = useState([]);
@@ -22,12 +32,51 @@ const FeedScreen = props => {
     }, []);
 
     useEffect(() => {
+        getNotificationPermission();
         getDates();
     }, []);
 
     // useEffect(() => {
     //     console.log(JSON.stringify(confirmedMatches));
     // });
+
+    // example of a notification
+    const triggerNotificationHandler = () => {
+        Notifications.scheduleNotificationAsync({
+            content: {
+                title: 'So Refreshed',
+                body: 'You refreshed the feed screen!',
+            },
+            trigger: {
+                seconds: 1
+            }
+        })
+    };
+
+    const getNotificationPermission = () => {
+        Permissions.getAsync(Permissions.NOTIFICATIONS)
+        .then((statusObj) => {
+            if (statusObj.status !== 'granted') {
+                return Permissions.askAsync(Permissions.NOTIFICATIONS)
+            }
+            return statusObj;
+        })
+        .then((statusObj) => {
+            if (statusObj.status !== 'granted') {
+                throw new Error('Permission not granted!');
+            }
+        })
+        .then(() => {
+            console.log("getting token");
+            return Notifications.getExpoPushTokenAsync();
+        })
+        .then(response => {
+            const token = response.data;
+        })
+        .catch((err) => {
+            return null;
+        });
+    };
 
     const getDates = () => {
         fetch(localHost + '/api/confirmed')

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
+import * as Notifications from 'expo-notifications';
 
 const socket = io(localHost);
 
@@ -25,6 +26,8 @@ const MessengerScreen = props => {
     const [recId, updateRecId] = useState(recipientId);
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
+
+    const { myPushToken } = useContext(AuthContext);
 
     const renderItem = ({ item }) => (
         <Item title={item.message} sender={item.User.username} timestamp={handleTimeStamp(item.createdAt)} />
@@ -62,6 +65,29 @@ const MessengerScreen = props => {
         return () => {
             socket.disconnect()
         };
+    };
+
+    const triggerNotificationHandler = () => {
+        // Notifications.scheduleNotificationAsync({
+        //     content: {
+        //         title: 'So Refreshed',
+        //         body: 'You refreshed the feed screen!',
+        //     },
+        //     trigger: {
+        //         seconds: 1
+        //     }
+        // })
+        // fetch('https://exp.host/--/api/v2/push/send', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Accept-Encoding': 'gzip, deflate',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         to: 
+        //     })
+        // })
     };
 
     const handleMessageSend = () => {
