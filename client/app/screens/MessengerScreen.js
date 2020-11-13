@@ -19,6 +19,7 @@ const Item = ({ title, sender, timestamp }) => (
 const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
     const recipientUsername = props.route.params.recipientUsername;
+    const recipientPushToken = props.route.params.pushToken;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
     const updateInbox = props.route.params.getMessages;
@@ -34,7 +35,6 @@ const MessengerScreen = props => {
     useEffect(() => {
         getMessages(recipientId);
         connectToSocket();
-        console.log("my push token: " + pushToken)
     }, []);
 
     const getMessages = recipient => {
@@ -83,10 +83,10 @@ const MessengerScreen = props => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                to: pushToken,
-                data: {},
-                title: '',
-                body: ''
+                to: recipientPushToken,
+                // data: {},
+                title: 'Message',
+                body: 'New Message'
             })
         })
     };
@@ -117,6 +117,7 @@ const MessengerScreen = props => {
             })
                 .then(res => {
                     console.log("Your message was sent!");
+                    triggerNotificationHandler();
                 })
                 .catch(err => console.log(err));
             setNewMessage("")

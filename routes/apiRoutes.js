@@ -141,7 +141,7 @@ module.exports = function (app) {
                     let userArr = (req.query.username).split(" ");
 
                     db.User.findAll({
-                        attributes: ["username", "firstname", "lastname", "id"],
+                        attributes: ["username", "firstname", "lastname", "id", "pushToken"],
                         where: {
                             [Op.and]: [
                                 { firstname: { [Op.substring]: userArr[0] } },
@@ -154,7 +154,7 @@ module.exports = function (app) {
                     });
                 } else {
                     db.User.findAll({
-                        attributes: ["username", "firstname", "lastname", "id"],
+                        attributes: ["username", "firstname", "lastname", "id", "pushToken"],
                         where: {
                             id: { [Op.not]: req.session.userID },
                             [Op.or]: [
@@ -280,7 +280,7 @@ module.exports = function (app) {
                 },
                 include: [
                     {model: db.User,
-                        attributes: ["username","firstname","lastname","id","skilllevel"],}]
+                        attributes: ["username","firstname","lastname","id","skilllevel", "pushToken"],}]
             }).then(function (results) {
                 res.json(results);
             });
@@ -301,7 +301,7 @@ module.exports = function (app) {
                 },
                 include: [
                     {model: db.User,
-                        attributes: ["username","firstname","lastname","id","skilllevel"],}]
+                        attributes: ["username","firstname","lastname","id","skilllevel", "pushToken"],}]
             }).then(function (results) {
                 results = {results: results, userid: req.session.userID}
                 res.json(results);
@@ -435,8 +435,8 @@ module.exports = function (app) {
                 }, 
                 order: [["createdAt", "DESC"]],
                 include: [
-                    { model: db.User, attributes: ["username", "firstname", "lastname"] },
-                    { model: db.User, as: "recipient", attributes: ["username", "firstname", "lastname"] }
+                    { model: db.User, attributes: ["username", "firstname", "lastname", "pushToken"] },
+                    { model: db.User, as: "recipient", attributes: ["username", "firstname", "lastname", "pushToken"] }
                 ]
             })
                 .then(function (results) {

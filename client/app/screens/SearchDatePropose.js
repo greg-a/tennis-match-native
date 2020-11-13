@@ -9,7 +9,7 @@ import LocationPicker from '../components/LocationPicker';
 
 
 const SearchDatePropose = ({ route, navigation }) => {
-
+    // params being passed from Search Date Results Screen
     const [eventObj, setEventObj] = React.useState(route.params.eventObj);
 
     const [startIntArrState, setStartIntArrState] = React.useState([]);
@@ -142,7 +142,10 @@ const SearchDatePropose = ({ route, navigation }) => {
             })
         })
             .then(res => res.json())
-            .then(res => console.log(res))
+            .then(res => {
+                console.log(res);
+                triggerNotificationHandler();
+            })
             .catch(err => console.log(err));
 
     }
@@ -207,6 +210,25 @@ const SearchDatePropose = ({ route, navigation }) => {
                 setModalVisible(false);
             })
             .catch(err => console.log(err))
+    };
+
+    const triggerNotificationHandler = () => {
+        const recipientPushToken = eventObj.User.pushToken;
+
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: recipientPushToken,
+                // data: {},
+                title: 'Match Request',
+                body: 'New Match Request'
+            })
+        })
     };
 
     return (

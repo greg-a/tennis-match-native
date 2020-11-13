@@ -34,7 +34,8 @@ const RequestsScreen = props => {
             id: eventId,
             title: "Confirmed -" + titleArr[1]
         };
-
+        const recipientPushToken = eventObj.User.pushToken;
+        
         // console.log(JSON.stringify(updateObj));
 
         const confirmedEventInfo = {
@@ -64,6 +65,7 @@ const RequestsScreen = props => {
                         // Do we need this?
                         // socket.emit("newMatchNotification", this.state.userid);
                         console.log(JSON.stringify(res));
+                        triggerNotificationHandler(recipientPushToken);
                         getRequests();
                     })
                     .catch(err => console.log(err))
@@ -92,8 +94,24 @@ const RequestsScreen = props => {
                 getRequests();
             })
             .catch(err => console.log(err));
+    };
 
-    }
+    const triggerNotificationHandler = (recipientPushToken) => {
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: recipientPushToken,
+                // data: {},
+                title: 'Match Confirmation',
+                body: 'New Match Confirmation'
+            })
+        })
+    };
 
     return (
         <ScrollView>

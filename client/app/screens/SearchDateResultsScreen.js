@@ -5,6 +5,7 @@ import moment from "moment";
 import { googleMapsAPI } from '../localhost.js';
 
 const SearchDateResultsScreen = ({ route, navigation }) => {
+    // params being passed from Search By Date Screen
     const [searchResults, setSearchResults] = React.useState(route.params.searchResults);
     const [showMap, setShowMap] = React.useState(false);
     const [mapLocation, setMapLocation] = React.useState();

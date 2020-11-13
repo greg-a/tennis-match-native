@@ -38,14 +38,15 @@ const UserSearchScreen = props => {
             onPress={searchType === 'message' ? () => props.navigation.replace('Messenger', {
                 recipientId: item.id,
                 recipientUsername: item.username,
+                pushToken: item.pushToken,
                 myUserId: myUserId,
                 myUsername: myUsername,
                 getMessages: getMessages
             })
                 :
                 () => {
-                    setUserInfo(item.id, item.username)
-                    props.navigation.goBack()
+                    setUserInfo(item.id, item.username, item.pushToken);
+                    props.navigation.goBack();
                 }
             }
         />

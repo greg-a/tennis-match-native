@@ -56,6 +56,7 @@ const InboxScreen = props => {
             onPress={() => props.navigation.navigate('Messenger', {
                 recipientId: item.senderId == myUserId ? item.recipientId : item.senderId,
                 recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username,
+                recipientPushToken: item.senderId == myUserId ? item.recipient.pushToken : item.User.pushToken,
                 myUserId: myUserId,
                 myUsername: myUsername,
                 getMessages: getMessages

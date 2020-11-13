@@ -125,7 +125,7 @@ const ProfileScreen = props => {
     };
 
     const handleLogout = () => {
-        const token = { pushToken: null};
+        const token = { pushToken: null };
 
         fetch(localHost + "/api/profileupdate", {
             method: "PUT",
@@ -134,14 +134,14 @@ const ProfileScreen = props => {
             },
             body: JSON.stringify(token)
         })
-        .then(res => {
-        fetch(localHost + "/logout")
             .then(res => {
-                signOut();
+                fetch(localHost + "/logout")
+                    .then(res => {
+                        signOut();
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
-        })
-        .catch(err => console.log(err));
     };
 
     return (
