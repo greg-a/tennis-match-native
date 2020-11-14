@@ -33,10 +33,14 @@ const SearchDatePropose = ({ route, navigation }) => {
     const [currentCoordinates, setCurrentCoordinates] = React.useState({ lat: route.params.eventObj.latitude, lng: route.params.eventObj.longitude });
     const [modalVisible, setModalVisible] = React.useState(false);
 
+    const [userInstructions, setUserInstructions] = React.useState("Pick a start and end time.");
+    const [warningText, setWarningText] = React.useState(false);
+
     useEffect(() => {
         // console.log('username Test: ' + JSON.stringify(route.params.eventObj));
         if (eventObj.location === 'any') {
             getCourtData();
+            setUserInstructions('Pick a court, start time and end time.');
         };
         addInputTime();
     }, [currentCoordinates]);
@@ -127,23 +131,30 @@ const SearchDatePropose = ({ route, navigation }) => {
         // console.log('end: '+currentEndDate);
         // console.log('confirmedByUser: '+eventObj.User.id);
         // console.log('location: '+eventLocation);
-        fetch(localHost + "/api/calendar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: "Proposed - " + eventTitle,
-                start: currentStartDate,
-                end: currentEndDate,
-                confirmedByUser: eventObj.User.id,
-                location: eventLocation,
-                eventStatus: "propose"
-            })
-        })
-            .then(res => res.json())
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
+        if (eventLocation && startTimeHourValue && startTimeMinuteValue && endTimeHourValue && endTimeMinuteValue) {
+            // fetch(localHost + "/api/calendar", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({
+            //         title: "Proposed - " + eventTitle,
+            //         start: currentStartDate,
+            //         end: currentEndDate,
+            //         confirmedByUser: eventObj.User.id,
+            //         location: eventLocation,
+            //         eventStatus: "propose"
+            //     })
+            // })
+            //     .then(res => res.json())
+            //     .then(res => console.log(res))
+            //     .catch(err => console.log(err));
+            setUserInstructions('fetch called');
+        } else {
+            setWarningText(true);
+            setUserInstructions('Please fill out all fields.');
+        }
+
 
     }
 
@@ -216,6 +227,7 @@ const SearchDatePropose = ({ route, navigation }) => {
                 <Text style={[styles.baseText, styles.titleText]}>
                     {eventObj.title}
                 </Text>
+                {warningText ? <Text style={[styles.baseText, styles.warningText]}>{userInstructions}</Text> : <Text style={[styles.baseText]}>{userInstructions}</Text>}
                 <Text style={[styles.baseText, styles.subTitle]}>
                     {eventObj.User.firstname ? `Username: ${eventObj.User.username} (${eventObj.User.firstname} ${eventObj.User.lastname})` : `Username: ${eventObj.User.username}`}
                 </Text>
@@ -248,7 +260,7 @@ const SearchDatePropose = ({ route, navigation }) => {
                             />
                         </ModalSelector>
                         <View style={styles.locationButton}>
-                        <Button title='Set Location' onPress={() => setModalVisible(true)} />
+                            <Button title='Set Location' onPress={() => setModalVisible(true)} />
                         </View>
                     </View>
                     :
@@ -404,14 +416,17 @@ const styles = StyleSheet.create({
         paddingBottom: 6
     },
     topContainer: {
-        flex: 2,
+        flex: 3,
 
         justifyContent: 'space-around'
     },
     locationButton: {
         marginTop: 10,
         alignItems: 'center'
-    }
+    },
+    warningText: {
+        color: '#d30000'
+    },
 });
 
 export default SearchDatePropose;
