@@ -26,7 +26,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen name="Find Match" component={SearchByDateStackNavigator} 
       options={{ drawerLabel: 'Find Match',
-      drawerIcon: (({focused}) => <Icon name="call-merge" size={30} color="#6CE631" />)
+      drawerIcon: (({focused}) => <Icon name="call-merge" size={30} color="#6CE631" />), unmountOnBlur: true
       }}
       />
       <Drawer.Screen name="Requests" component={RequestsStackNavigator} 

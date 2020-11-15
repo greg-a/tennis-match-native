@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Button } from 'react-native';
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View, Button } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import moment from "moment";
 import { minuteArray } from '../../data/ProfileData';
@@ -50,7 +50,8 @@ const SearchDatePropose = ({ route, navigation }) => {
         // console.log('start time minute: ' + startTimeMinuteValue);
         // console.log('end time hour: ' + endTimeHourValue);
         // console.log('end time minute: ' + endTimeMinuteValue);
-        // console.log('event location: ' + eventLocation);
+        console.log('event location: ' + eventLocation);
+        console.log('event obj: '+ JSON.stringify(eventObj));
         // console.log('event title: ' + eventTitle);
         // console.log('user id: ' + eventObj.User.id);
     });
@@ -132,24 +133,68 @@ const SearchDatePropose = ({ route, navigation }) => {
         // console.log('confirmedByUser: '+eventObj.User.id);
         // console.log('location: '+eventLocation);
         if (eventLocation && startTimeHourValue && startTimeMinuteValue && endTimeHourValue && endTimeMinuteValue) {
-            // fetch(localHost + "/api/calendar", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     },
-            //     body: JSON.stringify({
-            //         title: "Proposed - " + eventTitle,
-            //         start: currentStartDate,
-            //         end: currentEndDate,
-            //         confirmedByUser: eventObj.User.id,
-            //         location: eventLocation,
-            //         eventStatus: "propose"
-            //     })
-            // })
-            //     .then(res => res.json())
-            //     .then(res => console.log(res))
-            //     .catch(err => console.log(err));
-            setUserInstructions('fetch called');
+            let fetchBody;
+            if(typeof eventLocation === 'string') {
+                fetchBody = JSON.stringify({
+                    title: "Proposed - " + eventTitle,
+                    start: currentStartDate,
+                    end: currentEndDate,
+                    confirmedByUser: eventObj.User.id,
+                    eventStatus: "propose",
+                    location: eventLocation,
+                    vicinity: eventObj.vicinity,
+                    latitude: eventObj.latitude,
+                    longitude: eventObj.longitude
+                })
+            } else {
+                fetchBody = JSON.stringify({
+                    title: "Proposed - " + eventTitle,
+                    start: currentStartDate,
+                    end: currentEndDate,
+                    confirmedByUser: eventObj.User.id,
+                    eventStatus: "propose",
+                    location: eventLocation.label,
+                    vicinity: eventLocation.vicinity,
+                    latitude: eventLocation.lat,
+                    longitude: eventLocation.lng
+                })
+            }
+
+            fetch(localHost + "/api/calendar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: fetchBody
+            })
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    if (res.statusString === 'eventCreated') {
+
+                        Alert.alert(
+                            "Success!",
+                            "The match was proposed.",
+                            [{
+                                text: "OK",
+                                onPress: () => navigation.navigate('Feed')
+                            }],
+                            { cancelable: false }
+                        );
+                    } else {
+                        Alert.alert(
+                            "Uh oh",
+                            "Something went wrong. Please try again.",
+                            [{
+                                text: "OK",
+                                onPress: () => navigation.navigate('FindMatch')
+                            }],
+                            { cancelable: false }
+                        );
+                    }
+
+                })
+                .catch(err => console.log(err));
         } else {
             setWarningText(true);
             setUserInstructions('Please fill out all fields.');
