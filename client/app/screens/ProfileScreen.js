@@ -251,7 +251,8 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 18,
-        marginBottom: 15
+        marginBottom: 10,
+        color: 'grey'
     },
     logoutButton: {
         paddingVertical: 15,

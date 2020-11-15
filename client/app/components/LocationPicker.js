@@ -75,7 +75,7 @@ const LocationPicker = props => {
                                 value={zipcode}
                             />
                         </View>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={styles.footer}>
                             <TouchableOpacity style={styles.button} onPress={props.cancelModal}>
                                 <Text style={styles.buttonText}>Cancel</Text>
                             </TouchableOpacity>
@@ -97,6 +97,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 22
     },
+    footer: {
+        flexDirection: 'row'
+    },
     modalView: {
         margin: 20,
         backgroundColor: "white",
@@ -113,16 +116,16 @@ const styles = StyleSheet.create({
         elevation: 5
     },
     button: {
-        paddingVertical: 15,
-        backgroundColor: '#269bee',
         borderRadius: 5,
         marginTop: 5,
         width: 60,
         margin: 20,
-        marginTop: 30
+        marginTop: 30,
     },
     buttonText: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        color: '#269bee',
+        fontSize: 15
     },
     openButton: {
         backgroundColor: "#F194FF",
@@ -140,7 +143,9 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     input: {
-        fontSize: 20
+        fontSize: 20,
+        width: 110,
+        textAlign: 'center'
     },
     inputContainer: {
         borderBottomColor: 'black',
@@ -149,7 +154,7 @@ const styles = StyleSheet.create({
         width: '80%'
     },
     buttonContainer: {
-        marginBottom: 15
+        marginBottom: 20
     }
 });
 
