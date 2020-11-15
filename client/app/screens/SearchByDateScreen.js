@@ -9,16 +9,18 @@ const SearchByDateScreen = props => {
     const [newDate, setNewDate] = React.useState("");
     const [conDate, setConDate] = React.useState("");
     const [searchResult, setSearchResult] = React.useState("");
+    const [userInstructions, setUserInstructions] = React.useState("Pick a date to search for other players' availability.");
+    const [warningText, setWarningText] = React.useState(false);
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
 
-    useEffect(()=>{
-        console.log('newDate: '+newDate);
-        console.log('conDate: '+conDate);
-    }); 
+    useEffect(() => {
+        console.log('newDate: ' + newDate);
+        console.log('conDate: ' + conDate);
+    });
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -50,23 +52,41 @@ const SearchByDateScreen = props => {
     };
 
     const handleFormSubmit = () => {
-        const searchURL = localHost+"/api/calendar/propose?date=" + moment(newDate).format('YYYY-MM-DD');
-        console.log(searchURL);
-        fetch(searchURL)
-            .then(res => res.json())
-            .then(res => {
-                // this.addInputTimes(res);
-                // console.log("query results: " + JSON.stringify(res));
-                setSearchResult(res);
-                props.navigation.navigate('DateResults', {
-                    searchResults: res
-                });
-            })
-            .catch(err => console.log(err));
+        if (newDate==='') {
+            setWarningText(true);
+            setUserInstructions('Please enter a date.');
+        } else {
+
+            const searchURL = localHost + "/api/calendar/propose?date=" + moment(newDate).format('YYYY-MM-DD');
+            console.log(searchURL);
+            fetch(searchURL)
+                .then(res => res.json())
+                .then(res => {
+                    // this.addInputTimes(res);
+                    console.log("query results: " + JSON.stringify(res));
+                    console.log("query results no stringify: " + res.length);
+                    if (res.length===0) {
+                        setWarningText(true);
+                        setUserInstructions('No availability for that date.');
+                    } else {
+                        setSearchResult(res);
+                        props.navigation.navigate('DateResults', {
+                            searchResults: res
+                        });
+                        setWarningText(false);
+                        setUserInstructions("Pick a date to search for other players' availability.");
+                    }
+                })
+                .catch(err => console.log(err));
+        }
     };
 
     return (
         <View style={styles.container}>
+            {warningText ? <Text style={[styles.baseText, styles.instructionText, styles.warningText]}>{userInstructions}</Text> : <Text style={[styles.baseText, styles.instructionText]}>{userInstructions}</Text>}
+            {/* <Text style={[warningText ? styles.warningText : styles.baseText, styles.instructionText]}>
+                    {userInstructions}
+                </Text> */}
             <View>
                 <TouchableWithoutFeedback onPress={showDatePicker}>
                     <View style={styles.viewInput}>
@@ -100,6 +120,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around'
     },
+    instructionText: {
+        textAlign: 'center'
+    },  
     searchButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
@@ -126,6 +149,9 @@ const styles = StyleSheet.create({
     viewInputText2: {
         color: 'black',
         fontWeight: "300"
+    },
+    warningText: {
+        color: '#d30000'
     },
 });
 
