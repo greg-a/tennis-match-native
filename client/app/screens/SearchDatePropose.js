@@ -9,7 +9,7 @@ import LocationPicker from '../components/LocationPicker';
 
 
 const SearchDatePropose = ({ route, navigation }) => {
-
+    // params being passed from Search Date Results Screen
     const [eventObj, setEventObj] = React.useState(route.params.eventObj);
 
     const [startIntArrState, setStartIntArrState] = React.useState([]);
@@ -171,7 +171,7 @@ const SearchDatePropose = ({ route, navigation }) => {
                 .then(res => {
                     console.log(res);
                     if (res.statusString === 'eventCreated') {
-
+                        triggerNotificationHandler();
                         Alert.alert(
                             "Success!",
                             "The match was proposed.",
@@ -263,6 +263,31 @@ const SearchDatePropose = ({ route, navigation }) => {
                 setModalVisible(false);
             })
             .catch(err => console.log(err))
+    };
+
+    const triggerNotificationHandler = () => {
+        const recipientPushToken = eventObj.User.pushToken;
+        const recipientPushEnabled = eventObj.User.pushEnabled;
+
+        if (recipientPushEnabled) {
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: recipientPushToken,
+                // data: {},
+                title: 'Match Request',
+                body: 'New Match Request'
+            })
+        })
+    }
+    else {
+        console.log('recipient disabled push notifications');
+    }
     };
 
     return (

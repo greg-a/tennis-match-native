@@ -28,6 +28,8 @@ const AvailabilityScreen = props => {
     const [conEndTime, setConEndTime] = React.useState("");
     const [recipientId, setRecipientId] = React.useState(null);
     const [recipientUsername, setRecipientUsername] = React.useState("");
+    const [recipientPushToken, setRecipientPushToken] = React.useState(null);
+    const [recipientPushEnabled, setRecipientPushEnabled] = React.useState(false);
     const [currentCoordinates, setCurrentCoordinates] = React.useState({});
     const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
     const [userInstructions, setUserInstructions] = React.useState("");
@@ -54,6 +56,7 @@ const AvailabilityScreen = props => {
         setConEndTime("");
         setRecipientId(null);
         setRecipientUsername("");
+        setRecipientPushToken(null);
         setInitialEndTime(initialTime);
         setEventType("");
     };
@@ -92,6 +95,7 @@ const AvailabilityScreen = props => {
                             "Your availability was posted",
                             [{ text: "OK" }]
                         );
+                        triggerNotificationHandler();
                         formReset();
                     }
                 }
@@ -237,9 +241,11 @@ const AvailabilityScreen = props => {
         convertDatetime(time, 'endTime');
     };
 
-    const setUserInfo = (id, username) => {
+    const setUserInfo = (id, username, token, enabled) => {
         setRecipientId(id);
         setRecipientUsername(username);
+        setRecipientPushToken(token);
+        setRecipientPushEnabled(enabled);
     };
 
     const getCurrentLocation = (lat, lng) => {
@@ -262,6 +268,37 @@ const AvailabilityScreen = props => {
                 setModalVisible(false);
             })
             .catch(err => console.log(err))
+    };
+
+    const triggerNotificationHandler = () => {
+        // Notifications.scheduleNotificationAsync({
+        //     content: {
+        //         title: 'So Refreshed',
+        //         body: 'You refreshed the feed screen!',
+        //     },
+        //     trigger: {
+        //         seconds: 1
+        //     }
+        // })
+        if (recipientPushEnabled) {
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: recipientPushToken,
+                // data: {},
+                title: 'Match Request',
+                body: 'New Match Request'
+            })
+        })
+    }
+    else {
+        console.log('recipient disabled push notifications');
+    }
     };
 
     return (
@@ -395,7 +432,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        marginBottom: 20
     },
     input: {
         height: 60,

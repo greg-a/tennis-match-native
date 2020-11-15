@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 
 // import { MainStackNavigator } from "./app/navigation/StackNavigator";
 import DrawerNavigator from './app/navigation/DrawerNavigator';
-import BottomTabNavigator from './app/navigation/TabNavigator';
 import LoginScreen from './app/screens/LoginScreen';
 import SignUpScreen from './app/screens/SignUpScreen';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -51,7 +50,7 @@ export default function App() {
   const authContext = React.useMemo(() => {
     return {
       signIn: () => {
-        setUserToken("asdf");
+        setUserToken("asdf");        
       },
       signUp: () => {
         setUserToken(null);

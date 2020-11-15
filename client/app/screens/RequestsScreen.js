@@ -34,6 +34,8 @@ const RequestsScreen = props => {
             id: eventId,
             title: "Confirmed -" + titleArr[1]
         };
+        const recipientPushToken = eventObj.User.pushToken;
+        const recipientPushEnabled = eventObj.User.pushEnabled;
 
         // console.log(JSON.stringify(updateObj));
 
@@ -64,6 +66,14 @@ const RequestsScreen = props => {
                         // Do we need this?
                         // socket.emit("newMatchNotification", this.state.userid);
                         console.log(JSON.stringify(res));
+
+                        if (recipientPushEnabled) {
+                            triggerNotificationHandler(recipientPushToken);
+                        }
+                        else {
+                            console.log('recipient disabled push notifications');
+                        };
+
                         getRequests();
                     })
                     .catch(err => console.log(err))
@@ -79,7 +89,7 @@ const RequestsScreen = props => {
             id: eventId
         }
 
-        fetch(localHost+"/api/event/deny", {
+        fetch(localHost + "/api/event/deny", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -92,8 +102,24 @@ const RequestsScreen = props => {
                 getRequests();
             })
             .catch(err => console.log(err));
+    };
 
-    }
+    const triggerNotificationHandler = (recipientPushToken) => {
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: recipientPushToken,
+                // data: {},
+                title: 'Match Confirmation',
+                body: 'New Match Confirmation'
+            })
+        })
+    };
 
     return (
         <ScrollView>

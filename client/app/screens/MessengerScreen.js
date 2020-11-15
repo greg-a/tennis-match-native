@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
+import * as Notifications from 'expo-notifications';
 
 const socket = io(localHost);
 
@@ -18,6 +19,8 @@ const Item = ({ title, sender, timestamp }) => (
 const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
     const recipientUsername = props.route.params.recipientUsername;
+    const recipientPushToken = props.route.params.recipientPushToken;
+    const recipientPushEnabled = props.route.params.recipientPushEnabled;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
     const updateInbox = props.route.params.getMessages;
@@ -33,6 +36,7 @@ const MessengerScreen = props => {
     useEffect(() => {
         getMessages(recipientId);
         connectToSocket();
+        console.log("push token: " + recipientPushToken)
     }, []);
 
     const getMessages = recipient => {
@@ -52,7 +56,6 @@ const MessengerScreen = props => {
         socket.on("output", data => {
             data.createdAt = new Date();
             data.id = new Date();
-            console.log("socket data: " + JSON.stringify(data));
             if (data.senderId == recipientId || data.recipientId == recipientId) {
                 setMessages(oldMessages => [data, ...oldMessages]);
                 updateInbox();
@@ -62,6 +65,37 @@ const MessengerScreen = props => {
         return () => {
             socket.disconnect()
         };
+    };
+
+    const triggerNotificationHandler = () => {
+        // Notifications.scheduleNotificationAsync({
+        //     content: {
+        //         title: 'So Refreshed',
+        //         body: 'You refreshed the feed screen!',
+        //     },
+        //     trigger: {
+        //         seconds: 1
+        //     }
+        // })
+        if (recipientPushEnabled) {
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: recipientPushToken,
+                    // data: {},
+                    title: 'Message',
+                    body: 'New Message'
+                })
+            })
+        }
+        else {
+            console.log("recipient has push notifications disabled")
+        }
     };
 
     const handleMessageSend = () => {
@@ -90,6 +124,7 @@ const MessengerScreen = props => {
             })
                 .then(res => {
                     console.log("Your message was sent!");
+                    triggerNotificationHandler();
                 })
                 .catch(err => console.log(err));
             setNewMessage("")

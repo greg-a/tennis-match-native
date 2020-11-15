@@ -74,7 +74,7 @@ const CalendarScreen = props => {
     const handleGetDirections = () => {
         const scheme = Platform.OS === 'ios' ? 'maps:0,0?q=' : 'geo:0,0?q=';
         const latLng = `${eventLocationInfo.lat},${eventLocationInfo.lng}`;
-        const label = 'Custom Label';
+        const label = 'Tennis Court';
         const url = Platform.select({
             ios: `${scheme}${label}@${latLng}`,
             android: `${scheme}${latLng}(${label})`
@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         textAlign: 'center',
-        fontSize: 15
+        fontSize: 15,
+        color: 'white'
     },
     text: {
         fontSize: 20,

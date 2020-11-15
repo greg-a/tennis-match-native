@@ -109,7 +109,7 @@ const CalendarStackNavigator = ({ navigation }) => {
 
 export { CalendarStackNavigator };
 
-const ProfileStackNavigator = () => {
+const ProfileStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -120,7 +120,18 @@ const ProfileStackNavigator = () => {
         headerBackTitle: "Back",
       }}
     >
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }} />
     </Stack.Navigator>
   );
 }
@@ -158,7 +169,7 @@ const MessengerStackNavigator = ({ navigation }) => {
 
 export { MessengerStackNavigator };
 
-const SearchByDateStackNavigator = () => {
+const SearchByDateStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -169,7 +180,18 @@ const SearchByDateStackNavigator = () => {
         headerBackTitle: "Back",
       }}
     >
-      <Stack.Screen name="FindMatch" component={SearchByDateScreen} />
+      <Stack.Screen name="FindMatch" component={SearchByDateScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }} />
       <Stack.Screen name="DateResults" component={SearchDateResultsScreen} />
       <Stack.Screen name="ProposeDate" component={SearchDatePropose} />
     </Stack.Navigator>
@@ -179,7 +201,7 @@ const SearchByDateStackNavigator = () => {
 export { SearchByDateStackNavigator };
 
 
-const RequestsStackNavigator = () => {
+const RequestsStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator
     screenOptions={{
@@ -190,7 +212,18 @@ const RequestsStackNavigator = () => {
       headerBackTitle: "Back",
     }}
     >
-      <Stack.Screen name="Requests" component={RequestsScreen} />
+      <Stack.Screen name="Requests" component={RequestsScreen} options={{
+        headerLeft: () => (
+          <View>
+            <Icon
+              onPress={() => navigation.toggleDrawer()}
+              name="tennis"
+              color="white"
+              size={40}
+            />
+          </View>
+        ),
+      }} />
     </Stack.Navigator>
   )
 };

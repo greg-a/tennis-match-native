@@ -14,19 +14,23 @@ const EventModal = props => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text>{props.title}</Text>
-                        <Text>{props.subtitle}</Text>
-                        <TouchableOpacity style={styles.button} onPress={props.getDirections}>
-                            <Text style={styles.buttonText}>Get Directions</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText}>Edit Details</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={props.deleteEvent}>
-                            <Text style={styles.buttonText}>Delete</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={props.cancelModal}>
-                            <Text style={styles.buttonText}>Cancel</Text>
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>{props.title}</Text>
+                            <Text>{props.subtitle}</Text>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity onPress={props.getDirections}>
+                                <Text style={styles.buttonText}>Get Directions</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Text style={styles.buttonText}>Edit Details</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={props.deleteEvent}>
+                                <Text style={styles.buttonText}>Delete</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={styles.cancelContainer} onPress={props.cancelModal}>
+                            <Text style={styles.buttonText, styles.cancelButton}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -42,11 +46,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 22
     },
+    titleContainer: {
+        marginBottom: 5,
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 15,
+        fontWeight: 'bold'
+    },
     modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 30,
+        padding: 10,
         paddingTop: 25,
         alignItems: "center",
         shadowColor: "#000",
@@ -62,11 +74,15 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 5,
-        width: 145
+        marginTop: 8,
+        width: 130
     },
     buttonText: {
-        alignSelf: 'center'
+        color: '#269bee',
+        marginTop: 10,
+        marginBottom: 10,
+        fontSize: 18,
+        borderColor: 'black'
     },
     openButton: {
         backgroundColor: "#F194FF",
@@ -82,6 +98,22 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
+    },
+    buttonContainer: {
+        borderColor: '#e0e0e0',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        width: 165,
+        marginTop: 15,
+        alignItems: 'center'
+    },  
+    cancelContainer: {
+        marginTop: 5,
+        alignItems: 'center',
+        padding: 10
+    },
+    cancelButton: {
+        color: 'red'
     }
 });
 
