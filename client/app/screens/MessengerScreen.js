@@ -20,6 +20,7 @@ const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
     const recipientUsername = props.route.params.recipientUsername;
     const recipientPushToken = props.route.params.recipientPushToken;
+    const recipientPushEnabled = props.route.params.recipientPushEnabled;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
     const updateInbox = props.route.params.getMessages;
@@ -76,20 +77,25 @@ const MessengerScreen = props => {
         //         seconds: 1
         //     }
         // })
-        fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Accept-Encoding': 'gzip, deflate',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                to: recipientPushToken,
-                // data: {},
-                title: 'Message',
-                body: 'New Message'
+        if (recipientPushEnabled) {
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: recipientPushToken,
+                    // data: {},
+                    title: 'Message',
+                    body: 'New Message'
+                })
             })
-        })
+        }
+        else {
+            console.log("recipient has push notifications disabled")
+        }
     };
 
     const handleMessageSend = () => {

@@ -39,13 +39,14 @@ const UserSearchScreen = props => {
                 recipientId: item.id,
                 recipientUsername: item.username,
                 pushToken: item.pushToken,
+                pushEnabled: item.pushEnabled,
                 myUserId: myUserId,
                 myUsername: myUsername,
                 getMessages: getMessages
             })
                 :
                 () => {
-                    setUserInfo(item.id, item.username, item.pushToken);
+                    setUserInfo(item.id, item.username, item.pushToken, item.pushEnabled);
                     props.navigation.goBack();
                 }
             }

@@ -267,7 +267,9 @@ const SearchDatePropose = ({ route, navigation }) => {
 
     const triggerNotificationHandler = () => {
         const recipientPushToken = eventObj.User.pushToken;
+        const recipientPushEnabled = eventObj.User.pushEnabled;
 
+        if (recipientPushEnabled) {
         fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
@@ -282,6 +284,10 @@ const SearchDatePropose = ({ route, navigation }) => {
                 body: 'New Match Request'
             })
         })
+    }
+    else {
+        console.log('recipient disabled push notifications');
+    }
     };
 
     return (

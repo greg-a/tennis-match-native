@@ -35,7 +35,8 @@ const RequestsScreen = props => {
             title: "Confirmed -" + titleArr[1]
         };
         const recipientPushToken = eventObj.User.pushToken;
-        
+        const recipientPushEnabled = eventObj.User.pushEnabled;
+
         // console.log(JSON.stringify(updateObj));
 
         const confirmedEventInfo = {
@@ -65,7 +66,14 @@ const RequestsScreen = props => {
                         // Do we need this?
                         // socket.emit("newMatchNotification", this.state.userid);
                         console.log(JSON.stringify(res));
-                        triggerNotificationHandler(recipientPushToken);
+
+                        if (recipientPushEnabled) {
+                            triggerNotificationHandler(recipientPushToken);
+                        }
+                        else {
+                            console.log('recipient disabled push notifications');
+                        };
+
                         getRequests();
                     })
                     .catch(err => console.log(err))
@@ -81,7 +89,7 @@ const RequestsScreen = props => {
             id: eventId
         }
 
-        fetch(localHost+"/api/event/deny", {
+        fetch(localHost + "/api/event/deny", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

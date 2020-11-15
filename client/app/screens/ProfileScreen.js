@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity } from 'react-native';
+import { ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity, Switch } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost, googleMapsAPI } from '../localhost.js';
@@ -17,11 +17,15 @@ const ProfileScreen = props => {
         zipcode: '',
         skilllevel: 0,
         lat: '',
-        lng: ''
+        lng: '',
+        pushEnabled: true
     });
     const [skillLabel, setSkillLabel] = useState('');
+    // const [isEnabledPush, setIsEnabledPush] = useState(true);
     const { signOut } = React.useContext(AuthContext);
-
+    
+    const toggleSwitch = () => setProfileUpdate({...profileUpdate, pushEnabled: !profileUpdate.pushEnabled});
+    
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
             return "1.0-1.5 - New Player";
@@ -102,7 +106,8 @@ const ProfileScreen = props => {
                     zipcode: res.zipcode,
                     skilllevel: res.skilllevel,
                     lat: res.lat,
-                    lng: res.lng
+                    lng: res.lng,
+                    pushEnabled: res.pushEnabled
                 });
                 setSkillLabel(skillConversion(res.skilllevel));
             })
@@ -147,21 +152,23 @@ const ProfileScreen = props => {
     return (
         <ScrollView>
             <View style={styles.form}>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>First Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={profileUpdate.firstname}
-                        onChangeText={text => setProfileUpdate({ ...profileUpdate, firstname: text })}
-                    />
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Last Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={profileUpdate.lastname}
-                        onChangeText={text => setProfileUpdate({ ...profileUpdate, lastname: text })}
-                    />
+                <View style={styles.row}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>First Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.firstname}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, firstname: text })}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Last Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.lastname}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, lastname: text })}
+                        />
+                    </View>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>City</Text>
@@ -171,28 +178,30 @@ const ProfileScreen = props => {
                         onChangeText={text => setProfileUpdate({ ...profileUpdate, city: text })}
                     />
                 </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>State</Text>
-                    <ModalSelector
-                        pickerStyle={styles.input}
-                        data={States}
-                        onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
+                <View style={styles.row}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>State</Text>
+                        <ModalSelector
+                            pickerStyle={styles.input}
+                            data={States}
+                            onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
+                            <TextInput
+                                style={styles.input}
+                                value={profileUpdate.state}
+                                editable={false}
+                                placeholder={"Choose State..."}
+                            />
+                        </ModalSelector>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Zip Code</Text>
                         <TextInput
                             style={styles.input}
-                            value={profileUpdate.state}
-                            editable={false}
-                            placeholder={"Choose State..."}
+                            value={profileUpdate.zipcode}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
+                            keyboardType="numeric"
                         />
-                    </ModalSelector>
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Zip Code</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={profileUpdate.zipcode}
-                        onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
-                        keyboardType="numeric"
-                    />
+                    </View>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Skill Level</Text>
@@ -210,6 +219,16 @@ const ProfileScreen = props => {
                             placeholder={"Choose Skill Level..."}
                         />
                     </ModalSelector>
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={profileUpdate.pushEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={profileUpdate.pushEnabled}
+                    />
                 </View>
                 <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                     <Text style={styles.logoutButtonText}>LOGOUT</Text>
@@ -240,6 +259,13 @@ ProfileScreen.navigationOptions = navData => {
 };
 
 const styles = StyleSheet.create({
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    inputContainer: {
+        flex: 1,
+    },
     input: {
         fontSize: 20,
         borderBottomColor: '#ccc',
@@ -247,7 +273,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         paddingVertical: 4,
         paddingHorizontal: 2,
-        color: 'black'
+        color: 'black',
+        width: '90%'
     },
     label: {
         fontSize: 18,

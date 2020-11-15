@@ -29,6 +29,7 @@ const AvailabilityScreen = props => {
     const [recipientId, setRecipientId] = React.useState(null);
     const [recipientUsername, setRecipientUsername] = React.useState("");
     const [recipientPushToken, setRecipientPushToken] = React.useState(null);
+    const [recipientPushEnabled, setRecipientPushEnabled] = React.useState(false);
     const [currentCoordinates, setCurrentCoordinates] = React.useState({});
     const [initialEndTime, setInitialEndTime] = React.useState(initialTime);
     const [userInstructions, setUserInstructions] = React.useState("");
@@ -240,10 +241,11 @@ const AvailabilityScreen = props => {
         convertDatetime(time, 'endTime');
     };
 
-    const setUserInfo = (id, username, token) => {
+    const setUserInfo = (id, username, token, enabled) => {
         setRecipientId(id);
         setRecipientUsername(username);
         setRecipientPushToken(token);
+        setRecipientPushEnabled(enabled);
     };
 
     const getCurrentLocation = (lat, lng) => {
@@ -278,6 +280,7 @@ const AvailabilityScreen = props => {
         //         seconds: 1
         //     }
         // })
+        if (recipientPushEnabled) {
         fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
@@ -292,6 +295,10 @@ const AvailabilityScreen = props => {
                 body: 'New Match Request'
             })
         })
+    }
+    else {
+        console.log('recipient disabled push notifications');
+    }
     };
 
     return (

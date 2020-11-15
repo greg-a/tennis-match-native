@@ -57,6 +57,7 @@ const InboxScreen = props => {
                 recipientId: item.senderId == myUserId ? item.recipientId : item.senderId,
                 recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username,
                 recipientPushToken: item.senderId == myUserId ? item.recipient.pushToken : item.User.pushToken,
+                recipientPushEnabled: item.senderId == myUserId ? item.recipient.pushEnabled : item.User.pushEnabled,
                 myUserId: myUserId,
                 myUsername: myUsername,
                 getMessages: getMessages

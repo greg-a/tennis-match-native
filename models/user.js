@@ -50,6 +50,10 @@ module.exports = function(sequelize, DataTypes) {
         pushToken: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        pushEnabled: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         }
     });
 
