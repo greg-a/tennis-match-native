@@ -151,14 +151,14 @@ const styles = StyleSheet.create({
     },
     middleView: {
         alignItems: 'center',
-        marginTop: 80
+        marginTop: 50
     },
     signInButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 10
+        marginTop: 20
     },
     signUpButton: {
         paddingVertical: 15,

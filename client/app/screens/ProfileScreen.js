@@ -5,6 +5,7 @@ import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost, googleMapsAPI } from '../localhost.js';
 import { AuthContext } from './../../context';
+import ModalItem from '../components/ModalItem';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -21,8 +22,28 @@ const ProfileScreen = props => {
         pushEnabled: true
     });
     const [skillLabel, setSkillLabel] = useState('');
-    // const [isEnabledPush, setIsEnabledPush] = useState(true);
     const { signOut } = React.useContext(AuthContext);
+
+    const statesArr = [];
+    const skillsArr = [];
+
+    States.forEach(state => {
+        statesArr.push({
+            component: <ModalItem title={state.label} />,
+            key: state.key,
+            label: state.label,
+            value: state.value
+        });
+    });
+
+    Skills.forEach(skill => {
+        skillsArr.push({
+            component: <ModalItem title={skill.label} />,
+            key: skill.key,
+            value: skill.value,
+            label: skill.label
+        })
+    });
     
     const toggleSwitch = () => setProfileUpdate({...profileUpdate, pushEnabled: !profileUpdate.pushEnabled});
     
@@ -183,7 +204,7 @@ const ProfileScreen = props => {
                         <Text style={styles.label}>State</Text>
                         <ModalSelector
                             pickerStyle={styles.input}
-                            data={States}
+                            data={statesArr}
                             onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
                             <TextInput
                                 style={styles.input}
@@ -207,7 +228,7 @@ const ProfileScreen = props => {
                     <Text style={styles.label}>Skill Level</Text>
                     <ModalSelector
                         pickerStyle={styles.input}
-                        data={Skills}
+                        data={skillsArr}
                         onChange={(option) => {
                             setProfileUpdate({ ...profileUpdate, skilllevel: option.value });
                             setSkillLabel(option.label)
@@ -223,7 +244,7 @@ const ProfileScreen = props => {
                 <View style={styles.row}>
                     <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
                     <Switch
-                        trackColor={{ false: "#767577", true: "#f5dd4b" }}
+                        trackColor={{ false: "#767577", true: "#bbf7e7" }}
                         thumbColor={profileUpdate.pushEnabled ? "#6CE631" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={toggleSwitch}
@@ -238,25 +259,25 @@ const ProfileScreen = props => {
     )
 };
 
-ProfileScreen.navigationOptions = navData => {
-    return {
-        headerTitle: 'Edit Profile',
-        headerRight: () => <HeaderButtons>
-            <Item
-                title='SAVE'
-                onPress={() => {
-                    fetch(localHost + "/api/profile")
-                        .then(res => res.json())
-                        .then((profileInfo) => {
-                            console.log(profileInfo)
-                            console.log("Header Button Works!");
-                        })
-                        .catch(err => console.log(err));
-                }}
-            />
-        </HeaderButtons>
-    };
-};
+// ProfileScreen.navigationOptions = navData => {
+//     return {
+//         headerTitle: 'Edit Profile',
+//         headerRight: () => <HeaderButtons>
+//             <Item
+//                 title='SAVE'
+//                 onPress={() => {
+//                     fetch(localHost + "/api/profile")
+//                         .then(res => res.json())
+//                         .then((profileInfo) => {
+//                             console.log(profileInfo)
+//                             console.log("Header Button Works!");
+//                         })
+//                         .catch(err => console.log(err));
+//                 }}
+//             />
+//         </HeaderButtons>
+//     };
+// };
 
 const styles = StyleSheet.create({
     row: {
