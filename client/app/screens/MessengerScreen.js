@@ -36,7 +36,11 @@ const MessengerScreen = props => {
     useEffect(() => {
         getMessages(recipientId);
         connectToSocket();
-        console.log("push token: " + recipientPushToken)
+        console.log("push token: " + recipientPushToken);
+
+        return () => {
+            socket.disconnect()
+        };
     }, []);
 
     const getMessages = recipient => {
@@ -60,11 +64,7 @@ const MessengerScreen = props => {
                 setMessages(oldMessages => [data, ...oldMessages]);
                 updateInbox();
             };
-        });
-
-        return () => {
-            socket.disconnect()
-        };
+        });        
     };
 
     const triggerNotificationHandler = () => {

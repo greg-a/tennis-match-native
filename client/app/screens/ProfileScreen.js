@@ -223,8 +223,8 @@ const ProfileScreen = props => {
                 <View style={styles.row}>
                     <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
                     <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={profileUpdate.pushEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        trackColor={{ false: "#767577", true: "#f5dd4b" }}
+                        thumbColor={profileUpdate.pushEnabled ? "#6CE631" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={toggleSwitch}
                         value={profileUpdate.pushEnabled}
