@@ -259,30 +259,11 @@ const ProfileScreen = props => {
     )
 };
 
-// ProfileScreen.navigationOptions = navData => {
-//     return {
-//         headerTitle: 'Edit Profile',
-//         headerRight: () => <HeaderButtons>
-//             <Item
-//                 title='SAVE'
-//                 onPress={() => {
-//                     fetch(localHost + "/api/profile")
-//                         .then(res => res.json())
-//                         .then((profileInfo) => {
-//                             console.log(profileInfo)
-//                             console.log("Header Button Works!");
-//                         })
-//                         .catch(err => console.log(err));
-//                 }}
-//             />
-//         </HeaderButtons>
-//     };
-// };
-
 const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginTop: 10
     },
     inputContainer: {
         flex: 1,
