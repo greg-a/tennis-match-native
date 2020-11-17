@@ -42,7 +42,12 @@ const LocationPicker = props => {
         }
         setIsFetching(false);
     };
-    
+
+    const handleFetchingZip = () => {
+        props.handleZip(zipcode);
+        setIsFetching(false);
+    };
+
     return (
         <View style={styles.centeredView}>
             <Modal
@@ -80,7 +85,10 @@ const LocationPicker = props => {
                                 <Text style={styles.buttonText}>Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.button} onPress={props.handleSubmit}>
-                                <Text style={styles.buttonText} onPress={() => props.handleZip(zipcode)}>Okay</Text>
+                                <Text style={styles.buttonText} onPress={() => {
+                                    setIsFetching(true);
+                                    setTimeout(handleFetchingZip, 2000);
+                                    }}>Okay</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
