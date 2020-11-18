@@ -13,6 +13,7 @@ const SignUpScreen = props => {
 
     const [signUpUsername, setSignUpUsername] = React.useState("");
     const [signUpPassword, setSignUpPassword] = React.useState("");
+    const [signUpPasswordCon, setSignUpPasswordCon] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
@@ -20,31 +21,40 @@ const SignUpScreen = props => {
     const { signUp } = React.useContext(AuthContext);
 
     const handleFormSubmit = () => {
-        fetch(localHost + "/api", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: signUpUsername,
-                password: signUpPassword,
-                email: signUpEmail
+        if (signUpPassword === signUpPasswordCon) {
+            fetch(localHost + "/api", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: signUpUsername,
+                    password: signUpPassword,
+                    email: signUpEmail
+                })
             })
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.statusString === "formNotComplete") {
-                    setUserInstructions("Please complete the registration form");
-                    setWarningText(true);
-                } else if (res.statusString === "userAlreadyExists") {
-                    setUserInstructions("Account already exists with that username");
-                    setWarningText(true);
-                } else if (res.statusString === "userCreateSuccess") {
-                    signUp();
-                    props.navigation.navigate('Login')
-                }
-            })
-            .catch(err => console.log(err));
+                .then(res => res.json())
+                .then(res => {
+                    if (res.statusString === "formNotComplete") {
+                        setUserInstructions("Please complete the registration form");
+                        setWarningText(true);
+                    } else if (res.statusString === "userAlreadyExists") {
+                        setUserInstructions("Account already exists with that username");
+                        setWarningText(true);
+                    } else if (res.statusString === "userCreateSuccess") {
+                        signUp();
+                        props.navigation.navigate('Login')
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+        else {
+            setUserInstructions("Passwords do not match");
+            setWarningText(true);
+            setSignUpPassword("");
+            setSignUpPasswordCon("");
+
+        }
     };
 
     // checks if font has been loaded
@@ -88,6 +98,14 @@ const SignUpScreen = props => {
                         onChangeText={text => setSignUpPassword(text)}
                         value={signUpPassword}
                         placeholder={'Password'}
+                        placeholderTextColor={'black'}
+                        secureTextEntry
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={text => setSignUpPasswordCon(text)}
+                        value={signUpPasswordCon}
+                        placeholder={'Confirm Password'}
                         placeholderTextColor={'black'}
                         secureTextEntry
                     />
