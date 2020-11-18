@@ -15,13 +15,27 @@ const SignUpScreen = props => {
     const [signUpPassword, setSignUpPassword] = React.useState("");
     const [signUpPasswordCon, setSignUpPasswordCon] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
+    const [emailIsValid, setEmailIsValid] = React.useState(false);
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
 
     const { signUp } = React.useContext(AuthContext);
 
+    const handleEmailIsValid = email => {
+        setEmailIsValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+        // if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        //     setEmailIsValid(true);
+        // }
+        // else {
+        //     setWarningText(true);
+        //     setUserInstructions("Invalid Email");
+        // }
+    };
+
     const handleFormSubmit = () => {
-        if (signUpPassword === signUpPasswordCon) {
+        handleEmailIsValid(signUpEmail);
+        
+        if (signUpPassword === signUpPasswordCon && emailIsValid) {
             fetch(localHost + "/api", {
                 method: "POST",
                 headers: {
@@ -47,6 +61,10 @@ const SignUpScreen = props => {
                     }
                 })
                 .catch(err => console.log(err));
+        }
+        else if (!emailIsValid) {
+            setWarningText(true);
+            setUserInstructions("Invalid Email");
         }
         else {
             setUserInstructions("Passwords do not match");
@@ -116,7 +134,10 @@ const SignUpScreen = props => {
 
                 <View style={styles.bottomView}>
                     <Text style={styles.baseText}>Already a member?</Text>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => props.navigation.navigate('Login')}>
+                    <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={() => props.navigation.navigate('Login')}
+                    >
                         <Text style={[styles.loginButtonText]}>LOGIN</Text>
                     </TouchableOpacity>
                 </View>
