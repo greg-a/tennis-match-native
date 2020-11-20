@@ -23,9 +23,7 @@ const LoginScreen = props => {
         let userCred = {
             username: loginUsername,
             password: loginPassword
-        }
-
-        
+        };        
 
         fetch(localHost+"/api/login", {
             method: "POST",

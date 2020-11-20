@@ -89,12 +89,12 @@ const MessengerScreen = props => {
                     to: recipientPushToken,
                     // data: {},
                     title: 'Message',
-                    body: 'New Message'
+                    body: `Message from ${myUsername}`
                 })
             })
         }
         else {
-            console.log("recipient has push notifications disabled")
+            console.log('recipient has push notifications disabled');
         }
     };
 
@@ -127,7 +127,7 @@ const MessengerScreen = props => {
                     triggerNotificationHandler();
                 })
                 .catch(err => console.log(err));
-            setNewMessage("")
+            setNewMessage('')
         };
     };
 

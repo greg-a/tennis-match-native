@@ -23,18 +23,11 @@ const SignUpScreen = props => {
 
     const handleEmailIsValid = email => {
         setEmailIsValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
-        // if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        //     setEmailIsValid(true);
-        // }
-        // else {
-        //     setWarningText(true);
-        //     setUserInstructions("Invalid Email");
-        // }
     };
 
     const handleFormSubmit = () => {
         handleEmailIsValid(signUpEmail);
-        
+
         if (signUpPassword === signUpPasswordCon && emailIsValid) {
             fetch(localHost + "/api", {
                 method: "POST",
