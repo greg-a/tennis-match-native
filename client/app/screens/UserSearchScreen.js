@@ -3,9 +3,9 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'r
 import { localHost } from '../localhost.js';
 
 const Item = ({ username, name, onPress }) => (
-    <TouchableOpacity style={styles.message} onPress={onPress}>
-        <Text style={styles.senderText}>{username}</Text>
-        <Text style={styles.messageText}>{name}</Text>
+    <TouchableOpacity style={styles.searchResultContainer} onPress={onPress}>
+        <Text style={styles.usernameText}>{username}</Text>
+        <Text style={styles.nameText}>{name}</Text>
     </TouchableOpacity>
 );
 
@@ -61,9 +61,9 @@ const UserSearchScreen = props => {
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
             />
-            <View style={styles.sendMessageContainer}>
+            <View style={styles.searchInputContainer}>
                 <TextInput
-                    style={styles.sendMessage}
+                    style={styles.searchInput}
                     placeholder="Search for user"
                     multiline={true}
                     onChangeText={handleUserSearch}
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end'
     },
-    message: {
+    searchResultContainer: {
         backgroundColor: 'white',
         borderColor: 'black',
         borderStyle: 'solid',
@@ -88,21 +88,15 @@ const styles = StyleSheet.create({
         borderWidth: .5,
         padding: 16
     },
-    senderText: {
+    usernameText: {
         fontSize: 18
     },
-    messageText: {
+    nameText: {
         fontSize: 12,
         marginTop: 3,
         color: 'grey'
     },
-    timeStamp: {
-        fontSize: 12,
-        alignSelf: 'flex-end',
-        marginRight: 10,
-        color: 'grey'
-    },
-    sendMessage: {
+    searchInput: {
         borderColor: 'black',
         backgroundColor: 'white',
         justifyContent: 'flex-end',
@@ -111,18 +105,8 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         paddingLeft: 10
     },
-    sendMessageContainer: {
-        flexDirection: 'row',
-        marginLeft: 10,
-        justifyContent: 'space-around'
-    },
-    sendButton: {
-        backgroundColor: 'green',
-        padding: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 30,
-        width: 50
+    searchInputContainer: {
+        alignItems: 'center'
     }
 });
 

@@ -291,6 +291,11 @@ export const Skills = [
         key: "7",
         value: "7",
         label: "4.5 - Advanced"
+    },
+    {
+        key: "8",
+        value: "8",
+        label: "5.0 - Very Advanced"
     }
 ];
 

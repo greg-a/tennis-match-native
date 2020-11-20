@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     },
     middleView: {
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 20,
     },
     createAccountButton: {
         paddingVertical: 15,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 60,
         alignItems: 'center',
-        marginTop: 20
+        marginTop: 60
     }
 });
 
