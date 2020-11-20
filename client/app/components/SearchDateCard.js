@@ -30,6 +30,9 @@ function SearchDateCard(props) {
                     <Text style={[styles.baseText, styles.subTitle]}>
                         {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
                     </Text>
+                    <Text style={[styles.baseText, styles.subTitle]}>
+                        Date: {props.date}
+                    </Text>
                     <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
                         Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
                     </Text>

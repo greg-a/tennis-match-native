@@ -301,6 +301,9 @@ const SearchDatePropose = ({ route, navigation }) => {
                 <Text style={[styles.baseText, styles.subTitle]}>
                     {eventObj.User.firstname ? `Username: ${eventObj.User.username} (${eventObj.User.firstname} ${eventObj.User.lastname})` : `Username: ${eventObj.User.username}`}
                 </Text>
+                <Text style={[styles.baseText]}>
+                    Date: {moment(eventObj.start).format("MM/DD/YYYY")}
+                </Text>
                 <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
                     Skill level: {eventObj.User.skilllevel ? `${skillConversion(eventObj.User.skilllevel)}` : `n/a`}
                 </Text>
