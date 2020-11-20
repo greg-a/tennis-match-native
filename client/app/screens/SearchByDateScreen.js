@@ -1,15 +1,22 @@
 import React, { useEffect } from 'react';
-import { Appearance, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Appearance, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import ModalSelector from 'react-native-modal-selector';
+import { Skills } from '../../data/ProfileData';
 import moment from "moment";
+import ModalItem from '../components/ModalItem';
 import { localHost } from '../localhost.js';
 
 const SearchByDateScreen = props => {
-    const [newDate, setNewDate] = React.useState("");
+    const [newDate, setNewDate] = React.useState();
     const [conDate, setConDate] = React.useState("");
     const [searchResult, setSearchResult] = React.useState("");
-    const [userInstructions, setUserInstructions] = React.useState("Pick a date to search for other players' availability.");
+    const [skillLevel, setSkillLevel] = React.useState();
+    const [skillLabel, setSkillLabel] = React.useState();
+    const [recipientId, setRecipientId] = React.useState(null);
+    const [recipientUsername, setRecipientUsername] = React.useState("");
+    const [userInstructions, setUserInstructions] = React.useState("Search for other players' availability with the filters below.");
     const [warningText, setWarningText] = React.useState(false);
 
     const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
@@ -17,9 +24,23 @@ const SearchByDateScreen = props => {
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
 
+    const skillsArr = [];
+
+    Skills.forEach(skill => {
+        skillsArr.push({
+            component: <ModalItem title={skill.label} />,
+            key: skill.key,
+            value: skill.value,
+            label: skill.label
+        })
+    });
+
     useEffect(() => {
         console.log('newDate: ' + newDate);
         console.log('conDate: ' + conDate);
+        console.log('skill level: ' + skillLevel);
+        console.log('recip id: ' + recipientId);
+        console.log('recip username: ' + recipientUsername);
     });
 
     const showDatePicker = () => {
@@ -33,6 +54,11 @@ const SearchByDateScreen = props => {
         convertDatetime(date, 'date');
         console.log("new date: ", date);
         hideDatePicker();
+    };
+
+    const setUserInfo = (id, username, token, enabled) => {
+        setRecipientId(id);
+        setRecipientUsername(username);
     };
 
     const convertDatetime = (datetime, type) => {
@@ -52,12 +78,15 @@ const SearchByDateScreen = props => {
     };
 
     const handleFormSubmit = () => {
-        if (newDate==='') {
+        if (!newDate && !skillLevel && !recipientId) {
             setWarningText(true);
-            setUserInstructions('Please enter a date.');
+            setUserInstructions('Please enter at least one search parameter.');
         } else {
 
-            const searchURL = localHost + "/api/calendar/propose?date=" + moment(newDate).format('YYYY-MM-DD');
+            const dateURL = newDate ? "date=" + moment(newDate).format('YYYY-MM-DD') + "&" : "";
+            const skillURL = skillLevel ? "skill=" + skillLevel + "&": "";
+            const userIdURL = recipientId ? "user=" + recipientId : "";
+            const searchURL = localHost + "/api/calendar/propose?" + dateURL + skillURL + userIdURL;
             console.log(searchURL);
             fetch(searchURL)
                 .then(res => res.json())
@@ -65,7 +94,7 @@ const SearchByDateScreen = props => {
                     // this.addInputTimes(res);
                     console.log("query results: " + JSON.stringify(res));
                     console.log("query results no stringify: " + res.length);
-                    if (res.length===0) {
+                    if (res.length === 0) {
                         setWarningText(true);
                         setUserInstructions('No availability for that date.');
                     } else {
@@ -88,9 +117,10 @@ const SearchByDateScreen = props => {
                     {userInstructions}
                 </Text> */}
             <View>
+                <Text style={styles.baseText}>Date</Text>
                 <TouchableWithoutFeedback onPress={showDatePicker}>
                     <View style={styles.viewInput}>
-                        {newDate !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
+                        {newDate ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
                     </View>
                 </TouchableWithoutFeedback>
                 <DateTimePickerModal
@@ -100,6 +130,34 @@ const SearchByDateScreen = props => {
                     onCancel={hideDatePicker}
                     textColor={isDarkMode ? 'white' : 'black'}
                 />
+            </View>
+            <View>
+                <Text style={styles.baseText}>Skill Level</Text>
+                <ModalSelector
+                    // style={styles.viewInput}
+                    data={skillsArr}
+                    onChange={(option) => {
+                        setSkillLevel(option.value);
+                        setSkillLabel(option.label)
+                    }}>
+                    <TextInput
+                        style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
+                        value={skillLabel}
+                        editable={false}
+                        placeholder={"Skill Level"}
+                    />
+                </ModalSelector>
+            </View>
+            <View>
+            <Text style={styles.baseText}>User</Text>
+                <View style={[styles.viewInput]}>
+                    <Text
+                        style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16, fontWeight: "300" }}
+                        onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
+                    >
+                        {recipientUsername === '' ? 'Find User' : recipientUsername}
+                    </Text>
+                </View>
             </View>
 
             <TouchableOpacity style={styles.searchButton} onPress={handleFormSubmit}>
@@ -120,9 +178,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around'
     },
+    input: {
+        height: 60,
+        // width: 120,
+        borderColor: 'lightgrey',
+        borderWidth: 1,
+        borderRadius: 5,
+        fontSize: 16,
+        fontWeight: '300',
+        // marginBottom: 20,
+        paddingLeft: 10,
+        color: 'black',
+    },
     instructionText: {
         textAlign: 'center'
-    },  
+    },
     searchButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
