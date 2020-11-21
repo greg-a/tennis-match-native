@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
+
+const { width, height } = Dimensions.get('window');
 
 const Item = ({ title, sender, timestamp, onPress }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
@@ -67,13 +69,28 @@ const InboxScreen = props => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.inputContainer}>
+                <View style={styles.input}>
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={() => props.navigation.navigate('User Search', {
+                            myUserId: myUserId,
+                            myUsername: myUsername,
+                            searchType: 'message',
+                            getMessages: getMessages
+                        })}
+                    >
+                        <Text style={{ color: 'grey' }}>Search for user</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
             <FlatList
                 style={styles.messagesContainer}
                 data={inboxMessages}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
             />
-            <View style={styles.sendMessageContainer}>
+            {/* <View style={styles.sendMessageContainer}>
                 <TouchableOpacity
                     style={styles.sendMessage}
                     onPress={() => props.navigation.navigate('User Search', {
@@ -85,7 +102,7 @@ const InboxScreen = props => {
                 >
                     <Text style={{ color: 'grey' }}>Search for user</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </View>
     )
 };
@@ -97,11 +114,13 @@ const styles = StyleSheet.create({
     },
     message: {
         backgroundColor: 'white',
-        borderColor: 'black',
-        borderStyle: 'solid',
-        borderTopColor: 'white',
-        borderWidth: .5,
-        padding: 16
+        // borderColor: 'black',
+        // borderStyle: 'solid',
+        // borderTopColor: 'white',
+        // borderWidth: .5,
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0'
     },
     senderText: {
         fontSize: 18
@@ -117,20 +136,49 @@ const styles = StyleSheet.create({
         marginRight: 10,
         color: 'grey'
     },
-    sendMessage: {
-        borderColor: 'black',
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        height: 40,
-        width: '80%',
-        borderRadius: 30,
-        paddingLeft: 10
-    },
-    sendMessageContainer: {
+    // sendMessage: {
+    //     borderColor: 'black',
+    //     backgroundColor: 'white',
+    //     justifyContent: 'center',
+    //     height: 40,
+    //     width: '80%',
+    //     borderRadius: 30,
+    //     paddingLeft: 10
+    // },
+    // sendMessageContainer: {
+    //     flexDirection: 'row',
+    //     marginLeft: 10,
+    //     justifyContent: 'space-around'
+    // },
+    inputContainer: {
         flexDirection: 'row',
-        marginLeft: 10,
-        justifyContent: 'space-around'
-    }
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        // margin: 10,
+        // paddingBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0'
+    },
+    input: {
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
+        padding: 10,
+        height: 40,
+        width: width - 20,
+        backgroundColor: '#fff',
+        margin: 10,
+        // marginLeft: 10,
+        // marginRight: 10,
+        // marginBottom: 10,
+        // shadowColor: '#3d3d3d',
+        // shadowRadius: 2,
+        // shadowOpacity: 0.5,
+        // shadowOffset: {
+        //     height: 1,
+        // },
+        // borderColor: '#696969',
+        // borderWidth: 1,
+    },
 });
 
 export default InboxScreen;
