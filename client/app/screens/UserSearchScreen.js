@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import { localHost } from '../localhost.js';
+
+const { width, height } = Dimensions.get('window');
 
 const Item = ({ username, name, onPress }) => (
     <TouchableOpacity style={styles.searchResultContainer} onPress={onPress}>
@@ -55,13 +57,25 @@ const UserSearchScreen = props => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.inputContainer}>
+                <View style={styles.input}>
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search for user"
+                        multiline={true}
+                        onChangeText={handleUserSearch}
+                        onKeyPress={handleUserSearchClear}
+                        autoFocus={true}
+                    />
+                </View>
+            </View>
             <FlatList
                 style={styles.messagesContainer}
                 data={userSearchList}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
             />
-            <View style={styles.searchInputContainer}>
+            {/* <View style={styles.searchInputContainer}>
                 <TextInput
                     style={styles.searchInput}
                     placeholder="Search for user"
@@ -70,7 +84,7 @@ const UserSearchScreen = props => {
                     onKeyPress={handleUserSearchClear}
                     autoFocus={true}
                 />
-            </View>
+            </View> */}
         </View>
     )
 };
@@ -82,11 +96,13 @@ const styles = StyleSheet.create({
     },
     searchResultContainer: {
         backgroundColor: 'white',
-        borderColor: 'black',
-        borderStyle: 'solid',
-        borderTopColor: 'white',
-        borderWidth: .5,
-        padding: 16
+        // borderColor: 'black',
+        // borderStyle: 'solid',
+        // borderTopColor: 'white',
+        // borderWidth: .5,
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0'
     },
     usernameText: {
         fontSize: 18
@@ -107,7 +123,36 @@ const styles = StyleSheet.create({
     },
     searchInputContainer: {
         alignItems: 'center'
-    }
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        // margin: 10,
+        // paddingBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0'
+    },
+    input: {
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
+        padding: 10,
+        height: 40,
+        width: width - 20,
+        backgroundColor: '#fff',
+        margin: 10,
+        // marginLeft: 10,
+        // marginRight: 10,
+        // marginBottom: 10,
+        // shadowColor: '#3d3d3d',
+        // shadowRadius: 2,
+        // shadowOpacity: 0.5,
+        // shadowOffset: {
+        //     height: 1,
+        // },
+        // borderColor: '#696969',
+        // borderWidth: 1,
+    },
 });
 
 export default UserSearchScreen;
