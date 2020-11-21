@@ -28,8 +28,6 @@ const styles = StyleSheet.create({
     },
     feedText: {
         fontSize: 15,
-        // paddingLeft: 5,
-        // paddingRight: 5
     },
     feedNames: {
         fontWeight: 'bold',
