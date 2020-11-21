@@ -35,6 +35,7 @@ const MessengerScreen = props => {
 
     useEffect(() => {
         getMessages(recipientId);
+        // updateNotifications(recipientId);
         connectToSocket();
         console.log("push token: " + recipientPushToken);
 
@@ -42,6 +43,19 @@ const MessengerScreen = props => {
             socket.disconnect()
         };
     }, []);
+
+    const updateNotifications = id => {
+        fetch(localHost + "/api/messages/read/" + id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => console.log(err));
+    };
 
     const getMessages = recipient => {
         fetch(localHost + "/api/conversation/" + recipient)
@@ -64,7 +78,7 @@ const MessengerScreen = props => {
                 setMessages(oldMessages => [data, ...oldMessages]);
                 updateInbox();
             };
-        });        
+        });
     };
 
     const triggerNotificationHandler = () => {

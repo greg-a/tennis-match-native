@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import io from 'socket.io-client';
 
@@ -35,7 +35,6 @@ const RootStackScreen = ({ userToken }) => (
       <RootStack.Screen
         name="Drawer Navigator"
         component={DrawerNavigator}
-        messages={5}
       />
     ) : (
         <RootStack.Screen
