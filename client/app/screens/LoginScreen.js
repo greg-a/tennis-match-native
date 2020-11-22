@@ -171,14 +171,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 20
+        marginTop: 20,
+        width: 115
     },
     signUpButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
         backgroundColor: 'white',
         borderRadius: 5,
-        marginTop: 10
+        marginTop: 10,
+        width: 115
     },
     signInButtonText: {
         fontSize: 16
