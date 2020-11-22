@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
@@ -20,8 +21,18 @@ const InboxScreen = props => {
 
     useEffect(() => {
         getProfileInfo();
-        getMessages();
     }, []);
+
+    useFocusEffect(useCallback(() => {
+        let isActive = true;
+        if (isActive) {
+            getMessages();
+        };
+
+        return () => {
+            isActive = false;
+        }
+    }, []));
 
     const getProfileInfo = () => {
         fetch(localHost + "/api/profile")
@@ -61,8 +72,7 @@ const InboxScreen = props => {
                 recipientPushToken: item.senderId == myUserId ? item.recipient.pushToken : item.User.pushToken,
                 recipientPushEnabled: item.senderId == myUserId ? item.recipient.pushEnabled : item.User.pushEnabled,
                 myUserId: myUserId,
-                myUsername: myUsername,
-                getMessages: getMessages
+                myUsername: myUsername
             })}
         />
     );
@@ -76,8 +86,7 @@ const InboxScreen = props => {
                         onPress={() => props.navigation.navigate('User Search', {
                             myUserId: myUserId,
                             myUsername: myUsername,
-                            searchType: 'message',
-                            getMessages: getMessages
+                            searchType: 'message'
                         })}
                     >
                         <Text style={{ color: 'grey' }}>Search for user</Text>

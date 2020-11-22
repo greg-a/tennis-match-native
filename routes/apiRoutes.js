@@ -517,7 +517,7 @@ module.exports = function (app) {
                     }
                 }
             ).then(function (result) {
-                res.send(result);
+                console.log("message update result: " + result)
             })
         } else {
             res.status(400).end();
@@ -533,7 +533,8 @@ module.exports = function (app) {
                         { read: false }
                     ]
                 }
-            });
+            })
+            .catch(err => console.log(err));;
 
             const matchNotifications = db.Event.count({
                 where: {
@@ -543,17 +544,18 @@ module.exports = function (app) {
                         { eventStatus: "propose" }
                     ]
                 }
-            });
+            })
+            .catch(err => console.log(err));;
 
             Promise
                 .all([messageNotifications, matchNotifications])
                 .then(responses => {
                     res.json({ messages: responses[0], matches: responses[1], userid: req.session.userID })
-                    console.log(responses)
+                    // console.log(responses)
                 })
                 .catch(err => console.log(err));
         }
-    })
+    });
 
     // user can deny request from other user
     app.put("/api/event/deny", function (req, res) {

@@ -12,7 +12,7 @@ const LocationPicker = props => {
         if (result.status !== 'granted') {
             Alert.alert(
                 'Insufficient permissions!',
-                'You need to grant location permissions to use this function.',
+                'You need to grant location permissions to use this function',
                 [{ text: 'Okay' }]
             );
             return false;

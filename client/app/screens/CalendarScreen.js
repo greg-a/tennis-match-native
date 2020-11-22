@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Platform, Linking, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import moment from 'moment';
@@ -32,9 +33,9 @@ const CalendarScreen = props => {
         getCalendarEvents();
     }, []);
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         getCalendarEvents();
-    }, []);
+    }, []));
 
     const getCalendarEvents = () => {
         fetch(localHost + '/api/calendar')
@@ -126,7 +127,7 @@ const CalendarScreen = props => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate, updateCalendar: getCalendarEvents })}
+                        onPress={() => props.navigation.navigate('Availability', { selectedDate: selectedDate })}
                     >
                         <Text style={[styles.baseText, styles.buttonText]}>Create Event</Text>
                     </TouchableOpacity>

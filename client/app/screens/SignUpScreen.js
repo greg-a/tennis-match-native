@@ -13,38 +13,59 @@ const SignUpScreen = props => {
 
     const [signUpUsername, setSignUpUsername] = React.useState("");
     const [signUpPassword, setSignUpPassword] = React.useState("");
+    const [signUpPasswordCon, setSignUpPasswordCon] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
+    const [emailIsValid, setEmailIsValid] = React.useState(false);
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
 
     const { signUp } = React.useContext(AuthContext);
 
+    const handleEmailIsValid = email => {
+        setEmailIsValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    };
+
     const handleFormSubmit = () => {
-        fetch(localHost + "/api", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: signUpUsername,
-                password: signUpPassword,
-                email: signUpEmail
+        handleEmailIsValid(signUpEmail);
+
+        if (signUpPassword === signUpPasswordCon && emailIsValid) {
+            fetch(localHost + "/api", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: signUpUsername,
+                    password: signUpPassword,
+                    email: signUpEmail
+                })
             })
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.statusString === "formNotComplete") {
-                    setUserInstructions("Please complete the registration form");
-                    setWarningText(true);
-                } else if (res.statusString === "userAlreadyExists") {
-                    setUserInstructions("Account already exists with that username");
-                    setWarningText(true);
-                } else if (res.statusString === "userCreateSuccess") {
-                    signUp();
-                    props.navigation.navigate('Login')
-                }
-            })
-            .catch(err => console.log(err));
+                .then(res => res.json())
+                .then(res => {
+                    if (res.statusString === "formNotComplete") {
+                        setUserInstructions("Please complete the registration form");
+                        setWarningText(true);
+                    } else if (res.statusString === "userAlreadyExists") {
+                        setUserInstructions("Account already exists with that username");
+                        setWarningText(true);
+                    } else if (res.statusString === "userCreateSuccess") {
+                        signUp();
+                        props.navigation.navigate('Login')
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+        else if (!emailIsValid) {
+            setWarningText(true);
+            setUserInstructions("Invalid Email");
+        }
+        else {
+            setUserInstructions("Passwords do not match");
+            setWarningText(true);
+            setSignUpPassword("");
+            setSignUpPasswordCon("");
+
+        }
     };
 
     // checks if font has been loaded
@@ -91,6 +112,14 @@ const SignUpScreen = props => {
                         placeholderTextColor={'black'}
                         secureTextEntry
                     />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={text => setSignUpPasswordCon(text)}
+                        value={signUpPasswordCon}
+                        placeholder={'Confirm Password'}
+                        placeholderTextColor={'black'}
+                        secureTextEntry
+                    />
                     <TouchableOpacity style={styles.createAccountButton} onPress={handleFormSubmit}>
                         <Text style={[styles.baseText, styles.createAccountButtonText]}>CREATE ACCOUNT</Text>
                     </TouchableOpacity>
@@ -98,7 +127,10 @@ const SignUpScreen = props => {
 
                 <View style={styles.bottomView}>
                     <Text style={styles.baseText}>Already a member?</Text>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => props.navigation.navigate('Login')}>
+                    <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={() => props.navigation.navigate('Login')}
+                    >
                         <Text style={[styles.loginButtonText]}>LOGIN</Text>
                     </TouchableOpacity>
                 </View>

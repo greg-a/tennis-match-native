@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const NotificationBadge = props => {
     return (
         <View style={styles.badge}>
-            <Text>{props.count}</Text>
+            <Text style={styles.text}>{props.count}</Text>
         </View>
     )
 };
@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 50,
-        minHeight: 25,
-        minWidth: 25,
+        minHeight: 5,
+        minWidth: 5,
         paddingLeft: 5,
         paddingRight: 5,
+        left: 15,
+        top: -5,
         position: 'absolute',
-        right: '15%',
-        top: '40%',
-        backgroundColor: '#6CE631',
+        backgroundColor: 'white',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5
+    },
+    text: {
+        color: '#6CE631'
     }
 })
 

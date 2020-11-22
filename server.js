@@ -55,14 +55,16 @@ io.on('connection', (socket) => {
 
     //emits new message to specific room
     io.in(user.room).in(user.recipientid).emit("output", data);
-    console.log("New message: " + JSON.stringify(data))
   });
 
   socket.on("newMatchNotification", userid => {
 
     //emits new message to specific room
     socket.to(userid).emit("output", "update");
-    console.log("new match notification!", userid)
+  });
+
+  socket.on('unsubscribe', room => {
+    socket.leave(room);
   });
 
 });
