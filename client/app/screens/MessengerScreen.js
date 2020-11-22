@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, SafeAreaView, ScrollView, Platform, Alert, Button, Dimensions } from 'react-native';
 import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
-import * as Notifications from 'expo-notifications';
 
 const socket = io(localHost);
 
@@ -25,7 +24,7 @@ const MessengerScreen = props => {
     const recipientPushEnabled = props.route.params.recipientPushEnabled;
     const myUserId = props.route.params.myUserId;
     const myUsername = props.route.params.myUsername;
-    const updateInbox = props.route.params.getMessages;
+    // const updateInbox = props.route.params.getMessages;
     const thisRoom = createRoom(myUserId, recipientId);
     const [recId, updateRecId] = useState(recipientId);
     const [messages, setMessages] = useState();
@@ -56,12 +55,11 @@ const MessengerScreen = props => {
 
     useEffect(() => {
         getMessages(recipientId);
-        // updateNotifications(recipientId);
+        updateNotifications(recipientId);
         connectToSocket();
-        console.log("push token: " + recipientPushToken);
 
         return () => {
-            socket.disconnect()
+            socket.emit('unsubscribe', thisRoom)
         };
     }, []);
 
@@ -82,36 +80,31 @@ const MessengerScreen = props => {
         fetch(localHost + "/api/conversation/" + recipient)
             .then(res => res.json())
             .then((messages) => {
-
                 props.navigation.setOptions({ title: recipientUsername });
                 setMessages(messages);
             })
             .catch(err => console.log(err));
     };
 
+
     const connectToSocket = () => {
         socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
 
-        socket.on("output", data => {
-            data.createdAt = new Date();
-            data.id = new Date();
-            if (data.senderId == recipientId || data.recipientId == recipientId) {
-                setMessages(oldMessages => [data, ...oldMessages]);
-                updateInbox();
-            };
-        });
+            socket.on("output", data => {
+                data.createdAt = new Date();
+                data.id = new Date();
+                if (data.senderId == recipientId || data.recipientId == recipientId) {
+                    setMessages(oldMessages => [data, ...oldMessages]);
+                    // updateInbox();
+                };
+
+                return () => {
+                    socket.disconnect()
+                }
+            });
     };
 
     const triggerNotificationHandler = () => {
-        // Notifications.scheduleNotificationAsync({
-        //     content: {
-        //         title: 'So Refreshed',
-        //         body: 'You refreshed the feed screen!',
-        //     },
-        //     trigger: {
-        //         seconds: 1
-        //     }
-        // })
         if (recipientPushEnabled) {
             fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 
@@ -18,8 +19,18 @@ const InboxScreen = props => {
 
     useEffect(() => {
         getProfileInfo();
-        getMessages();
     }, []);
+
+    useFocusEffect(useCallback(() => {
+        let isActive = true;
+        if (isActive) {
+            getMessages();
+        };
+
+        return () => {
+            isActive = false;
+        }
+    }, []));
 
     const getProfileInfo = () => {
         fetch(localHost + "/api/profile")
@@ -59,8 +70,7 @@ const InboxScreen = props => {
                 recipientPushToken: item.senderId == myUserId ? item.recipient.pushToken : item.User.pushToken,
                 recipientPushEnabled: item.senderId == myUserId ? item.recipient.pushEnabled : item.User.pushEnabled,
                 myUserId: myUserId,
-                myUsername: myUsername,
-                getMessages: getMessages
+                myUsername: myUsername
             })}
         />
     );

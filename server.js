@@ -65,6 +65,11 @@ io.on('connection', (socket) => {
     console.log("new match notification!", userid)
   });
 
+  socket.on('unsubscribe', room => {
+    socket.leave(room);
+    console.log("unsubscribed from: " + room);
+  });
+
 });
 
 // Middleware

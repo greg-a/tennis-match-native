@@ -517,7 +517,7 @@ module.exports = function (app) {
                     }
                 }
             ).then(function (result) {
-                res.send(result);
+                console.log("message update result: " + result)
             })
         } else {
             res.status(400).end();
