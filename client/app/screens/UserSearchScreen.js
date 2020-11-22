@@ -14,7 +14,6 @@ const Item = ({ username, name, onPress }) => (
 const UserSearchScreen = props => {
     const myUserId = props.route.params ? props.route.params.myUserId : '';
     const myUsername = props.route.params ? props.route.params.myUsername : '';
-    const getMessages = props.route.params ? props.route.params.getMessages : '';
     const searchType = props.route.params.searchType;
     const setUserInfo = props.route.params.setUserInfo;
     const [userSearchList, setUserList] = useState();
@@ -43,8 +42,7 @@ const UserSearchScreen = props => {
                 pushToken: item.pushToken,
                 pushEnabled: item.pushEnabled,
                 myUserId: myUserId,
-                myUsername: myUsername,
-                getMessages: getMessages
+                myUsername: myUsername
             })
                 :
                 () => {
