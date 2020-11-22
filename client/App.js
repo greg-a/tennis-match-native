@@ -57,6 +57,8 @@ export default function App() {
     if (userToken) {
       fetch(localHost + "/api/notifications").then(res => res.json())
         .then((notifications) => {
+          socket.emit('notifyMe', notifications.userid);
+          
           if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
             setNewNotifications({ messages: notifications.messages, matches: notifications.matches });
           }
