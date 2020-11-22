@@ -86,7 +86,6 @@ const AvailabilityScreen = props => {
             .then(res => {
                 if (res.statusString === "eventCreated") {
                     if (props.route.params) {
-                        props.route.params.updateCalendar();
                         props.navigation.goBack();
                     }
                     else {
@@ -271,15 +270,6 @@ const AvailabilityScreen = props => {
     };
 
     const triggerNotificationHandler = () => {
-        // Notifications.scheduleNotificationAsync({
-        //     content: {
-        //         title: 'So Refreshed',
-        //         body: 'You refreshed the feed screen!',
-        //     },
-        //     trigger: {
-        //         seconds: 1
-        //     }
-        // })
         if (recipientPushEnabled) {
         fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',

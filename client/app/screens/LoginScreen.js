@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
@@ -15,17 +15,26 @@ const LoginScreen = props => {
     const [loginPassword, setLoginPassword] = React.useState("");
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
-    
+    const [signingIn, setSigningIn] = React.useState(false);
+
     const { signIn } = React.useContext(AuthContext);
 
+    const handleSpinner = () => {
+        if (warningText) {
+            setSigningIn(true);
+        }
+    };
+
     const handleSignIn = () => {
+
+        setTimeout(handleSpinner, 1000);
 
         let userCred = {
             username: loginUsername,
             password: loginPassword
-        };        
+        };
 
-        fetch(localHost+"/api/login", {
+        fetch(localHost + "/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -42,10 +51,12 @@ const LoginScreen = props => {
                 else if (res.statusString === 'noPassOrUser') {
                     setUserInstructions("Missing username or password");
                     setWarningText(true);
+                    setSigningIn(false);
                 }
                 else if (res.statusString === 'wrongPassOrUser') {
                     setUserInstructions('Incorrect username or password');
                     setWarningText(true);
+                    setSigningIn(false);
                 };
             })
             .catch(err => console.log(err));
@@ -90,8 +101,12 @@ const LoginScreen = props => {
                     />
                     <TouchableOpacity
                         style={styles.signInButton}
-                        onPress={handleSignIn}>
-                        <Text style={[styles.baseText, styles.signInButtonText]}>SIGN IN</Text>
+                        onPress={handleSignIn}
+                    >
+                        {
+                            signingIn ? <ActivityIndicator size="small" color='white' /> :
+                                <Text style={[styles.baseText, styles.signInButtonText]}>SIGN IN</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 

@@ -54,14 +54,16 @@ export default function App() {
   const [newNotification, setNewNotification] = React.useState(false);
 
   const getNewNotifications = () => {
-    fetch(localHost + "/api/notifications").then(res => res.json())
-      .then((notifications) => {
-        if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
-          setNewNotifications({ messages: notifications.messages, matches: notifications.matches });
-        }
-      })
-      .catch(err => console.log(err));
-    console.log("new notifications: " + JSON.stringify(newNotifications));
+    if (userToken) {
+      fetch(localHost + "/api/notifications").then(res => res.json())
+        .then((notifications) => {
+          if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
+            setNewNotifications({ messages: notifications.messages, matches: notifications.matches });
+          }
+        })
+        .catch(err => console.log(err));
+      console.log("new notifications: " + JSON.stringify(newNotifications));
+    };
   };
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function App() {
     return () => {
       socket.disconnect();
       setSocketConnected(false);
-  };
+    };
   }, [userToken, newNotification]);
 
   const connectToSocket = () => {
