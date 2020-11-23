@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
 import RequestCard from '../components/RequestCard.js';
 import moment from "moment";
 import { localHost } from '../localhost.js';
