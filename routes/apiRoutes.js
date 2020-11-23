@@ -276,6 +276,12 @@ module.exports = function (app) {
         if (req.query.date) {
             dateSearch = { start: { [Op.like]: req.query.date + "%" } };
         }
+
+        let locationSearch;
+        if (req.query.location) {
+            locationSearch = { location: req.query.location }
+        }
+
         let skillUserSearch = {};
         if (req.query.skill) {
             // skillSearch = {
@@ -296,6 +302,7 @@ module.exports = function (app) {
 
                         // { start: { [Op.like]: req.query.date + "%" } },
                         dateSearch,
+                        locationSearch,
 
 
                         { UserId: { [Op.not]: req.session.userID } },
