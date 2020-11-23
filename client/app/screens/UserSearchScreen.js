@@ -22,8 +22,8 @@ const UserSearchScreen = props => {
         fetch(localHost + "/api/username?username=" + search)
             .then(res => res.json())
             .then((users) => {
-                setUserList(users);
-                console.log("user list: " + JSON.stringify(users))
+                    setUserList(users);
+                    console.log("user list: " + JSON.stringify(users));
             })
             .catch(err => console.log(err));
     };
