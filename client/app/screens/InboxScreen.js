@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions, RefreshControl } from 'react-native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import io from 'socket.io-client';
@@ -21,6 +21,7 @@ const InboxScreen = props => {
     const [myUserId, setMyUserId] = useState();
     const [myUsername, setMyUsername] = useState();
     const [inboxMessages, setInboxMessages] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         getProfileInfo();
@@ -36,6 +37,18 @@ const InboxScreen = props => {
             isActive = false;
         }
     }, []));
+
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        });
+    };
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+        getMessages();
+    }, []);
 
     const getProfileInfo = () => {
         fetch(localHost + "/api/profile")
@@ -102,6 +115,12 @@ const InboxScreen = props => {
                 data={inboxMessages}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
             />
             {/* <View style={styles.sendMessageContainer}>
                 <TouchableOpacity
