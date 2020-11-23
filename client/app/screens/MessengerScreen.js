@@ -185,7 +185,7 @@ const MessengerScreen = props => {
         // </View>
 
         <View style={{ flex: 1 }}>
-            <KeyboardAvoidingView behavior="" style={styles.keyboard} keyboardVerticalOffset={keyboardVerticalOffset}>
+            <KeyboardAvoidingView behavior="padding" style={styles.keyboard} keyboardVerticalOffset={keyboardVerticalOffset}>
                 <FlatList
                     style={styles.list}
                     data={messages}
