@@ -43,11 +43,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on("notifyMe", userid => {
-    console.log("user id: " + userid)
     const user = { socketId: socket.id, room: userid, userid: userid };
     socket.join(user.room);
-    console.log(user.userid + " is listening for notifications.")
-  })
+    console.log(user.userid + " is listening for notifications.");
+  });
 
   //Receives a new message
   socket.on("input", data => {
@@ -55,11 +54,13 @@ io.on('connection', (socket) => {
 
     //emits new message to specific room
     io.in(user.room).in(user.recipientid).emit("output", data);
+    console.log('data: ' + data);
+    console.log('sent to: ' + user.recipientid);
   });
 
   socket.on("newMatchNotification", userid => {
 
-    //emits new message to specific room
+    //emits new match update to specific room
     socket.to(userid).emit("output", "update");
   });
 

@@ -95,7 +95,7 @@ const MessengerScreen = props => {
                 data.id = new Date();
                 if (data.senderId == recipientId || data.recipientId == recipientId) {
                     setMessages(oldMessages => [data, ...oldMessages]);
-                    // updateInbox();
+                    updateNotifications(recipientId);
                 };
 
                 return () => {
@@ -185,7 +185,7 @@ const MessengerScreen = props => {
         // </View>
 
         <View style={{ flex: 1 }}>
-            <KeyboardAvoidingView behavior="padding" style={styles.keyboard} keyboardVerticalOffset={keyboardVerticalOffset}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""} style={styles.keyboard} keyboardVerticalOffset={keyboardVerticalOffset}>
                 <FlatList
                     style={styles.list}
                     data={messages}

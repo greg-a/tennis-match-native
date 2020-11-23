@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Appearance, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Appearance, Button, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import ModalSelector from 'react-native-modal-selector';
@@ -49,16 +49,14 @@ const SearchByDateScreen = props => {
         console.log('recip username: ' + recipientUsername);
     });
 
-    // useEffect(() => {
-
-    //     if (currentCoordinates.lat && currentCoordinates.lng) {
-    //         getCourtData();
-    //         setUserInstructions("Fill out event details");
-    //     }
-    //     else {
-    //         getProfileLocation();
-    //     };
-    // }, [currentCoordinates]);
+    useEffect(() => {
+        if (currentCoordinates.lat && currentCoordinates.lng) {
+            getCourtData();
+        }
+        else {
+            getProfileLocation();
+        };
+    }, [currentCoordinates]);
 
     const getProfileLocation = () => {
         fetch(localHost + '/api/profile')
@@ -136,7 +134,7 @@ const SearchByDateScreen = props => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                
+
                 console.log("courts query: " + locationQuery)
                 let courtSearch = [{ key: 1, label: 'any', vicinity: currentCoordinates.vicinity, component: <ModalItem title='any' subtitle='near me' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
 
@@ -190,98 +188,102 @@ const SearchByDateScreen = props => {
     };
 
     return (
-        <View style={styles.container}>
-            {warningText ? <Text style={[styles.baseText, styles.instructionText, styles.warningText]}>{userInstructions}</Text> : <Text style={[styles.baseText, styles.instructionText]}>{userInstructions}</Text>}
-            {/* <Text style={[warningText ? styles.warningText : styles.baseText, styles.instructionText]}>
-                    {userInstructions}
-                </Text> */}
-            <View>
-                <Text style={styles.baseText}>Date</Text>
-                <TouchableWithoutFeedback onPress={showDatePicker}>
-                    <View style={styles.viewInput}>
-                        {newDate ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
-                    </View>
-                </TouchableWithoutFeedback>
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleConfirmDate}
-                    onCancel={hideDatePicker}
-                    textColor={isDarkMode ? 'white' : 'black'}
-                />
-            </View>
-            <View>
-                <Text style={styles.baseText}>Skill Level</Text>
-                <ModalSelector
-                    // style={styles.viewInput}
-                    data={skillsArr}
-                    onChange={(option) => {
-                        setSkillLevel(option.value);
-                        setSkillLabel(option.label)
-                    }}>
-                    <TextInput
-                        style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
-                        value={skillLabel}
-                        editable={false}
-                        placeholder={"Skill Level"}
-                    />
-                </ModalSelector>
-            </View>
-            <View>
-                <Text style={styles.baseText}>User</Text>
-                <View style={[styles.viewInput]}>
-                    <Text
-                        style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16, fontWeight: "300" }}
-                        onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
-                    >
-                        {recipientUsername === '' ? 'Find User' : recipientUsername}
-                    </Text>
-                </View>
-            </View>
-
-            <View>
-                <TextInput 
-                    style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
-                    onChangeText={text => setEventLocation(text)}
-                    value={eventLocation}
-                    placeholder={'Location'}
-                    placeholderTextColor={'lightgrey'}
-                />
-            </View>
-
-            {/* <View>
+        <ScrollView>
+            <View style={styles.container}>
                 <LocationPicker
                     modalVisible={modalVisible}
                     cancelModal={() => setModalVisible(false)}
                     handleLocation={getCurrentLocation}
                     handleZip={zipToCoordinates}
                 />
-                <ModalSelector
-                    data={courtLocations}
-                    style={styles.courtInput}
-                    initValue='Court Location'
-                    onChange={(option) => {
-                        setEventLocation(option);
-                    }}>
-                    <TextInput
-                        style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
-                        editable={false}
-                        value={eventLocation === undefined ? eventLocation : eventLocation.label}
-                        placeholder={'Court Location'}
-                        placeholderTextColor={'lightgrey'}
-                        multiline={true}
+                {warningText ? <Text style={[styles.baseText, styles.instructionText, styles.warningText]}>{userInstructions}</Text> : <Text style={[styles.baseText, styles.instructionText]}>{userInstructions}</Text>}
+                {/* <Text style={[warningText ? styles.warningText : styles.baseText, styles.instructionText]}>
+                    {userInstructions}
+                </Text> */}
+                <View>
+                    <Text style={styles.baseText}>Date</Text>
+                    <TouchableWithoutFeedback onPress={showDatePicker}>
+                        <View style={styles.viewInput}>
+                            {newDate ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleConfirmDate}
+                        onCancel={hideDatePicker}
+                        textColor={isDarkMode ? 'white' : 'black'}
                     />
-                </ModalSelector>
-                <View style={styles.locationButton}>
-                    <Button title='Set Location' onPress={() => setModalVisible(true)} />
                 </View>
+                <View>
+                    <Text style={styles.baseText}>Skill Level</Text>
+                    <ModalSelector
+                        // style={styles.viewInput}
+                        data={skillsArr}
+                        onChange={(option) => {
+                            setSkillLevel(option.value);
+                            setSkillLabel(option.label)
+                        }}>
+                        <TextInput
+                            style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
+                            value={skillLabel}
+                            editable={false}
+                            placeholder={"Any"}
+                        />
+                    </ModalSelector>
+                </View>
+                <View>
+                    <Text style={styles.baseText}>User</Text>
+                    <View style={[styles.viewInput]}>
+                        <Text
+                            style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16, fontWeight: "300" }}
+                            onPress={() => props.navigation.navigate('User Search', { searchType: 'invite', setUserInfo: setUserInfo })}
+                        >
+                            {recipientUsername === '' ? 'Any' : recipientUsername}
+                        </Text>
+                    </View>
+                </View>
+
+                {/* <View>
+                <Text style={styles.baseText}>Court</Text>
+                <TextInput
+                    style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
+                    onChangeText={text => setEventLocation(text)}
+                    value={eventLocation}
+                    placeholder={'Any'}
+                    placeholderTextColor={'lightgrey'}
+                />
             </View> */}
 
-            <TouchableOpacity style={styles.searchButton} onPress={handleFormSubmit}>
-                <Text style={[styles.baseText, styles.searchButtonText]}>SEARCH</Text>
-            </TouchableOpacity>
+                <View>
+                <Text style={styles.baseText}>Court</Text>
+                    <ModalSelector
+                        data={courtLocations}
+                        style={styles.courtInput}
+                        initValue='Court Location'
+                        onChange={(option) => {
+                            setEventLocation(option);
+                        }}>
+                        <TextInput
+                            style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
+                            editable={false}
+                            value={eventLocation === undefined ? eventLocation : eventLocation.label}
+                            placeholder={'Court Location'}
+                            placeholderTextColor={'lightgrey'}
+                            multiline={true}
+                        />
+                    </ModalSelector>
+                    <View style={styles.locationButton}>
+                        <Button title='Set Location' onPress={() => setModalVisible(true)} />
+                    </View>
+                </View>
 
-        </View>
+                <TouchableOpacity style={styles.searchButton} onPress={handleFormSubmit}>
+                    <Text style={[styles.baseText, styles.searchButtonText]}>SEARCH</Text>
+                </TouchableOpacity>
+
+            </View>
+        </ScrollView>
     );
 
 };
@@ -291,7 +293,7 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     container: {
-        flex: 1,
+        // flex: 1,
         alignItems: 'center',
         justifyContent: 'space-around'
     },

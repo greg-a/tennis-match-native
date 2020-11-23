@@ -8,7 +8,9 @@ import { playTypeData, eventTypeData } from '../../data/ProfileData';
 import { localHost, googleMapsAPI } from '../localhost.js';
 import ModalItem from '../components/ModalItem';
 import LocationPicker from '../components/LocationPicker';
+import io from 'socket.io-client';
 
+const socket = io(localHost);
 
 const AvailabilityScreen = props => {
     eventTypeData.forEach(item => item.component = <ModalItem title={item.label} subtitle={item.descripton} />);
@@ -84,19 +86,23 @@ const AvailabilityScreen = props => {
         })
             .then(res => res.json())
             .then(res => {
+                console.log("RESPONSE: " + JSON.stringify(res));
                 if (res.statusString === "eventCreated") {
                     if (props.route.params) {
                         props.navigation.goBack();
+                        if (recipientId) {
+                            socket.emit('newMatchNotification', recipientId);
+                        };
                     }
                     else {
                         Alert.alert(
                             "Success!",
                             "Your availability was posted",
-                            [{ text: "OK" }]
+                            [{ text: "OK", onPress: () => socket.emit('newMatchNotification', recipientId) }]
                         );
                         triggerNotificationHandler();
                         formReset();
-                    }
+                    };
                 }
                 else {
                     Alert.alert(
@@ -104,14 +110,14 @@ const AvailabilityScreen = props => {
                         "Something went wrong. Make sure all fields are selected.",
                         [{ text: "OK" }]
                     );
-                }
+                };
             }).catch(err => {
                 Alert.alert(
                     "Uh oh",
                     "Something went wrong. Please Try Again.",
                     [{ text: "OK" }]
                 );
-            })
+            });
     };
 
     useEffect(() => {
@@ -154,7 +160,7 @@ const AvailabilityScreen = props => {
         fetch(locationQuery)
             .then(res => res.json())
             .then(courts => {
-                
+
                 console.log("courts query: " + locationQuery)
                 let courtSearch = [{ key: 1, label: 'any', vicinity: currentCoordinates.vicinity, component: <ModalItem title='any' subtitle='near me' />, lat: currentCoordinates.lat, lng: currentCoordinates.lng }];
 
@@ -183,7 +189,7 @@ const AvailabilityScreen = props => {
         let currentHour = parseInt(moment(time).format('HH'));
         let currentMinute = parseInt(moment(time).format('mm'));
         let convertedEventTime = new Date(parseInt(currentYear), currentMonthAdj, parseInt(currentDay), currentHour, currentMinute);
-        
+
         return convertedEventTime;
     };
 
@@ -271,24 +277,24 @@ const AvailabilityScreen = props => {
 
     const triggerNotificationHandler = () => {
         if (recipientPushEnabled) {
-        fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Accept-Encoding': 'gzip, deflate',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                to: recipientPushToken,
-                // data: {},
-                title: 'Match Request',
-                body: 'New Match Request'
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: recipientPushToken,
+                    // data: {},
+                    title: 'Match Request',
+                    body: 'New Match Request'
+                })
             })
-        })
-    }
-    else {
-        console.log('recipient disabled push notifications');
-    }
+        }
+        else {
+            console.log('recipient disabled push notifications');
+        }
     };
 
     return (

@@ -23,7 +23,7 @@ const FeedScreen = props => {
         return new Promise(resolve => {
             setTimeout(resolve, timeout);
         });
-    }
+    };
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);

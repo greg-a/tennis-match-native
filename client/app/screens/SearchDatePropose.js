@@ -6,7 +6,9 @@ import { minuteArray } from '../../data/ProfileData';
 import { localHost, googleMapsAPI } from '../localhost';
 import ModalItem from '../components/ModalItem';
 import LocationPicker from '../components/LocationPicker';
+import io from 'socket.io-client';
 
+const socket = io(localHost);
 
 const SearchDatePropose = ({ route, navigation }) => {
     // params being passed from Search Date Results Screen
@@ -50,10 +52,10 @@ const SearchDatePropose = ({ route, navigation }) => {
         // console.log('start time minute: ' + startTimeMinuteValue);
         // console.log('end time hour: ' + endTimeHourValue);
         // console.log('end time minute: ' + endTimeMinuteValue);
-        console.log('event location: ' + eventLocation);
-        console.log('event obj: '+ JSON.stringify(eventObj));
+        // console.log('event location: ' + eventLocation);
+        // console.log('event obj: '+ JSON.stringify(eventObj));
         // console.log('event title: ' + eventTitle);
-        // console.log('user id: ' + eventObj.User.id);
+        console.log('user id: ' + eventObj.User.id);
     });
 
     const getCourtData = () => {
@@ -171,6 +173,7 @@ const SearchDatePropose = ({ route, navigation }) => {
                 .then(res => {
                     console.log(res);
                     if (res.statusString === 'eventCreated') {
+                        socket.emit("newMatchNotification", eventObj.User.id);
                         triggerNotificationHandler();
                         Alert.alert(
                             "Success!",

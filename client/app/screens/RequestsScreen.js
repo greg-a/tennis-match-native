@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
 import RequestCard from '../components/RequestCard.js';
 import moment from "moment";
 import { localHost } from '../localhost.js';
@@ -8,22 +8,37 @@ const RequestsScreen = props => {
 
     const [searchResults, setSearchResults] = React.useState([]);
     const [userid, setUserid] = React.useState("");
+    const [refreshing, setRefreshing] = React.useState(false);
 
     useEffect(() => {
         getRequests();
     }, []);
 
-    getRequests = () => {
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        });
+    };
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+        getRequests();
+    }, []);
+
+    const getRequests = () => {
         fetch(localHost + "/api/calendar/requests")
             .then(res => res.json())
             .then(res => {
                 setSearchResults(res.results);
                 setUserid(res.userid);
+                console.log("search results: " + JSON.stringify(res.results))
             })
             .catch(err => console.log(err));
-    }
+    };
 
-    handleConfirm = (index) => {
+    const handleConfirm = (index) => {
+        console.log("event index: " + index)
         const eventObj = searchResults[index];
         const eventId = eventObj.id;
         const eventStart = eventObj.start;
@@ -81,7 +96,7 @@ const RequestsScreen = props => {
             .catch(err => console.log(err));
     };
 
-    handleDeny = (index) => {
+    const handleDeny = (index) => {
         const eventObj = searchResults[index];
         const eventId = eventObj.id;
 
@@ -121,30 +136,44 @@ const RequestsScreen = props => {
         })
     };
 
+    const renderItem = ({ item, index }) => (
+        <RequestCard
+            title={item.title}
+            username={item.User.username}
+            userFirstname={item.User.firstname}
+            userLastname={item.User.lastname}
+            userSkill={item.User.skilllevel}
+            eventLocation={item.location}
+            date={moment(item.start).format("MM/DD/YYYY")}
+            starttime={moment(item.start).format("hh:mm a")}
+            endtime={moment(item.end).format("hh:mm a")}
+            handleConfirm={handleConfirm}
+            handleDeny={handleDeny}
+            eventIndex={index}
+        />
+    );
+
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                {searchResults.length > 0 ?
-                    searchResults.map((event, i) => (
-                        <RequestCard
-                            key={i}
-                            title={event.title}
-                            username={event.User.username}
-                            userFirstname={event.User.firstname}
-                            userLastname={event.User.lastname}
-                            userSkill={event.User.skilllevel}
-                            eventLocation={event.location}
-                            date={moment(event.start).format("MM/DD/YYYY")}
-                            starttime={moment(event.start).format("hh:mm a")}
-                            endtime={moment(event.end).format("hh:mm a")}
-                            eventIndex={i}
-                            handleConfirm={handleConfirm}
-                            handleDeny={handleDeny}
+        <View style={styles.container}>
+            {searchResults.length > 0 ?
+                <FlatList
+                    data={searchResults}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
                         />
-                    ))
-                    : <Text>No Requests</Text>}
-            </View>
-        </ScrollView>
+                    }
+                />
+                :
+                <View>
+                    <Text>No Requests</Text>
+                    <Button title='Refresh' onPress={getRequests}/>
+                </View>
+            }
+        </View>
     );
 
 };
