@@ -3,6 +3,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
+import io from 'socket.io-client';
+
+const socket = io(localHost);
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,6 +60,7 @@ const InboxScreen = props => {
                     };
                 });
                 setInboxMessages(newArr);
+                socket.emit('newMatchNotification', myUserId);
             })
             .catch(err => console.log(err));
     };

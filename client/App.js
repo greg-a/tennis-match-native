@@ -49,6 +49,7 @@ export default function App() {
   const socket = io(localHost);
 
   const [userToken, setUserToken] = React.useState(null);
+  const [userId, setUserId] = React.useState();
   const [newNotifications, setNewNotifications] = React.useState({ messages: 0, matches: 0 });
   const [socketConnected, setSocketConnected] = React.useState(false);
 
@@ -58,6 +59,8 @@ export default function App() {
         .then((notifications) => {
           if (!socketConnected) {
             socket.emit('notifyMe', notifications.userid);
+            setSocketConnected(true);
+            setUserId(notifications.userid);
             console.log("----connected to notifyMe----");
           };
 
@@ -73,10 +76,10 @@ export default function App() {
     connectToSocket();
     getNewNotifications();
 
-    // return () => {
-    //   socket.disconnect();
-    //   setSocketConnected(false);
-    // };
+    return () => {
+      socket.emit('unsubscribe', userId);
+      setSocketConnected(false);
+    };
   }, [userToken]);
 
   const connectToSocket = () => {
