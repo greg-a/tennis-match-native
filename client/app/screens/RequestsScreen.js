@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, View, FlatList, RefreshControl } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
 import RequestCard from '../components/RequestCard.js';
 import moment from "moment";
 import { localHost } from '../localhost.js';
@@ -32,12 +32,15 @@ const RequestsScreen = props => {
             .then(res => {
                 setSearchResults(res.results);
                 setUserid(res.userid);
+                console.log("search results: " + JSON.stringify(res.results))
             })
             .catch(err => console.log(err));
-    }
+    };
 
     const handleConfirm = (index) => {
-        const eventId = index;
+        console.log("event index: " + index)
+        const eventObj = searchResults[index];
+        const eventId = eventObj.id;
         const eventStart = eventObj.start;
         const eventEnd = eventObj.end;
         const eventTitle = eventObj.title;
@@ -94,7 +97,8 @@ const RequestsScreen = props => {
     };
 
     const handleDeny = (index) => {
-        const eventId = index;
+        const eventObj = searchResults[index];
+        const eventId = eventObj.id;
 
         const updateObj = {
             id: eventId
@@ -132,7 +136,7 @@ const RequestsScreen = props => {
         })
     };
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item, index }) => (
         <RequestCard
             title={item.title}
             username={item.User.username}
@@ -145,7 +149,7 @@ const RequestsScreen = props => {
             endtime={moment(item.end).format("hh:mm a")}
             handleConfirm={handleConfirm}
             handleDeny={handleDeny}
-            eventIndex={item.id}
+            eventIndex={index}
         />
     );
 
@@ -164,7 +168,10 @@ const RequestsScreen = props => {
                     }
                 />
                 :
-                <Text>No Requests</Text>
+                <View>
+                    <Text>No Requests</Text>
+                    <Button title='Refresh' onPress={getRequests}/>
+                </View>
             }
         </View>
     );
