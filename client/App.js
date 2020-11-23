@@ -51,20 +51,21 @@ export default function App() {
   const [userToken, setUserToken] = React.useState(null);
   const [newNotifications, setNewNotifications] = React.useState({ messages: 0, matches: 0 });
   const [socketConnected, setSocketConnected] = React.useState(false);
-  const [newNotification, setNewNotification] = React.useState(false);
 
   const getNewNotifications = () => {
     if (userToken) {
       fetch(localHost + "/api/notifications").then(res => res.json())
         .then((notifications) => {
-          socket.emit('notifyMe', notifications.userid);
-          
+          if (!socketConnected) {
+            socket.emit('notifyMe', notifications.userid);
+            console.log("----connected to notifyMe----");
+          };
+
           if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
             setNewNotifications({ messages: notifications.messages, matches: notifications.matches });
           }
         })
         .catch(err => console.log(err));
-      console.log("new notifications: " + JSON.stringify(newNotifications));
     };
   };
 
@@ -72,19 +73,21 @@ export default function App() {
     connectToSocket();
     getNewNotifications();
 
-    return () => {
-      socket.disconnect();
-      setSocketConnected(false);
-    };
-  }, [userToken, newNotification]);
+    // return () => {
+    //   socket.disconnect();
+    //   setSocketConnected(false);
+    // };
+  }, [userToken]);
 
   const connectToSocket = () => {
-    if (!socketConnected) {
-      socket.on("output", data => {
-        setNewNotification(!newNotification);
-      });
-      setSocketConnected(true);
+    socket.on("output", data => {
+      getNewNotifications();
+      console.log("notification update: " + JSON.stringify(data));
+
+      return () => {
+        socket.disconnect()
     };
+    });
   };
 
   const authContext = React.useMemo(() => {

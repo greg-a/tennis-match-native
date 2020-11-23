@@ -55,6 +55,8 @@ io.on('connection', (socket) => {
 
     //emits new message to specific room
     io.in(user.room).in(user.recipientid).emit("output", data);
+    console.log('data: ' + data);
+    console.log('sent to: ' + user.recipientid);
   });
 
   socket.on("newMatchNotification", userid => {
