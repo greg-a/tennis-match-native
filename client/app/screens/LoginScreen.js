@@ -20,7 +20,7 @@ const LoginScreen = props => {
     const { signIn } = React.useContext(AuthContext);
 
     const handleSpinner = () => {
-        if (warningText) {
+        if (!warningText) {
             setSigningIn(true);
         }
     };
