@@ -1,5 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, SafeAreaView, ScrollView, Platform, Alert, Button, Dimensions } from 'react-native';
+import {
+    View,
+    StyleSheet,
+    Image,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    FlatList,
+    KeyboardAvoidingView,
+    SafeAreaView,
+    Platform,
+    Alert,
+    Button,
+    Dimensions,
+    NativeModules,
+    StatusBarIOS
+}
+    from 'react-native';
 import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
@@ -17,6 +34,8 @@ const Item = ({ title, sender, timestamp }) => (
     </View>
 );
 
+const {StatusBarManager} = NativeModules;
+
 const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
     const recipientUsername = props.route.params.recipientUsername;
@@ -29,6 +48,7 @@ const MessengerScreen = props => {
     const [recId, updateRecId] = useState(recipientId);
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
+    const [statusBarHeight, setStatusBarHeight] = useState(0);
 
     const renderItem = ({ item }) => {
         // <Item title={item.message} sender={item.User.username} timestamp={handleTimeStamp(item.createdAt)} />
@@ -57,7 +77,9 @@ const MessengerScreen = props => {
         getMessages(recipientId);
         updateNotifications(recipientId);
         connectToSocket();
-
+        StatusBarManager.getHeight((statusBarFrameData)=>{
+            setStatusBarHeight(statusBarFrameData.height)
+        });
         return () => {
             socket.emit('unsubscribe', thisRoom)
         };
@@ -90,18 +112,18 @@ const MessengerScreen = props => {
     const connectToSocket = () => {
         socket.emit('joinRoom', { username: myUsername, room: thisRoom, userId: myUserId });
 
-            socket.on("output", data => {
-                data.createdAt = new Date();
-                data.id = new Date();
-                if (data.senderId == recipientId || data.recipientId == recipientId) {
-                    setMessages(oldMessages => [data, ...oldMessages]);
-                    updateNotifications(recipientId);
-                };
+        socket.on("output", data => {
+            data.createdAt = new Date();
+            data.id = new Date();
+            if (data.senderId == recipientId || data.recipientId == recipientId) {
+                setMessages(oldMessages => [data, ...oldMessages]);
+                updateNotifications(recipientId);
+            };
 
-                return () => {
-                    socket.disconnect()
-                }
-            });
+            return () => {
+                socket.disconnect()
+            }
+        });
     };
 
     const triggerNotificationHandler = () => {
@@ -159,33 +181,12 @@ const MessengerScreen = props => {
         };
     };
 
-    const keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 0
+    // const keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 0
 
     return (
-        // <View style={styles.container}>
-        //     <FlatList
-        //         style={styles.messagesContainer}
-        //         data={messages}
-        //         renderItem={renderItem}
-        //         keyExtractor={item => item.id.toString()}
-        //         inverted={true}
-        //     />
-        //     <View style={styles.sendMessageContainer}>
-        //         <TextInput
-        //             style={styles.sendMessage}
-        //             placeholder="Type a message"
-        //             multiline={true}
-        //             onChangeText={setNewMessage}
-        //             value={newMessage}
-        //         />
-        //         <TouchableOpacity style={styles.sendButton} onPress={handleMessageSend} disabled={newMessage === '' ? true : false}>
-        //             <Text>SEND</Text>
-        //         </TouchableOpacity>
-        //     </View>
-        // </View>
 
         <View style={{ flex: 1 }}>
-            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""} style={styles.keyboard} keyboardVerticalOffset={keyboardVerticalOffset}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""} style={styles.keyboard} keyboardVerticalOffset={44 + statusBarHeight}>
                 <FlatList
                     style={styles.list}
                     data={messages}
@@ -220,65 +221,6 @@ const MessengerScreen = props => {
 };
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    // justifyContent: 'flex-end'
-    // },
-    // message: {
-    //     backgroundColor: 'white',
-    //     borderColor: 'black',
-    //     borderStyle: 'solid',
-    //     borderWidth: .5,
-    //     marginBottom: 5,
-    //     borderRadius: 30,
-    //     padding: 5,
-    //     paddingLeft: 20,
-    //     marginLeft: 5,
-    //     width: '80%'
-    // },
-    // senderText: {
-    //     fontSize: 12
-    // },
-    // messageText: {
-    //     fontSize: 16,
-    //     marginTop: 3
-    // },
-    // timeStamp: {
-    //     fontSize: 12,
-    //     alignSelf: 'flex-end',
-    //     marginRight: 10,
-    //     color: 'grey'
-    // },
-    // sendMessage: {
-    //     borderColor: 'black',
-    //     backgroundColor: 'white',
-    //     justifyContent: 'flex-end',
-    //     height: 40,
-    //     width: '80%',
-    //     borderRadius: 30,
-    //     paddingLeft: 10
-    // },
-    // sendMessageContainer: {
-    //     flexDirection: 'row',
-    //     marginLeft: 10,
-    //     justifyContent: 'space-around'
-    // },
-    // sendMessageContainer: {
-    //     height: 40,
-    //     width: '100%',
-    //     backgroundColor: '#fff',
-    //     paddingLeft: 10,
-    //     justifyContent: 'flex-end',
-    //     color: '#fff'
-    // },
-    // sendButton: {
-    //     backgroundColor: '#6CE631',
-    //     padding: 5,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     borderRadius: 30,
-    //     width: 50
-    // },
     keyboard: {
         flex: 1,
         justifyContent: 'center',
