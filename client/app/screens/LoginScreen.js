@@ -67,7 +67,8 @@ const LoginScreen = props => {
         return <AppLoading />;
     } else {
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
+            {/* <ScrollView style={styles.container}> */}
                 <View style={styles.topView}>
                     <Image
                         resizeMode="contain"
@@ -116,7 +117,8 @@ const LoginScreen = props => {
                         <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
+            </View>
         );
     }
 };
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'rgb(108,230,49)',
-        // alignItems: 'center',
+        alignItems: 'center',
         // justifyContent: 'space-around'
     },
     input: {

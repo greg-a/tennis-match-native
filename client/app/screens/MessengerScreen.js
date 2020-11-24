@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#fff',
         // margin: 10,
-        paddingBottom: 20
+        // paddingBottom: 20
     },
     input: {
         flexDirection: 'row',
