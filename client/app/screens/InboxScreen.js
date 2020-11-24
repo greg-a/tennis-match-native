@@ -9,11 +9,11 @@ const socket = io(localHost);
 
 const { width, height } = Dimensions.get('window');
 
-const Item = ({ title, sender, timestamp, onPress }) => (
+const Item = ({ title, sender, timestamp, read, onPress }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
-        <Text style={styles.senderText}>{sender}</Text>
-        <Text style={styles.messageText}>{title}</Text>
-        <Text style={styles.timeStamp}>{timestamp}</Text>
+        <Text style={read === 1 ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+        <Text style={read === 1 ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
+        <Text style={read === 1 ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
     </TouchableOpacity>
 );
 
@@ -83,6 +83,7 @@ const InboxScreen = props => {
             title={item.message}
             sender={item.senderId == myUserId ? item.recipient.username : item.User.username}
             timestamp={handleTimeStamp(item.createdAt)}
+            read={item.read}
             onPress={() => props.navigation.navigate('Messenger', {
                 recipientId: item.senderId == myUserId ? item.recipientId : item.senderId,
                 recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username,
@@ -122,19 +123,6 @@ const InboxScreen = props => {
                     />
                 }
             />
-            {/* <View style={styles.sendMessageContainer}>
-                <TouchableOpacity
-                    style={styles.sendMessage}
-                    onPress={() => props.navigation.navigate('User Search', {
-                        myUserId: myUserId,
-                        myUsername: myUsername,
-                        searchType: 'message',
-                        getMessages: getMessages
-                    })}
-                >
-                    <Text style={{ color: 'grey' }}>Search for user</Text>
-                </TouchableOpacity>
-            </View> */}
         </View>
     )
 };
@@ -154,34 +142,37 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0'
     },
-    senderText: {
+    senderTextUnread: {
+        fontSize: 18,
+        // fontWeight: 'bold'
+    },
+    senderTextRead: {
         fontSize: 18
     },
-    messageText: {
-        fontSize: 12,
+    messageTextUnread: {
+        fontSize: 15,
+        marginTop: 3,
+        color: 'black',
+        fontWeight: 'bold'
+    },
+    messageTextRead: {
+        fontSize: 15,
         marginTop: 3,
         color: 'grey'
     },
-    timeStamp: {
+    timeStampUnread: {
+        fontSize: 12,
+        alignSelf: 'flex-end',
+        marginRight: 10,
+        color: 'black',
+        fontWeight: 'bold'
+    },
+    timeStampRead: {
         fontSize: 12,
         alignSelf: 'flex-end',
         marginRight: 10,
         color: 'grey'
     },
-    // sendMessage: {
-    //     borderColor: 'black',
-    //     backgroundColor: 'white',
-    //     justifyContent: 'center',
-    //     height: 40,
-    //     width: '80%',
-    //     borderRadius: 30,
-    //     paddingLeft: 10
-    // },
-    // sendMessageContainer: {
-    //     flexDirection: 'row',
-    //     marginLeft: 10,
-    //     justifyContent: 'space-around'
-    // },
     inputContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
