@@ -13,14 +13,14 @@ const SearchByDateScreen = props => {
     const [newDate, setNewDate] = React.useState();
     const [conDate, setConDate] = React.useState("");
     const [searchResult, setSearchResult] = React.useState("");
-    const [skillLevel, setSkillLevel] = React.useState();
+    const [skillLevel, setSkillLevel] = React.useState("0");
     const [skillLabel, setSkillLabel] = React.useState();
     const [recipientId, setRecipientId] = React.useState(null);
     const [recipientUsername, setRecipientUsername] = React.useState("");
     const [userInstructions, setUserInstructions] = React.useState("Search for other players' availability with the filters below.");
     const [warningText, setWarningText] = React.useState(false);
 
-    const [eventLocation, setEventLocation] = React.useState();
+    const [eventLocation, setEventLocation] = React.useState({label: 'any'});
     const [courtLocations, setCourtLocations] = React.useState([]);
     const [currentCoordinates, setCurrentCoordinates] = React.useState({});
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -30,7 +30,12 @@ const SearchByDateScreen = props => {
     const colorScheme = Appearance.getColorScheme()
     const isDarkMode = colorScheme === 'dark';
 
-    const skillsArr = [];
+    const skillsArr = [{
+        component: <ModalItem title='any' />,
+        key: "0",
+        value: "0",
+        label: 'any'
+    }];
 
     Skills.forEach(skill => {
         skillsArr.push({
@@ -154,16 +159,17 @@ const SearchByDateScreen = props => {
     };
 
     const handleFormSubmit = () => {
-        if (!newDate && !skillLevel && !recipientId && !eventLocation) {
+        if (!newDate && skillLevel === "0" && !recipientId && eventLocation.label==='any') {
             setWarningText(true);
             setUserInstructions('Please enter at least one search parameter.');
-        } else {
-            console.log(JSON.stringify(eventLocation.label));
-            
+        } 
+        else {
+            // console.log(JSON.stringify(eventLocation.label));
+
             const dateURL = newDate ? "date=" + moment(newDate).format('YYYY-MM-DD') + "&" : "";
-            const skillURL = skillLevel ? "skill=" + skillLevel + "&" : "";
+            const skillURL = skillLevel !== '0' ? "skill=" + skillLevel + "&" : "";
             const userIdURL = recipientId ? "user=" + recipientId + "&" : "";
-            const locationURL = eventLocation.label ? "location=" + eventLocation.label : "";
+            const locationURL = eventLocation.label!=='any' ? "location=" + eventLocation.label : "";
             const searchURL = localHost + "/api/calendar/propose?" + dateURL + skillURL + userIdURL + locationURL;
             console.log(searchURL);
             fetch(searchURL)
@@ -242,22 +248,25 @@ const SearchByDateScreen = props => {
                         >
                             {recipientUsername === '' ? 'Any' : recipientUsername}
                         </Text>
+                        {recipientId && 
+                        <View style={styles.userClear}>
+                            <Text 
+                                style={[styles.userClearText]}
+                                onPress={()=>{
+                                    console.log('pressed');
+                                    setRecipientId(null);
+                                    setRecipientUsername("");
+                                }}
+                            >
+                                X
+                            </Text>
+                        </View>
+                        }
                     </View>
                 </View>
 
-                {/* <View>
-                <Text style={styles.baseText}>Court</Text>
-                <TextInput
-                    style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
-                    onChangeText={text => setEventLocation(text)}
-                    value={eventLocation}
-                    placeholder={'Any'}
-                    placeholderTextColor={'lightgrey'}
-                />
-            </View> */}
-
                 <View>
-                <Text style={styles.baseText}>Court</Text>
+                    <Text style={styles.baseText}>Court</Text>
                     <ModalSelector
                         data={courtLocations}
                         style={styles.courtInput}
@@ -268,8 +277,8 @@ const SearchByDateScreen = props => {
                         <TextInput
                             style={[styles.viewInput, styles.baseText, styles.viewInputText2]}
                             editable={false}
-                            value={eventLocation === undefined ? eventLocation : eventLocation.label}
-                            placeholder={'Court Location'}
+                            value={eventLocation.label === 'any' ? undefined : eventLocation.label}
+                            placeholder={'Any'}
                             placeholderTextColor={'lightgrey'}
                             multiline={true}
                         />
@@ -331,6 +340,16 @@ const styles = StyleSheet.create({
     searchButtonText: {
         fontSize: 16,
         color: 'white',
+    },
+    userClear: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        paddingRight: 10,
+        
+    },
+    userClearText: {
+        color: 'red',
+        fontSize: 24
     },
     viewInput: {
         height: 60,
