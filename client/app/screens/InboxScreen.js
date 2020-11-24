@@ -168,20 +168,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         color: 'grey'
     },
-    // sendMessage: {
-    //     borderColor: 'black',
-    //     backgroundColor: 'white',
-    //     justifyContent: 'center',
-    //     height: 40,
-    //     width: '80%',
-    //     borderRadius: 30,
-    //     paddingLeft: 10
-    // },
-    // sendMessageContainer: {
-    //     flexDirection: 'row',
-    //     marginLeft: 10,
-    //     justifyContent: 'space-around'
-    // },
     inputContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
