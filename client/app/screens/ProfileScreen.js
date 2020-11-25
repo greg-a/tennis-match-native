@@ -44,9 +44,9 @@ const ProfileScreen = props => {
             label: skill.label
         })
     });
-    
-    const toggleSwitch = () => setProfileUpdate({...profileUpdate, pushEnabled: !profileUpdate.pushEnabled});
-    
+
+    const toggleSwitch = () => setProfileUpdate({ ...profileUpdate, pushEnabled: !profileUpdate.pushEnabled });
+
     function skillConversion(skillLevel) {
         if (skillLevel === 1) {
             return "1.0-1.5 - New Player";
@@ -103,10 +103,14 @@ const ProfileScreen = props => {
         props.navigation.setOptions({
             headerRight: () => (
                 <HeaderButtons>
-                    <Item
+                    {/* <Item
                         title='SAVE'
                         onPress={handleProfileUpdate}
-                    />
+                    /> */}
+                    <TouchableOpacity onPress={handleProfileUpdate}>
+                        <Text style={styles.saveButton}>SAVE</Text>
+                    </TouchableOpacity>
+
                 </HeaderButtons>
             ),
         });
@@ -171,90 +175,94 @@ const ProfileScreen = props => {
     };
 
     return (
-        <ScrollView>
-            <View style={styles.form}>
-                <View style={styles.row}>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>First Name</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profileUpdate.firstname}
-                            onChangeText={text => setProfileUpdate({ ...profileUpdate, firstname: text })}
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Last Name</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profileUpdate.lastname}
-                            onChangeText={text => setProfileUpdate({ ...profileUpdate, lastname: text })}
-                        />
-                    </View>
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>City</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={profileUpdate.city}
-                        onChangeText={text => setProfileUpdate({ ...profileUpdate, city: text })}
-                    />
-                </View>
-                <View style={styles.row}>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>State</Text>
-                        <ModalSelector
-                            pickerStyle={styles.input}
-                            data={statesArr}
-                            onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
+        <ScrollView style={{ flex: 1 }}>
+                <View style={styles.form}>
+                    <View style={styles.row}>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>First Name</Text>
                             <TextInput
                                 style={styles.input}
-                                value={profileUpdate.state}
+                                value={profileUpdate.firstname}
+                                onChangeText={text => setProfileUpdate({ ...profileUpdate, firstname: text })}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Last Name</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={profileUpdate.lastname}
+                                onChangeText={text => setProfileUpdate({ ...profileUpdate, lastname: text })}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>City</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.city}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, city: text })}
+                        />
+                    </View>
+                    <View style={styles.row}>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>State</Text>
+                            <ModalSelector
+                                pickerStyle={styles.input}
+                                data={statesArr}
+                                onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
+                                <TextInput
+                                    style={styles.input}
+                                    value={profileUpdate.state}
+                                    editable={false}
+                                    placeholder={"Choose State..."}
+                                />
+                            </ModalSelector>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Zip Code</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={profileUpdate.zipcode}
+                                onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
+                                keyboardType="numeric"
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Skill Level</Text>
+                        <ModalSelector
+                            pickerStyle={styles.input}
+                            data={skillsArr}
+                            onChange={(option) => {
+                                setProfileUpdate({ ...profileUpdate, skilllevel: option.value });
+                                setSkillLabel(option.label)
+                            }}>
+                            <TextInput
+                                style={styles.input}
+                                value={skillLabel}
                                 editable={false}
-                                placeholder={"Choose State..."}
+                                placeholder={"Choose Skill Level..."}
                             />
                         </ModalSelector>
                     </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Zip Code</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profileUpdate.zipcode}
-                            onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
-                            keyboardType="numeric"
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
+                        <Switch
+                            trackColor={{ false: "#767577", true: "#bbf7e7" }}
+                            thumbColor={profileUpdate.pushEnabled ? "#6CE631" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleSwitch}
+                            value={profileUpdate.pushEnabled}
                         />
                     </View>
+
                 </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Skill Level</Text>
-                    <ModalSelector
-                        pickerStyle={styles.input}
-                        data={skillsArr}
-                        onChange={(option) => {
-                            setProfileUpdate({ ...profileUpdate, skilllevel: option.value });
-                            setSkillLabel(option.label)
-                        }}>
-                        <TextInput
-                            style={styles.input}
-                            value={skillLabel}
-                            editable={false}
-                            placeholder={"Choose Skill Level..."}
-                        />
-                    </ModalSelector>
+                <View>
+                    <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                        <Text style={styles.logoutButtonText}>LOGOUT</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.row}>
-                    <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
-                    <Switch
-                        trackColor={{ false: "#767577", true: "#bbf7e7" }}
-                        thumbColor={profileUpdate.pushEnabled ? "#6CE631" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleSwitch}
-                        value={profileUpdate.pushEnabled}
-                    />
-                </View>
-                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-                    <Text style={styles.logoutButtonText}>LOGOUT</Text>
-                </TouchableOpacity>
-            </View>
+
         </ScrollView>
     )
 };
@@ -278,6 +286,12 @@ const styles = StyleSheet.create({
         color: 'black',
         width: '90%'
     },
+    saveButton: {
+        color: 'white',
+        fontSize: 18,
+        // marginRight: 8,
+        fontWeight: 'bold'
+    },
     label: {
         fontSize: 18,
         marginBottom: 10,
@@ -289,7 +303,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#f50057',
         borderRadius: 5,
         marginTop: 10,
-        alignSelf: 'flex-start'
+        alignSelf: 'center',
+        marginTop: 120
     },
     logoutButtonText: {
         fontSize: 16,
