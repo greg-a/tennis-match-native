@@ -180,7 +180,7 @@ const SearchByDateStackNavigator = ({ navigation }) => {
         headerBackTitle: "Back",
       }}
     >
-      <Stack.Screen name="FindMatch" component={SearchByDateScreen} options={{
+      <Stack.Screen name="Find Match" component={SearchByDateScreen} options={{
         headerLeft: () => (
           <View>
             <Icon

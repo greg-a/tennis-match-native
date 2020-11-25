@@ -50,7 +50,7 @@ const DrawerNavigator = () => {
             (
               ({ focused }) =>
                 <View>
-                  <Icon name="call-merge" size={30} color="#6CE631" />
+                  <Icon name="clipboard-alert-outline" size={30} color="#6CE631" />
                   {matches > 0 ? <NotificationBadge count={matches} /> : null}
                 </View>
             )
