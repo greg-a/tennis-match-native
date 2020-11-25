@@ -278,8 +278,11 @@ module.exports = function (app) {
         }
 
         let locationSearch;
-        if (req.query.location) {
-            locationSearch = { location: req.query.location }
+        if (req.query.locationlat && req.query.locationlng) {
+            locationSearch = { [Op.and]: [
+                {latitude: req.query.locationlat},
+                {longitude: req.query.locationlng}
+            ] }
         }
 
         let skillUserSearch = {};
