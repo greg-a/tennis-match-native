@@ -26,13 +26,13 @@ const socket = io(localHost);
 
 const { width, height } = Dimensions.get('window');
 
-const Item = ({ title, sender, timestamp }) => (
-    <View style={styles.message}>
-        <Text style={styles.senderText}>{sender}</Text>
-        <Text style={styles.messageText}>{title}</Text>
-        <Text style={styles.timeStamp}>{timestamp}</Text>
-    </View>
-);
+// const Item = ({ title, sender, timestamp }) => (
+//     <View style={styles.message}>
+//         <Text style={styles.senderText}>{sender}</Text>
+//         <Text style={styles.messageText}>{title}</Text>
+//         <Text style={styles.timeStamp}>{timestamp}</Text>
+//     </View>
+// );
 
 const {StatusBarManager} = NativeModules;
 
@@ -57,16 +57,17 @@ const MessengerScreen = props => {
                 <View style={styles.rightMsg} >
                     <View style={styles.rightBlock}>
                         <Text style={styles.rightTxt}>{item.message}</Text>
+                        <Text style={styles.rightTime}>{handleTimeStamp(item.createdAt)}</Text>
                     </View>
                 </View>
             );
         }
         else {
             return (
-
-                <View style={styles.eachMsg}>
-                    <View style={styles.msgBlock}>
-                        <Text style={styles.msgTxt}>{item.message}</Text>
+                <View style={styles.leftMsg}>
+                    <View style={styles.leftBlock}>
+                        <Text style={styles.leftTxt}>{item.message}</Text>
+                        <Text style={styles.leftTime}>{handleTimeStamp(item.createdAt)}</Text>
                     </View>
                 </View>
             )
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
         // borderColor: '#696969',
         // borderWidth: 1,
     },
-    eachMsg: {
+    leftMsg: {
         flexDirection: 'row',
         alignItems: 'flex-end',
         margin: 5,
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
         margin: 5,
         alignSelf: 'flex-end',
     },
-    msgBlock: {
+    leftBlock: {
         width: 220,
         borderRadius: 5,
         backgroundColor: '#ffffff',
@@ -288,7 +289,7 @@ const styles = StyleSheet.create({
     rightBlock: {
         width: 220,
         borderRadius: 5,
-        backgroundColor: 'rgb(233,245,174)',
+        backgroundColor: '#f0f590',
         padding: 10,
         shadowColor: '#3d3d3d',
         shadowRadius: 2,
@@ -297,9 +298,9 @@ const styles = StyleSheet.create({
             height: 1,
         },
     },
-    msgTxt: {
+    leftTxt: {
         fontSize: 15,
-        color: '#555',
+        // color: '#555',
         fontWeight: '600',
     },
     rightTxt: {
@@ -307,6 +308,12 @@ const styles = StyleSheet.create({
         color: '#202020',
         fontWeight: '600',
     },
+    leftTime: {
+        color: 'grey',
+    },
+    rightTime: {
+        color: '#b1b567'
+    }
 });
 
 export default MessengerScreen;
