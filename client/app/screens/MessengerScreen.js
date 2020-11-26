@@ -14,6 +14,7 @@ import {
     Button,
     Dimensions,
     NativeModules,
+    StatusBar,
     StatusBarIOS
 }
     from 'react-native';
@@ -78,8 +79,33 @@ const MessengerScreen = props => {
         getMessages(recipientId);
         updateNotifications(recipientId);
         connectToSocket();
+
+        // setStatusBarHeight() {
+        //     statusBarHeight = isIOS ? 20 : StatusBarManager.HEIGHT;
+        //     if (isIOS) {
+        //       // override guesstimate height with the actual height from StatusBarManager
+        //       StatusBarManager.getHeight(data => (statusBarHeight = data.height));
+        //     }
+        // }
+        
+        if (Platform.OS === "ios") {
+            console.log("is iOS");
+            StatusBarManager.getHeight((statusBarFrameData)=>{
+                setStatusBarHeight(statusBarFrameData.height);
+                console.log("statusBarFrameData: " + statusBarFrameData.height);
+                // console.log('statusBarHeight: ', StatusBar.currentHeight);
+            });
+        }
+
+        else {
+            console.log("is android")
+            setStatusBarHeight(StatusBarManager.HEIGHT);
+        }
+
         StatusBarManager.getHeight((statusBarFrameData)=>{
-            setStatusBarHeight(statusBarFrameData.height)
+            setStatusBarHeight(statusBarFrameData.height);
+            console.log("statusBarFrameData: " + statusBarFrameData.height);
+            console.log('statusBarHeight: ', StatusBar.currentHeight);
         });
         return () => {
             socket.emit('unsubscribe', thisRoom)
