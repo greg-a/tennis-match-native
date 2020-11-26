@@ -32,7 +32,7 @@ const FeedScreen = props => {
     }, []);
 
     useEffect(() => {
-        // getNotificationPermission();
+        getNotificationPermission();
         getDates();
     }, []);
 

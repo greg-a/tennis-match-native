@@ -61,7 +61,7 @@ export default function App() {
             socket.emit('notifyMe', notifications.userid);
             setSocketConnected(true);
             setUserId(notifications.userid);
-            console.log("----connected to notifyMe----");
+            console.log("----connected to notifyMe----", notifications.userid);
           };
 
           if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
@@ -73,13 +73,17 @@ export default function App() {
   };
 
   useEffect(() => {
-    connectToSocket();
+    console.log("APP MOUNTED")
+    // connectToSocket();
     getNewNotifications();
 
-    return () => {
-      socket.emit('unsubscribe', userId);
-      setSocketConnected(false);
-    };
+    if (socketConnected) {
+      return () => {
+        socket.emit('unsubscribe', userId);
+        setSocketConnected(false);
+        console.log("APP UNMOUNTED")
+      };
+    }
   }, [userToken]);
 
   const connectToSocket = () => {
@@ -87,9 +91,9 @@ export default function App() {
       getNewNotifications();
       console.log("notification update: " + JSON.stringify(data));
 
-      return () => {
-        socket.disconnect()
-    };
+      // return () => {
+      //   socket.disconnect()
+      // };
     });
   };
 

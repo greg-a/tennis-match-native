@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
 
   socket.on('unsubscribe', room => {
     socket.leave(room);
+    console.log("server: unsubscribed from " + room);
   });
 
 });
