@@ -164,14 +164,17 @@ const SearchByDateScreen = props => {
             setUserInstructions('Please enter at least one search parameter.');
         } 
         else {
-            // console.log(JSON.stringify(eventLocation.label));
+            console.log(JSON.stringify(eventLocation));
+            
 
             const dateURL = newDate ? "date=" + moment(newDate).format('YYYY-MM-DD') + "&" : "";
             const skillURL = skillLevel !== '0' ? "skill=" + skillLevel + "&" : "";
             const userIdURL = recipientId ? "user=" + recipientId + "&" : "";
-            const locationURL = eventLocation.label!=='any' ? "location=" + eventLocation.label : "";
-            const searchURL = localHost + "/api/calendar/propose?" + dateURL + skillURL + userIdURL + locationURL;
+            const locationLatURL = eventLocation.label!=='any' ? "locationlat=" + eventLocation.lat + "&" : "";
+            const locationLngURL = eventLocation.label!=='any' ? "locationlng=" + eventLocation.lng : "";
+            const searchURL = localHost + "/api/calendar/propose?" + dateURL + skillURL + userIdURL + locationLatURL + locationLngURL;
             console.log(searchURL);
+            
             fetch(searchURL)
                 .then(res => res.json())
                 .then(res => {
