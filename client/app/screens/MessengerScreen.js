@@ -87,7 +87,6 @@ const MessengerScreen = props => {
         //       StatusBarManager.getHeight(data => (statusBarHeight = data.height));
         //     }
         // }
-        
         if (Platform.OS === "ios") {
             console.log("is iOS");
             StatusBarManager.getHeight((statusBarFrameData)=>{
