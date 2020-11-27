@@ -63,7 +63,8 @@ const InboxScreen = props => {
     const getMessages = () => {
         fetch(localHost + "/api/messages")
             .then(res => res.json())
-            .then((messages) => {
+            .then((res) => {
+                const messages = res.results;
                 let newArr = [];
                 let existing = [];
                 messages.forEach(message => {
@@ -73,7 +74,7 @@ const InboxScreen = props => {
                     };
                 });
                 setInboxMessages(newArr);
-                socket.emit('newMatchNotification', myUserId);
+                socket.emit('newMatchNotification', res.myUserId);
             })
             .catch(err => console.log(err));
     };
