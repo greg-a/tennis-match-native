@@ -36,9 +36,9 @@ const FeedScreen = props => {
         getDates();
     }, []);
 
-    // useEffect(() => {
-    //     console.log(JSON.stringify(confirmedMatches));
-    // });
+    useEffect(() => {
+        console.log(JSON.stringify(confirmedMatches));
+    });
 
     // example of a notification
     const triggerNotificationHandler = () => {

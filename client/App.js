@@ -74,7 +74,7 @@ export default function App() {
 
   useEffect(() => {
     console.log("APP MOUNTED")
-    // connectToSocket();
+    connectToSocket();
     getNewNotifications();
 
     if (socketConnected) {
@@ -91,9 +91,9 @@ export default function App() {
       getNewNotifications();
       console.log("notification update: " + JSON.stringify(data));
 
-      // return () => {
-      //   socket.disconnect()
-      // };
+      return () => {
+        socket.disconnect()
+      };
     });
   };
 
