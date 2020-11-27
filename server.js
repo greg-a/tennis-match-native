@@ -62,10 +62,12 @@ io.on('connection', (socket) => {
 
     //emits new match update to specific room
     socket.to(userid).emit("output", "update");
+    console.log(userid + " is updating notifications");
   });
 
   socket.on('unsubscribe', room => {
     socket.leave(room);
+    console.log("server: unsubscribed from " + room);
   });
 
 });

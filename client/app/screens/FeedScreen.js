@@ -36,9 +36,9 @@ const FeedScreen = props => {
         getDates();
     }, []);
 
-    // useEffect(() => {
-    //     console.log(JSON.stringify(confirmedMatches));
-    // });
+    useEffect(() => {
+        console.log(JSON.stringify(confirmedMatches));
+    });
 
     // example of a notification
     const triggerNotificationHandler = () => {
@@ -71,7 +71,7 @@ const FeedScreen = props => {
             return Notifications.getExpoPushTokenAsync();
         })
         .then(response => {
-            const token = { pushToken: response.data};
+            const token = { pushToken: response.data, pushEnabled: true };
             console.log("push token: " + JSON.stringify(token))
             fetch(localHost + "/api/profileupdate", {
                 method: "PUT",

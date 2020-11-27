@@ -4,6 +4,7 @@ import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
 import { AuthContext } from './../../context';
+import { useIsFocused } from '@react-navigation/native';
 
 const LoginScreen = props => {
     // to load font
@@ -20,14 +21,13 @@ const LoginScreen = props => {
     const { signIn } = React.useContext(AuthContext);
 
     const handleSpinner = () => {
-        if (warningText) {
+        if (!warningText) {
             setSigningIn(true);
         }
     };
 
     const handleSignIn = () => {
-
-        setTimeout(handleSpinner, 1000);
+        handleSpinner();
 
         let userCred = {
             username: loginUsername,
@@ -45,8 +45,7 @@ const LoginScreen = props => {
             .then(res => {
                 //check log in attempt (need to set up error handling)
                 if (res.statusString === 'loggedin') {
-                    // props.navigation.replace('Feed');
-                    signIn();
+                    setTimeout(signIn, 1000);
                 }
                 else if (res.statusString === 'noPassOrUser') {
                     setUserInstructions("Missing username or password");
@@ -67,7 +66,8 @@ const LoginScreen = props => {
         return <AppLoading />;
     } else {
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
+            {/* <ScrollView style={styles.container}> */}
                 <View style={styles.topView}>
                     <Image
                         resizeMode="contain"
@@ -116,7 +116,8 @@ const LoginScreen = props => {
                         <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
+            </View>
         );
     }
 };
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'rgb(108,230,49)',
-        // alignItems: 'center',
+        alignItems: 'center',
         // justifyContent: 'space-around'
     },
     input: {

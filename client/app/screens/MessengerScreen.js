@@ -87,26 +87,14 @@ const MessengerScreen = props => {
         //       StatusBarManager.getHeight(data => (statusBarHeight = data.height));
         //     }
         // }
-        
         if (Platform.OS === "ios") {
             console.log("is iOS");
             StatusBarManager.getHeight((statusBarFrameData)=>{
                 setStatusBarHeight(statusBarFrameData.height);
                 console.log("statusBarFrameData: " + statusBarFrameData.height);
-                // console.log('statusBarHeight: ', StatusBar.currentHeight);
             });
         }
 
-        else {
-            console.log("is android")
-            setStatusBarHeight(StatusBarManager.HEIGHT);
-        }
-
-        StatusBarManager.getHeight((statusBarFrameData)=>{
-            setStatusBarHeight(statusBarFrameData.height);
-            console.log("statusBarFrameData: " + statusBarFrameData.height);
-            console.log('statusBarHeight: ', StatusBar.currentHeight);
-        });
         return () => {
             socket.emit('unsubscribe', thisRoom)
         };
@@ -279,7 +267,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginLeft: 10,
         marginRight: 10,
-        marginBottom: 10,
+        // marginBottom: 10,
         // shadowColor: '#3d3d3d',
         // shadowRadius: 2,
         // shadowOpacity: 0.5,
