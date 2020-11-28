@@ -73,7 +73,7 @@ const AvailabilityScreen = props => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                title: eventTitle,
+                title: recipientId === null ? eventTitle : "Proposed - " + eventTitle,
                 start: newStart,
                 end: newEnd,
                 eventStatus: recipientId === null ? "available" : "propose",
@@ -366,6 +366,7 @@ const AvailabilityScreen = props => {
                         onConfirm={handleConfirmStartTime}
                         onCancel={hideStartTimePicker}
                         textColor={isDarkMode ? 'white' : 'black'}
+                        headerTextIOS='Pick a time'
                         date={initialTime}
                     />
                 </View>
@@ -382,6 +383,7 @@ const AvailabilityScreen = props => {
                         onConfirm={handleConfirmEndTime}
                         onCancel={hideEndTimePicker}
                         textColor={isDarkMode ? 'white' : 'black'}
+                        headerTextIOS='Pick a time'
                         date={initialEndTime}
                     />
                 </View>
