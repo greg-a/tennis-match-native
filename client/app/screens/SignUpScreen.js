@@ -15,19 +15,21 @@ const SignUpScreen = props => {
     const [signUpPassword, setSignUpPassword] = React.useState("");
     const [signUpPasswordCon, setSignUpPasswordCon] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
-    const [emailIsValid, setEmailIsValid] = React.useState(false);
+    // const [emailIsValid, setEmailIsValid] = React.useState(false);
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
 
     const { signUp } = React.useContext(AuthContext);
 
     const handleEmailIsValid = email => {
-        setEmailIsValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return true
+        }
     };
 
     const handleFormSubmit = () => {
-        handleEmailIsValid(signUpEmail);
-
+        const emailIsValid = handleEmailIsValid(signUpEmail);
+        
         if (signUpPassword === signUpPasswordCon && emailIsValid) {
             fetch(localHost + "/api", {
                 method: "POST",
