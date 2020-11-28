@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
     View,
     StyleSheet,
@@ -22,6 +22,7 @@ import io from 'socket.io-client';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
+import { useFocusEffect } from '@react-navigation/native';
 
 const socket = io(localHost);
 
@@ -77,7 +78,6 @@ const MessengerScreen = props => {
 
     useEffect(() => {
         getMessages(recipientId);
-        updateNotifications(recipientId);
         connectToSocket();
 
         // setStatusBarHeight() {
@@ -99,6 +99,17 @@ const MessengerScreen = props => {
             socket.emit('unsubscribe', thisRoom)
         };
     }, []);
+
+    useFocusEffect(useCallback(() => {
+        let isActive = true;
+        if (isActive) {
+            updateNotifications(recipientId);
+        };
+
+        return () => {
+            isActive = false;
+        }
+    }, []));
 
     const updateNotifications = id => {
         fetch(localHost + "/api/messages/read/" + id, {
