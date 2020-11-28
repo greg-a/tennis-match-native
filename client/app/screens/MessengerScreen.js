@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import {
     View,
     StyleSheet,
@@ -35,7 +35,7 @@ const { width, height } = Dimensions.get('window');
 //     </View>
 // );
 
-const {StatusBarManager} = NativeModules;
+const { StatusBarManager } = NativeModules;
 
 const MessengerScreen = props => {
     const recipientId = props.route.params.recipientId;
@@ -89,7 +89,7 @@ const MessengerScreen = props => {
         // }
         if (Platform.OS === "ios") {
             console.log("is iOS");
-            StatusBarManager.getHeight((statusBarFrameData)=>{
+            StatusBarManager.getHeight((statusBarFrameData) => {
                 setStatusBarHeight(statusBarFrameData.height);
                 console.log("statusBarFrameData: " + statusBarFrameData.height);
             });
@@ -200,8 +200,8 @@ const MessengerScreen = props => {
 
     return (
 
-        <View style={{ flex: 1 }}>
-            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""} style={styles.keyboard} keyboardVerticalOffset={44 + statusBarHeight}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""} style={styles.keyboardViewStyle} keyboardVerticalOffset={44 + statusBarHeight}>
                 <FlatList
                     style={styles.list}
                     data={messages}
@@ -231,14 +231,15 @@ const MessengerScreen = props => {
                     </View>
                 </View>
             </KeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     )
 };
 
 const styles = StyleSheet.create({
-    keyboard: {
+    keyboardViewStyle: {
         flex: 1,
         justifyContent: 'center',
+        backgroundColor: '#ECECEB'
     },
     image: {
         width,
