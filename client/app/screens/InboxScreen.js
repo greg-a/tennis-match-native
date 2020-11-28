@@ -11,9 +11,9 @@ const { width, height } = Dimensions.get('window');
 
 const Item = ({ title, sender, timestamp, read, onPress }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
-        <Text style={read === 1 ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
-        <Text style={read === 1 ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
-        <Text style={read === 1 ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
+        <Text style={read === true ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+        <Text style={read === true ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
+        <Text style={read === true ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
     </TouchableOpacity>
 );
 
@@ -75,6 +75,7 @@ const InboxScreen = props => {
                 });
                 setInboxMessages(newArr);
                 socket.emit('newMatchNotification', res.myUserId);
+                console.log("inbox messages: " + JSON.stringify(newArr[0]));
             })
             .catch(err => console.log(err));
     };
