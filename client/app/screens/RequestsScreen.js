@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
+import { Alert, StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
 import RequestCard from '../components/RequestCard.js';
 import moment from "moment";
 import { localHost } from '../localhost.js';
@@ -70,6 +70,15 @@ const RequestsScreen = props => {
             body: JSON.stringify(updateObj)
         })
             .then(res => {
+                Alert.alert(
+                    "Success!",
+                    "The match was confirmed.",
+                    [{
+                        text: "OK",
+                        // onPress: () => navigation.navigate('Feed')
+                    }],
+                    // { cancelable: false }
+                );
                 fetch(localHost + "/api/overlap/destroy", {
                     method: "DELETE",
                     headers: {
@@ -114,6 +123,15 @@ const RequestsScreen = props => {
             .then(res => {
                 // Do we need this?
                 // socket.emit("newMatchNotification", this.state.userid);
+                Alert.alert(
+                    "Confirmed",
+                    "You have denied the request.",
+                    [{
+                        text: "OK",
+                        // onPress: () => navigation.navigate('Feed')
+                    }],
+                    // { cancelable: false }
+                );
                 getRequests();
             })
             .catch(err => console.log(err));
