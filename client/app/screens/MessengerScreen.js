@@ -167,7 +167,8 @@ const MessengerScreen = props => {
                     title: 'Message',
                     body: `Message from ${myUsername}`
                 })
-            })
+            });
+            console.log("sent push notification to: " + recipientPushToken);
         }
         else {
             console.log('recipient has push notifications disabled');

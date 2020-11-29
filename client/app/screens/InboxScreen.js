@@ -9,11 +9,14 @@ const socket = io(localHost);
 
 const { width, height } = Dimensions.get('window');
 
-const Item = ({ title, sender, timestamp, read, onPress }) => (
+const Item = ({ title, sender, timestamp, read, onPress, senderId, myUserId }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
-        <Text style={read === true ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+        {/* <Text style={read === true ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
         <Text style={read === true ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
-        <Text style={read === true ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
+        <Text style={read === true ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text> */}
+        <Text style={read === true || senderId === myUserId ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+        <Text style={read === true || senderId === myUserId ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
+        <Text style={read === true || senderId === myUserId ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
     </TouchableOpacity>
 );
 
@@ -84,6 +87,8 @@ const InboxScreen = props => {
         <Item
             title={item.message}
             sender={item.senderId == myUserId ? item.recipient.username : item.User.username}
+            senderId={item.senderId}
+            myUserId={myUserId}
             timestamp={handleTimeStamp(item.createdAt)}
             read={item.read}
             onPress={() => props.navigation.navigate('Messenger', {
