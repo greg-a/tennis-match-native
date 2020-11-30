@@ -287,7 +287,7 @@ const AvailabilityScreen = props => {
                 body: JSON.stringify({
                     to: recipientPushToken,
                     // data: {},
-                    title: 'Match Request',
+                    // title: 'TennisMatch',
                     body: 'New Match Request'
                 })
             })

@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
 import { AuthContext } from './../../context';
-import { useIsFocused } from '@react-navigation/native';
 
 const LoginScreen = props => {
     // to load font
@@ -67,7 +66,6 @@ const LoginScreen = props => {
     } else {
         return (
             <View style={styles.container}>
-            {/* <ScrollView style={styles.container}> */}
                 <View style={styles.topView}>
                     <Image
                         resizeMode="contain"
@@ -116,7 +114,6 @@ const LoginScreen = props => {
                         <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
                     </TouchableOpacity>
                 </View>
-            {/* </ScrollView> */}
             </View>
         );
     }

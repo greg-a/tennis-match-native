@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions, RefreshControl } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, Dimensions, RefreshControl } from 'react-native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import io from 'socket.io-client';
@@ -9,11 +9,14 @@ const socket = io(localHost);
 
 const { width, height } = Dimensions.get('window');
 
-const Item = ({ title, sender, timestamp, read, onPress }) => (
+const Item = ({ title, sender, timestamp, read, onPress, senderId, myUserId }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
-        <Text style={read === 1 ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
-        <Text style={read === 1 ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
-        <Text style={read === 1 ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
+        {/* <Text style={read === true ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+        <Text style={read === true ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
+        <Text style={read === true ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text> */}
+        <Text style={read === true || senderId === myUserId ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+        <Text style={read === true || senderId === myUserId ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
+        <Text style={read === true || senderId === myUserId ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
     </TouchableOpacity>
 );
 
@@ -75,6 +78,7 @@ const InboxScreen = props => {
                 });
                 setInboxMessages(newArr);
                 socket.emit('newMatchNotification', res.myUserId);
+                console.log("inbox messages: " + JSON.stringify(newArr[0]));
             })
             .catch(err => console.log(err));
     };
@@ -83,6 +87,8 @@ const InboxScreen = props => {
         <Item
             title={item.message}
             sender={item.senderId == myUserId ? item.recipient.username : item.User.username}
+            senderId={item.senderId}
+            myUserId={myUserId}
             timestamp={handleTimeStamp(item.createdAt)}
             read={item.read}
             onPress={() => props.navigation.navigate('Messenger', {
