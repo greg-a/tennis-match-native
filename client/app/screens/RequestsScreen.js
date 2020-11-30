@@ -37,6 +37,13 @@ const RequestsScreen = props => {
             .catch(err => console.log(err));
     };
 
+    const handleLocation = (index) => {
+        const eventObj = searchResults[index];
+        console.log("this event info: " + JSON.stringify(eventObj));
+        const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${eventObj.latitude},${eventObj.longitude}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
+        
+    };
+
     const handleConfirm = (index) => {
         console.log("event index: " + index)
         const eventObj = searchResults[index];
@@ -148,7 +155,7 @@ const RequestsScreen = props => {
             body: JSON.stringify({
                 to: recipientPushToken,
                 // data: {},
-                title: 'Match Confirmation',
+                // title: 'TennisMatch',
                 body: 'New Match Confirmation'
             })
         })
@@ -167,6 +174,7 @@ const RequestsScreen = props => {
             endtime={moment(item.end).format("hh:mm a")}
             handleConfirm={handleConfirm}
             handleDeny={handleDeny}
+            handleLocation={handleLocation}
             eventIndex={index}
         />
     );

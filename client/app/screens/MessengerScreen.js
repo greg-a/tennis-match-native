@@ -164,7 +164,7 @@ const MessengerScreen = props => {
                 body: JSON.stringify({
                     to: recipientPushToken,
                     // data: {},
-                    title: 'Message',
+                    // title: 'TennisMatch',
                     body: `Message from ${myUsername}`
                 })
             });

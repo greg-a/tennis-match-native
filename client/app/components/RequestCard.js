@@ -44,14 +44,26 @@ function RequestCard(props) {
                 End Time: {props.endtime}
             </Text>
             <View style={styles.rowContainer}>
-
+                {/* {props.eventLocation === 'any' ?
+                    <Text style={[styles.baseText, styles.linkText]}
+                        onPress={() => props.handleLocation(props.eventIndex)}
+                    >
+                        Choose Location
+                    </Text>
+                    :
+                    <Text style={[styles.baseText, styles.linkText]}
+                        onPress={() => props.handleConfirm(props.eventIndex)}
+                    >
+                        CONFIRM
+                    </Text>
+                } */}
                 <Text style={[styles.baseText, styles.linkText]}
-                onPress={()=>props.handleConfirm(props.eventIndex)}
+                    onPress={() => props.handleConfirm(props.eventIndex)}
                 >
                     CONFIRM
-                </Text>
+                    </Text>
                 <Text style={[styles.baseText, styles.linkTextDeny]}
-                onPress={()=>props.handleDeny(props.eventIndex)}
+                    onPress={() => props.handleDeny(props.eventIndex)}
                 >
                     DENY
                 </Text>
@@ -84,7 +96,7 @@ const styles = StyleSheet.create({
     },
     rowContainer: {
         flexDirection: 'row',
-        // justifyContent: 'space-around',
+        justifyContent: 'space-around'
         // paddingLeft: 0,
     },
     skillText: {

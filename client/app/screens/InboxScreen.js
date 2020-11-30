@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions, RefreshControl } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, Dimensions, RefreshControl } from 'react-native';
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import io from 'socket.io-client';
