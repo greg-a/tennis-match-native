@@ -22,9 +22,6 @@ const EventModal = props => {
                             <TouchableOpacity onPress={props.getDirections}>
                                 <Text style={styles.buttonText}>Get Directions</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Text style={styles.buttonText}>Edit Details</Text>
-                            </TouchableOpacity>
                             <TouchableOpacity onPress={props.deleteEvent}>
                                 <Text style={styles.buttonText}>Delete</Text>
                             </TouchableOpacity>

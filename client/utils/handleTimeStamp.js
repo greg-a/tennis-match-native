@@ -6,6 +6,6 @@ export const handleTimeStamp = date => {
         return `Today ${moment(date).format('h:mm A')}`
     }
     else {
-        return moment(date).format("M/DD/YY")
+        return moment(date).format('M/DD/YY')
     };
 };
