@@ -88,6 +88,7 @@ const LoginScreen = props => {
                         value={loginUsername}
                         placeholder={'Username'}
                         placeholderTextColor={'black'}
+                        autoCapitalize={'none'}
                     />
                     <TextInput
                         style={styles.input}
