@@ -72,10 +72,30 @@ export default function App() {
     };
   };
 
+  // checks if a server session exists and sets logged in token if it does
+  const checkLogin = () => {
+    console.log('checking login');
+        fetch(localHost + '/api/checklogin')
+          .then(res=>{
+            if (res.status===200) {
+              setUserToken('asdf');
+            } else {
+              console.log('not logged in');
+            }
+          })
+          .catch(err=>{
+            if (err) {
+              throw err;
+            }
+          });
+    
+  };
+
   useEffect(() => {
     console.log("APP MOUNTED")
     connectToSocket();
     getNewNotifications();
+    checkLogin();
 
     if (socketConnected) {
       return () => {
