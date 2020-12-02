@@ -412,8 +412,23 @@ const AvailabilityScreen = props => {
                         >
                             {recipientUsername === '' ? 'Find User' : recipientUsername}
                         </Text>
+                        {recipientId && 
+                        <View style={styles.userClear}>
+                            <Text 
+                                style={[styles.userClearText]}
+                                onPress={()=>{
+                                    console.log('pressed');
+                                    setRecipientId(null);
+                                    setRecipientUsername("");
+                                }}
+                            >
+                                X
+                            </Text>
+                        </View>
+                        }
                     </View> : null
                 }
+                
                 <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                     <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
                 </TouchableOpacity>
@@ -473,7 +488,17 @@ const styles = StyleSheet.create({
     },
     locationButton: {
         marginTop: 10
-    }
+    },
+    userClear: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        paddingRight: 10,
+        
+    },
+    userClearText: {
+        color: 'red',
+        fontSize: 24
+    },
 });
 
 export default AvailabilityScreen;
