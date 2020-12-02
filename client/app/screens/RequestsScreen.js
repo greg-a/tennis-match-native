@@ -180,9 +180,10 @@ const RequestsScreen = props => {
     );
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             {searchResults.length > 0 ?
                 <FlatList
+                    contentContainerStyle={{paddingBottom: 50}}
                     data={searchResults}
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
@@ -199,7 +200,7 @@ const RequestsScreen = props => {
                     <Button title='Refresh' onPress={getRequests}/>
                 </View>
             }
-        </View>
+        </SafeAreaView>
     );
 
 };

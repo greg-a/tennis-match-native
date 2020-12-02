@@ -64,6 +64,8 @@ const UserSearchScreen = props => {
                         onChangeText={handleUserSearch}
                         onKeyPress={handleUserSearchClear}
                         autoFocus={true}
+                        // autoCompleteType={'off'}
+                        autoCorrect={false}
                     />
                 </View>
             </View>

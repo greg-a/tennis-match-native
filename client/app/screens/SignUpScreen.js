@@ -98,6 +98,7 @@ const SignUpScreen = props => {
                         value={signUpUsername}
                         placeholder={'Username'}
                         placeholderTextColor={'black'}
+                        autoCapitalize={'none'}
                     />
                     <TextInput
                         style={styles.input}
@@ -105,6 +106,7 @@ const SignUpScreen = props => {
                         value={signUpEmail}
                         placeholder={'Email'}
                         placeholderTextColor={'black'}
+                        autoCapitalize={'none'}
                     />
                     <TextInput
                         style={styles.input}
