@@ -279,10 +279,12 @@ module.exports = function (app) {
 
         let locationSearch;
         if (req.query.locationlat && req.query.locationlng) {
-            locationSearch = { [Op.and]: [
-                {latitude: req.query.locationlat},
-                {longitude: req.query.locationlng}
-            ] }
+            locationSearch = {
+                [Op.and]: [
+                    { latitude: req.query.locationlat },
+                    { longitude: req.query.locationlng }
+                ]
+            }
         }
 
         let skillUserSearch = {};
@@ -368,7 +370,33 @@ module.exports = function (app) {
         } else {
             res.status(400).end();
         }
+    });
 
+    app.put("/api/calendar/requests/location", function (req, res) {
+        console.log("update request" + JSON.stringify(req.body))
+        if (req.session.loggedin) {
+            db.Event.update(
+                {
+                    location: req.body.location,
+                    vicinity: req.body.vicinity,
+                    latitude: req.body.latitude,
+                    longitude: req.body.longitude
+                },
+                {
+                    where: {
+                        id: req.body.id
+                    }
+                }
+            ).then(function (result) {
+                res.send(result);
+            })
+                .catch(function (err) {
+                    console.log(err)
+                })
+        }
+        else {
+            res.status(400).end();
+        }
     });
 
     app.delete("/api/overlap/destroy", function (req, res) {
@@ -478,7 +506,7 @@ module.exports = function (app) {
                 ]
             })
                 .then(function (results) {
-                    const resArr = {results: results, myUserId: req.session.userID};
+                    const resArr = { results: results, myUserId: req.session.userID };
                     res.json(resArr);
                 })
                 .catch(err => console.log(err));
@@ -545,7 +573,7 @@ module.exports = function (app) {
                     ]
                 }
             })
-            .catch(err => console.log(err));;
+                .catch(err => console.log(err));;
 
             const matchNotifications = db.Event.count({
                 where: {
@@ -556,7 +584,7 @@ module.exports = function (app) {
                     ]
                 }
             })
-            .catch(err => console.log(err));;
+                .catch(err => console.log(err));;
 
             Promise
                 .all([messageNotifications, matchNotifications])

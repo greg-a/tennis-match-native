@@ -1,14 +1,17 @@
 import React, { useEffect, useCallback } from 'react';
-import { Alert, StyleSheet, Text, View, FlatList, RefreshControl, Button } from 'react-native';
+import { Alert, StyleSheet, Text, View, FlatList, RefreshControl, Button, SafeAreaView } from 'react-native';
+import ModalItem from '../components/ModalItem';
 import RequestCard from '../components/RequestCard.js';
 import moment from "moment";
-import { localHost } from '../localhost.js';
+import { localHost, googleMapsAPI } from '../localhost.js';
 
 const RequestsScreen = props => {
 
     const [searchResults, setSearchResults] = React.useState([]);
     const [userid, setUserid] = React.useState("");
     const [refreshing, setRefreshing] = React.useState(false);
+    const [selectedEvent, setSelectedEvent] = React.useState();
+    const [courtLocations, setCourtLocations] = React.useState([]);
 
     useEffect(() => {
         getRequests();
@@ -37,11 +40,62 @@ const RequestsScreen = props => {
             .catch(err => console.log(err));
     };
 
-    const handleLocation = (index) => {
+    const handleSelectCourt = (court) => {
+        const eventObj = searchResults[selectedEvent];
+        const updateObj = {id: eventObj.id, location: court.label, vicinity: court.vicinity, latitude: court.lat, longitude: court.lng};
+
+        fetch(localHost + "/api/calendar/requests/location", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updateObj)
+        })
+        .then(res => {
+            Alert.alert(
+                "Success!",
+                "Location was updated.",
+                [{
+                    text: "OK",
+                    onPress: getRequests()
+                }]
+            );
+        })
+        .catch(err => console.log(err))
+    };
+
+    const handleSelectEvent = (index) => {
         const eventObj = searchResults[index];
-        console.log("this event info: " + JSON.stringify(eventObj));
         const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${eventObj.latitude},${eventObj.longitude}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
-        
+
+        if (index === selectedEvent) {
+            setSelectedEvent();
+        }
+        else {
+            setSelectedEvent(index);
+
+            if (eventObj.location === 'any') {
+                fetch(locationQuery)
+                    .then(res => res.json())
+                    .then(courts => {
+                        console.log("courts query: " + JSON.stringify(locationQuery))
+                        let courtSearch = [];
+
+                        courts.results.forEach((court, i) => {
+                            courtSearch.push({
+                                key: i + 2,
+                                label: court.name,
+                                vicinity: court.vicinity,
+                                lat: court.geometry.location.lat,
+                                lng: court.geometry.location.lng,
+                                component: <ModalItem title={court.name} subtitle={`near ${court.vicinity}`} />
+                            })
+                        })
+                        setCourtLocations(courtSearch);
+                    })
+                    .catch(err => console.log(err));
+            }
+        };
     };
 
     const handleConfirm = (index) => {
@@ -94,8 +148,6 @@ const RequestsScreen = props => {
                     body: JSON.stringify(confirmedEventInfo)
                 })
                     .then(res => {
-                        // Do we need this?
-                        // socket.emit("newMatchNotification", this.state.userid);
                         console.log(JSON.stringify(res));
 
                         if (recipientPushEnabled) {
@@ -174,8 +226,11 @@ const RequestsScreen = props => {
             endtime={moment(item.end).format("hh:mm a")}
             handleConfirm={handleConfirm}
             handleDeny={handleDeny}
-            handleLocation={handleLocation}
             eventIndex={index}
+            selectedEvent={selectedEvent}
+            handleSelectEvent={handleSelectEvent}
+            courtLocations={courtLocations}
+            handleCourt={handleSelectCourt}
         />
     );
 
@@ -183,7 +238,7 @@ const RequestsScreen = props => {
         <SafeAreaView style={styles.container}>
             {searchResults.length > 0 ?
                 <FlatList
-                    contentContainerStyle={{paddingBottom: 50}}
+                    contentContainerStyle={{ paddingBottom: 50 }}
                     data={searchResults}
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
@@ -197,7 +252,7 @@ const RequestsScreen = props => {
                 :
                 <View>
                     <Text>No Requests</Text>
-                    <Button title='Refresh' onPress={getRequests}/>
+                    <Button title='Refresh' onPress={getRequests} />
                 </View>
             }
         </SafeAreaView>
