@@ -9,6 +9,7 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
     const [searchResults, setSearchResults] = React.useState(route.params.searchResults);
     const [showMap, setShowMap] = React.useState(false);
     const [mapLocation, setMapLocation] = React.useState();
+    const [selectedEventIndex, setSelectedEventIndex] = React.useState();
 
     useEffect(() => {
         console.log('Search Result Arr: ' + route.params.searchResults);
@@ -21,6 +22,8 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
 
     const handleClick = (index) => {
         const eventObj = searchResults[index];
+
+        setSelectedEventIndex(index)
         
         navigation.navigate('ProposeDate', {
             eventObj: eventObj,
@@ -28,8 +31,20 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
     };
 
     const handleSeeMap = (index) => {
+        setSelectedEventIndex(index)
         setShowMap(!showMap);
     };
+
+    const handleSelectEvent = (index) => {
+        setShowMap(false);
+        
+        if (index === selectedEventIndex) {
+            setSelectedEventIndex();
+        }
+        else {
+            setSelectedEventIndex(index);
+        }
+    }
 
     return (
         <ScrollView>
@@ -52,6 +67,8 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
                     seeMapClick={handleSeeMap}
                     mapLocation={event.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${event.latitude},${event.longitude}&zoom=10&size=400x300&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${event.latitude},${event.longitude}&markers=color:blue%7Clabel:C%7C${event.latitude},${event.longitude}&zoom=13&size=400x300&maptype=roadmap&key=${googleMapsAPI}`}
                     showMap={showMap}
+                    selectedEvent={selectedEventIndex}
+                    handleSelectEvent={handleSelectEvent}
                 />
             )) : <Text>No dates</Text>}
 

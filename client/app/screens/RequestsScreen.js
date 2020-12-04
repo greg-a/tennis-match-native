@@ -12,6 +12,7 @@ const RequestsScreen = props => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState();
     const [courtLocations, setCourtLocations] = React.useState([]);
+    const [showMap, setShowMap] = React.useState(false);
 
     useEffect(() => {
         getRequests();
@@ -38,6 +39,10 @@ const RequestsScreen = props => {
                 console.log("search results: " + JSON.stringify(res.results))
             })
             .catch(err => console.log(err));
+    };
+
+    const handleSeeMap = (index) => {
+        setShowMap(!showMap);
     };
 
     const handleSelectCourt = (court) => {
@@ -68,6 +73,8 @@ const RequestsScreen = props => {
         const eventObj = searchResults[index];
         const locationQuery = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${eventObj.latitude},${eventObj.longitude}&radius=20000&keyword=tennis%20court&key=${googleMapsAPI}`;
 
+        setShowMap(false);
+        
         if (index === selectedEvent) {
             setSelectedEvent();
         }
@@ -231,6 +238,9 @@ const RequestsScreen = props => {
             handleSelectEvent={handleSelectEvent}
             courtLocations={courtLocations}
             handleCourt={handleSelectCourt}
+            seeMapClick={handleSeeMap}
+            mapLocation={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x300&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x300&maptype=roadmap&key=${googleMapsAPI}`}
+            showMap={showMap}
         />
     );
 
