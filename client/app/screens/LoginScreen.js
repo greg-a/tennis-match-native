@@ -131,13 +131,13 @@ const styles = StyleSheet.create({
     },
     bottomView: {
         alignItems: 'center',
-        marginTop: 50
+        // marginTop: 50
     },
     container: {
         flex: 1,
         backgroundColor: 'rgb(108,230,49)',
         alignItems: 'center',
-        // justifyContent: 'space-around'
+        justifyContent: 'space-around'
     },
     input: {
         height: 40,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     },
     middleView: {
         alignItems: 'center',
-        marginTop: 50
+        // marginTop: 50
     },
     signInButton: {
         paddingVertical: 15,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 60,
         alignItems: 'center',
-        marginTop: 60
+        // marginTop: 60
     }
 });
 
