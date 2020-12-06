@@ -64,9 +64,9 @@ export default function App() {
             console.log("----connected to notifyMe----", notifications.userid);
           };
 
-          if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
+          // if (notifications.messages !== newNotifications.messages || notifications.matches !== newNotifications.messages) {
             setNewNotifications({ messages: notifications.messages, matches: notifications.matches });
-          }
+          // }
         })
         .catch(err => console.log(err));
     };
