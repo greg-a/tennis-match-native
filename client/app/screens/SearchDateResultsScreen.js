@@ -59,6 +59,9 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
                     userLastname={event.User.lastname}
                     userSkill={event.User.skilllevel}
                     eventLocation={event.location}
+                    eventLat={event.latitude}
+                    eventLng={event.longitude}
+                    eventVicinity={event.vicinity}
                     date={moment(event.start).format("MM/DD/YYYY")}
                     starttime={moment(event.start).format("h:mm a")}
                     endtime={moment(event.end).format("h:mm a")}

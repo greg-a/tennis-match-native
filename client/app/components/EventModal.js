@@ -3,7 +3,7 @@ import { View, Modal, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const EventModal = props => {
     return (
-        <View style={styles.centeredView}>
+        <View>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -22,9 +22,11 @@ const EventModal = props => {
                             <TouchableOpacity onPress={props.getDirections}>
                                 <Text style={styles.buttonText}>Get Directions</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={props.deleteEvent}>
-                                <Text style={styles.buttonText}>Delete</Text>
-                            </TouchableOpacity>
+                            {props.deleteEvent &&
+                                <TouchableOpacity onPress={props.deleteEvent}>
+                                    <Text style={styles.buttonText}>Delete</Text>
+                                </TouchableOpacity>
+                            }
                         </View>
                         <TouchableOpacity style={styles.cancelContainer} onPress={props.cancelModal}>
                             <Text style={styles.buttonText, styles.cancelButton}>Cancel</Text>
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
         width: 165,
         marginTop: 15,
         alignItems: 'center'
-    },  
+    },
     cancelContainer: {
         marginTop: 5,
         alignItems: 'center',

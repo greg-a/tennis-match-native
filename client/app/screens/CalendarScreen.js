@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Platform, Linking, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
@@ -112,17 +112,19 @@ const CalendarScreen = props => {
                     subtitle={`near ${eventLocationInfo.vicinity}`}
                 />
                 {eventView.length > 0 ? eventView.map((item, i) => (
-                    <EventCard
-                        key={item.id}
-                        title={item.title}
-                        start={moment(item.start).format('h:mm a')}
-                        end={moment(item.end).format('h:mm a')}
-                        status={item.eventStatus}
-                        players={item.secondUser === null ? 'public' : handleSecondUser(item.User.username, item.User.id, item.secondUser.username)}
-                        location={item.location}
-                        image={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x200&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
-                        onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end, item.vicinity, item.latitude, item.longitude)}
-                    />
+                    <View style={styles.eventCardContainer}>
+                        <EventCard
+                            key={item.id}
+                            title={item.title}
+                            start={moment(item.start).format('h:mm a')}
+                            end={moment(item.end).format('h:mm a')}
+                            status={item.eventStatus}
+                            players={item.secondUser === null ? 'public' : handleSecondUser(item.User.username, item.User.id, item.secondUser.username)}
+                            location={item.location}
+                            image={item.location === 'any' ? `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&zoom=10&size=400x200&maptype=roadmap&key=${googleMapsAPI}` : `https://maps.googleapis.com/maps/api/staticmap?center=${item.latitude},${item.longitude}&markers=color:blue%7Clabel:C%7C${item.latitude},${item.longitude}&zoom=13&size=400x200&maptype=roadmap&key=${googleMapsAPI}`}
+                            onSelectEvent={() => handleEventSelect(item.id, item.title, item.start, item.end, item.vicinity, item.latitude, item.longitude)}
+                        />
+                    </View>
                 )) : <Text style={styles.text}>No Events</Text>}
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
@@ -164,6 +166,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flex: 1
     },
+    eventCardContainer: {
+        marginTop: 20
+    },  
     buttonContainer: {
         marginTop: 30,
         flexDirection: 'row',

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 
 const FadeInOptions = props => {
@@ -17,7 +17,7 @@ const FadeInOptions = props => {
         // Will change fadeAnim value to 0 in 5 seconds
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 0,
+            duration: 100,
             useNativeDriver: false
         }).start();
     };
@@ -36,11 +36,6 @@ const FadeInOptions = props => {
                 style={[
                     styles.fadingContainer,
                     {
-                        // transform: [
-                        //     {
-                        //         opacity: fadeAnim
-                        //     }
-                        // ] 
                         opacity: fadeAnim
                     }
                 ]}
