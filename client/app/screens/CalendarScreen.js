@@ -95,6 +95,14 @@ const CalendarScreen = props => {
 
     return (
         <View style={styles.container}>
+            <EventModal
+                modalVisible={modalVisible}
+                getDirections={handleGetDirections}
+                cancelModal={handleCancelModal}
+                deleteEvent={handleEventDelete}
+                title={eventTitle}
+                subtitle={`near ${eventLocationInfo.vicinity}`}
+            />
             <ScrollView
                 refreshControl={
                     <RefreshControl
@@ -103,18 +111,12 @@ const CalendarScreen = props => {
                     />
                 }
             >
-                <EventModal
-                    modalVisible={modalVisible}
-                    getDirections={handleGetDirections}
-                    cancelModal={handleCancelModal}
-                    deleteEvent={handleEventDelete}
-                    title={eventTitle}
-                    subtitle={`near ${eventLocationInfo.vicinity}`}
-                />
                 {eventView.length > 0 ? eventView.map((item, i) => (
-                    <View style={styles.eventCardContainer}>
+                    <View
+                        style={styles.eventCardContainer}
+                        key={i}
+                    >
                         <EventCard
-                            key={item.id}
                             title={item.title}
                             start={moment(item.start).format('h:mm a')}
                             end={moment(item.end).format('h:mm a')}
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
     },
     eventCardContainer: {
         marginTop: 20
-    },  
+    },
     buttonContainer: {
         marginTop: 30,
         flexDirection: 'row',
