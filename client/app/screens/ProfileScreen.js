@@ -202,7 +202,7 @@ const ProfileScreen = props => {
             .putString(pickerResult.uri)
             .then((snapshot) => {
                 //You can check the image is now uploaded in the storage bucket
-                console.log(`${username}'s pic has been successfully uploaded.`);
+                console.log(`${profileUpdate.username}'s pic has been successfully uploaded.`);
 
             })
             .catch((err) => console.log('uploading image error => ', err));
@@ -213,7 +213,7 @@ const ProfileScreen = props => {
         <ScrollView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
-                {selectedImage && <Image source={{ uri: 'selectedImage.localUri' }} style={{ width: 200, height: 200 }} />}
+                {selectedImage && <Image source={{ uri: selectedImage.localUri }} style={{ width: 200, height: 200 }} />}
             </View>
             <View style={styles.form}>
                 <View style={styles.row}>
