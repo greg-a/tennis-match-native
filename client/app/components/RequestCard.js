@@ -35,8 +35,8 @@ function RequestCard(props) {
                         <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
                             Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
                         </Text>
-                        <Text style={styles.baseText}>
-                            Court Location: {props.eventLocation}
+                        <Text style={styles.baseText} numberOfLines={props.selectedEvent !== props.eventIndex ? 1 : 2}>
+                            Court: {props.eventLocation}
                         </Text>
                         <Text style={styles.baseText}>
                             Date: {props.date}

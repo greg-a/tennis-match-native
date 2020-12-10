@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity, Switch } from 'react-native';
+import { Image, Platform, Button, ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity, Switch } from 'react-native';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost, googleMapsAPI } from '../localhost.js';
 import { AuthContext } from './../../context';
 import ModalItem from '../components/ModalItem';
+import * as ImagePicker from 'expo-image-picker';
+import firebase from '../../utils/firebaseConfig';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -21,6 +23,7 @@ const ProfileScreen = props => {
         lng: '',
         pushEnabled: true
     });
+    const [selectedImage, setSelectedImage] = useState(null);
     const [skillLabel, setSkillLabel] = useState('');
     const { signOut } = React.useContext(AuthContext);
 
@@ -174,94 +177,130 @@ const ProfileScreen = props => {
             .catch(err => console.log(err));
     };
 
+
+    const openImagePickerAsync = async () => {
+        const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            alert("Permission to access camera roll is required!");
+            return;
+        }
+
+        const pickerResult = await ImagePicker.launchImageLibraryAsync();
+        console.log(pickerResult);
+
+        if (pickerResult.cancelled === true) {
+            return;
+        }
+
+        setSelectedImage({ localUri: pickerResult.uri });
+        console.log("image: " + pickerResult.uri)
+
+        firebase
+            .storage()
+            .ref(profileUpdate.username)
+            .putString(pickerResult.uri)
+            .then((snapshot) => {
+                //You can check the image is now uploaded in the storage bucket
+                console.log(`${profileUpdate.username}'s pic has been successfully uploaded.`);
+
+            })
+            .catch((err) => console.log('uploading image error => ', err));
+
+    };
+
     return (
         <ScrollView style={{ flex: 1 }}>
-                <View style={styles.form}>
-                    <View style={styles.row}>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>First Name</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={profileUpdate.firstname}
-                                onChangeText={text => setProfileUpdate({ ...profileUpdate, firstname: text })}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Last Name</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={profileUpdate.lastname}
-                                onChangeText={text => setProfileUpdate({ ...profileUpdate, lastname: text })}
-                            />
-                        </View>
-                    </View>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
+                {selectedImage && <Image source={{ uri: selectedImage.localUri }} style={{ width: 200, height: 200 }} />}
+            </View>
+            <View style={styles.form}>
+                <View style={styles.row}>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>City</Text>
+                        <Text style={styles.label}>First Name</Text>
                         <TextInput
                             style={styles.input}
-                            value={profileUpdate.city}
-                            onChangeText={text => setProfileUpdate({ ...profileUpdate, city: text })}
+                            value={profileUpdate.firstname}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, firstname: text })}
                         />
                     </View>
-                    <View style={styles.row}>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>State</Text>
-                            <ModalSelector
-                                pickerStyle={styles.input}
-                                data={statesArr}
-                                onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
-                                <TextInput
-                                    style={styles.input}
-                                    value={profileUpdate.state}
-                                    editable={false}
-                                    placeholder={"Choose State..."}
-                                />
-                            </ModalSelector>
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Zip Code</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={profileUpdate.zipcode}
-                                onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
-                                keyboardType="numeric"
-                            />
-                        </View>
-                    </View>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Skill Level</Text>
+                        <Text style={styles.label}>Last Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.lastname}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, lastname: text })}
+                        />
+                    </View>
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>City</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={profileUpdate.city}
+                        onChangeText={text => setProfileUpdate({ ...profileUpdate, city: text })}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>State</Text>
                         <ModalSelector
                             pickerStyle={styles.input}
-                            data={skillsArr}
-                            onChange={(option) => {
-                                setProfileUpdate({ ...profileUpdate, skilllevel: option.value });
-                                setSkillLabel(option.label)
-                            }}>
+                            data={statesArr}
+                            onChange={(option) => setProfileUpdate({ ...profileUpdate, state: option.label })}>
                             <TextInput
                                 style={styles.input}
-                                value={skillLabel}
+                                value={profileUpdate.state}
                                 editable={false}
-                                placeholder={"Choose Skill Level..."}
+                                placeholder={"Choose State..."}
                             />
                         </ModalSelector>
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
-                        <Switch
-                            trackColor={{ false: "#767577", true: "#bbf7e7" }}
-                            thumbColor={profileUpdate.pushEnabled ? "#6CE631" : "#f4f3f4"}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={toggleSwitch}
-                            value={profileUpdate.pushEnabled}
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Zip Code</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={profileUpdate.zipcode}
+                            onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
+                            keyboardType="numeric"
                         />
                     </View>
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Skill Level</Text>
+                    <ModalSelector
+                        pickerStyle={styles.input}
+                        data={skillsArr}
+                        onChange={(option) => {
+                            setProfileUpdate({ ...profileUpdate, skilllevel: option.value });
+                            setSkillLabel(option.label)
+                        }}>
+                        <TextInput
+                            style={styles.input}
+                            value={skillLabel}
+                            editable={false}
+                            placeholder={"Choose Skill Level..."}
+                        />
+                    </ModalSelector>
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Push Notifications {profileUpdate.pushEnabled ? 'Enabled' : 'Disabled'}</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#bbf7e7" }}
+                        thumbColor={profileUpdate.pushEnabled ? "#6CE631" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={profileUpdate.pushEnabled}
+                    />
+                </View>
 
-                </View>
-                <View>
-                    <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-                        <Text style={styles.logoutButtonText}>LOGOUT</Text>
-                    </TouchableOpacity>
-                </View>
+            </View>
+            <View>
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                    <Text style={styles.logoutButtonText}>LOGOUT</Text>
+                </TouchableOpacity>
+            </View>
 
         </ScrollView>
     )

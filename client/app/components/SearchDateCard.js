@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useRef } from 'react';
+import { Animated, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import FadeInOptions from '../components/FadeInOptions';
+import FadeInMapView from '../components/FadeInMapView';
+
 
 function skillConversion(skillLevel) {
     if (skillLevel === 1) {
@@ -20,56 +23,78 @@ function skillConversion(skillLevel) {
 };
 
 function SearchDateCard(props) {
+    const fadeAnim = useRef(new Animated.Value(250)).current;
+
+    const expandContainer = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 400,
+            duration: 500,
+            useNativeDriver: false
+        }).start();
+    };
+
+    const collapseContainer = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 250,
+            duration: 0,
+            useNativeDriver: false
+        }).start();
+    };
+
     return (
-        <TouchableOpacity onPress={() => props.handleSelectEvent(props.eventIndex)} style={[props.selectedEvent === props.eventIndex && { backgroundColor: '#d6f2b5' }, styles.container]}>
-            <View>
-                {!props.showMap || props.selectedEvent !== props.eventIndex ?
+            <TouchableOpacity onPress={() => props.handleSelectEvent(props.eventIndex)}>
+                <Animated.View style={[props.selectedEvent === props.eventIndex && { backgroundColor: '#d6f2b5' }, styles.container, { maxHeight: fadeAnim }]}>
                     <View>
-                        <Text style={styles.titleText}>
-                            {props.title}
-                        </Text>
-                        <Text style={[styles.baseText, styles.subTitle]}>
-                            {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
-                        </Text>
-                        <Text style={[styles.baseText, styles.subTitle]}>
-                            Date: {props.date}
-                        </Text>
-                        <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
-                            Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
-                        </Text>
-                        <Text style={styles.baseText} numberOfLines={1}>
-                            Court Location: {props.eventLocation}
-                        </Text>
-                        <Text style={styles.baseText}>
-                            Start Time: {props.starttime}
-                        </Text>
-                        <Text style={styles.baseText}>
-                            End Time: {props.endtime}
-                        </Text>
+                        {!props.showMap || props.selectedEvent !== props.eventIndex ?
+                            <View>
+                                <Text style={styles.titleText}>
+                                    {props.title}
+                                </Text>
+                                <Text style={[styles.baseText, styles.subTitle]}>
+                                    {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
+                                </Text>
+                                <Text style={[styles.baseText, styles.subTitle]}>
+                                    Date: {props.date}
+                                </Text>
+                                <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
+                                    Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
+                                </Text>
+                                <Text style={styles.baseText} numberOfLines={props.selectedEvent !== props.eventIndex ? 1 : 2}>
+                                    Court Location: {props.eventLocation}
+                                </Text>
+                                <Text style={styles.baseText}>
+                                    Start Time: {props.starttime}
+                                </Text>
+                                <Text style={styles.baseText}>
+                                    End Time: {props.endtime}
+                                </Text>
+                            </View>
+                            :
+                            <View>
+                                <FadeInMapView
+                                    imageURL={props.mapLocation}
+                                    style={styles.bgImage}
+                                    eventLocation={props.eventLocation}
+                                    vicinity={props.eventVicinity}
+                                />
+                            </View>
+                        }
                     </View>
-                    :
-                    <View>
-                        <ImageBackground source={{ uri: props.mapLocation }} style={styles.bgImage} />
-                    </View>
-                }
-                {props.selectedEvent === props.eventIndex &&
-                    <View style={styles.buttonsContainer}>
-                        <Text
-                            style={[styles.baseText, styles.linkText]}
-                            onPress={() => props.handleClick(props.eventIndex)}
-                        >
-                            PROPOSE MATCH
-                </Text>
-                        <Text
-                            style={[styles.baseText, styles.linkText]}
-                            onPress={() => props.seeMapClick(props.eventIndex)}
-                        >
-                            {props.showMap ? 'SEE DETAILS' : 'SEE ON MAP'}
-                        </Text>
-                    </View>
-                }
-            </View>
-        </TouchableOpacity>
+                    {props.selectedEvent === props.eventIndex &&
+                        <FadeInOptions
+                            showMap={props.showMap}
+                            seeMapClick={props.seeMapClick}
+                            eventIndex={props.eventIndex}
+                            handleClick={props.handleClick}
+                            expand={expandContainer}
+                            collapse={collapseContainer}
+                            lat={props.eventLat}
+                            lng={props.eventLng}
+                        />
+                    }
+                </Animated.View>
+
+            </TouchableOpacity>
     );
 }
 
@@ -84,7 +109,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 15,
         marginVertical: 10,
-        width: '90%',
+        width: '85%'
         // flex: 1
     },
     buttonsContainer: {
@@ -102,13 +127,13 @@ const styles = StyleSheet.create({
     subTitle: {
         fontSize: 18,
     },
-    bgImage: {
-        width: '100%',
-        height: 192
-    },
     titleText: {
         fontSize: 24,
         paddingBottom: 6
+    },
+    bgImage: {
+        width: '100%',
+        height: 192
     }
 });
 

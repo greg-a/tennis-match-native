@@ -34,7 +34,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
         borderRadius: 15,
         overflow: 'hidden',
-        marginBottom: 20
+        marginBottom: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3
     },
     eventRow: {
         flexDirection: 'row',

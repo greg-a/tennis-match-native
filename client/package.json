@@ -17,6 +17,7 @@
     "@react-navigation/stack": "^5.9.3",
     "expo": "~39.0.2",
     "expo-font": "^8.3.0",
+    "expo-image-picker": "~9.1.0",
     "expo-location": "~9.0.0",
     "expo-notifications": "~0.7.2",
     "expo-permissions": "~9.3.0",
@@ -28,6 +29,8 @@
     "react-native-calendar-strip": "^2.0.9",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "~1.7.0",
+    "react-native-image-picker": "^2.3.4",
+    "react-native-image-resizer": "^1.4.1",
     "react-native-modal-datetime-picker": "^9.0.0",
     "react-native-modal-selector": "^2.0.3",
     "react-native-reanimated": "~1.13.0",
@@ -38,7 +41,8 @@
     "react-navigation": "^4.4.2",
     "react-navigation-header-buttons": "^5.0.2",
     "react-navigation-stack": "^2.8.4",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "firebase": "7.9.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
