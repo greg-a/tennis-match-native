@@ -23,6 +23,7 @@ const ProfileScreen = props => {
         lng: '',
         pushEnabled: true
     });
+    const [zipUpdate, setZipUpdate] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [skillLabel, setSkillLabel] = useState('');
     const { signOut } = React.useContext(AuthContext);
@@ -72,7 +73,9 @@ const ProfileScreen = props => {
         if (profileUpdate.username === '') {
             getProfileInfo();
         }
-        zipToCoordinates();
+        if (zipUpdate) {
+            zipToCoordinates();
+        }
     }, [profileUpdate.zipcode]);
 
     const handleProfileUpdate = () => {
@@ -150,7 +153,6 @@ const ProfileScreen = props => {
                 .then(res => res.json())
                 .then(res => {
                     const geocodeCoordinates = res.results[0].geometry.location;
-
                     setProfileUpdate({ ...profileUpdate, lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng });
                 })
                 .catch(err => console.log(err))
@@ -194,11 +196,11 @@ const ProfileScreen = props => {
             return;
         };
 
-        ImageManipulator.manipulateAsync(pickerResult.uri, [{resize: {width: 40, height: 40}}], {base64: true})
-        .then(result => {
-            console.log("resized imaged: " + JSON.stringify(result));
-        })
-        .catch(err => console.log(err));
+        ImageManipulator.manipulateAsync(pickerResult.uri, [{ resize: { width: 40, height: 40 } }], { base64: true })
+            .then(result => {
+                console.log("resized imaged: " + JSON.stringify(result));
+            })
+            .catch(err => console.log(err));
     };
 
     return (
@@ -254,7 +256,10 @@ const ProfileScreen = props => {
                         <TextInput
                             style={styles.input}
                             value={profileUpdate.zipcode}
-                            onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
+                            onChangeText={text => {
+                                setProfileUpdate({ ...profileUpdate, zipcode: text });
+                                setZipUpdate(true);
+                            }}
                             keyboardType="numeric"
                         />
                     </View>
