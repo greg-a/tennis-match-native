@@ -7,7 +7,7 @@ import { localHost, googleMapsAPI } from '../localhost.js';
 import { AuthContext } from './../../context';
 import ModalItem from '../components/ModalItem';
 import * as ImagePicker from 'expo-image-picker';
-import firebase from '../../utils/firebaseConfig';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -184,36 +184,28 @@ const ProfileScreen = props => {
         if (permissionResult.granted === false) {
             alert("Permission to access camera roll is required!");
             return;
-        }
+        };
 
+        // const pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true });
         const pickerResult = await ImagePicker.launchImageLibraryAsync();
-        console.log(pickerResult);
+        console.log("image info: " + JSON.stringify(pickerResult.uri));
 
         if (pickerResult.cancelled === true) {
             return;
-        }
+        };
 
-        setSelectedImage({ localUri: pickerResult.uri });
-        console.log("image: " + pickerResult.uri)
-
-        firebase
-            .storage()
-            .ref(profileUpdate.username)
-            .putString(pickerResult.uri)
-            .then((snapshot) => {
-                //You can check the image is now uploaded in the storage bucket
-                console.log(`${profileUpdate.username}'s pic has been successfully uploaded.`);
-
-            })
-            .catch((err) => console.log('uploading image error => ', err));
-
+        ImageManipulator.manipulateAsync(pickerResult.uri, [{resize: {width: 40, height: 40}}], {base64: true})
+        .then(result => {
+            console.log("resized imaged: " + JSON.stringify(result));
+        })
+        .catch(err => console.log(err));
     };
 
     return (
         <ScrollView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
-                {selectedImage && <Image source={{ uri: selectedImage.localUri }} style={{ width: 200, height: 200 }} />}
+                {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />}
             </View>
             <View style={styles.form}>
                 <View style={styles.row}>
