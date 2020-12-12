@@ -349,7 +349,7 @@ const AvailabilityScreen = props => {
                         mode="date"
                         onConfirm={handleConfirmDate}
                         onCancel={hideDatePicker}
-                        textColor={isDarkMode ? 'white' : 'black'}
+                        // textColor={isDarkMode ? 'white' : 'black'}
                         date={props.route.params ? new Date(props.route.params.selectedDate) : new Date()}
                     />
                 </View>
@@ -365,7 +365,7 @@ const AvailabilityScreen = props => {
                         mode="time"
                         onConfirm={handleConfirmStartTime}
                         onCancel={hideStartTimePicker}
-                        textColor={isDarkMode ? 'white' : 'black'}
+                        // textColor={isDarkMode ? 'white' : 'black'}
                         headerTextIOS='Pick a time'
                         date={initialTime}
                     />
@@ -382,7 +382,7 @@ const AvailabilityScreen = props => {
                         mode="time"
                         onConfirm={handleConfirmEndTime}
                         onCancel={hideEndTimePicker}
-                        textColor={isDarkMode ? 'white' : 'black'}
+                        // textColor={isDarkMode ? 'white' : 'black'}
                         headerTextIOS='Pick a time'
                         date={initialEndTime}
                     />
