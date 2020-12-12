@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
@@ -75,7 +76,11 @@ const SignUpScreen = props => {
         return <AppLoading />;
     } else {
         return (
-            <ScrollView style={styles.container}>
+            <KeyboardAwareScrollView
+                style={{backgroundColor: 'rgb(108,230,49)'}}
+                contentContainerStyle={styles.container}
+                extraHeight={20}
+            >
                 <View style={styles.topView}>
                     <Image
                         resizeMode="contain"
@@ -138,7 +143,7 @@ const SignUpScreen = props => {
                         <Text style={[styles.loginButtonText]}>LOGIN</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         );
     }
 };
@@ -154,16 +159,16 @@ const styles = StyleSheet.create({
     },
     bottomView: {
         alignItems: 'center',
-        marginTop: 50
+        // marginTop: 50
     },
     container: {
         flex: 1,
         backgroundColor: 'rgb(108,230,49)',
-        // alignItems: 'center',
-        // justifyContent: 'space-around'
+        alignItems: 'center',
+        justifyContent: 'space-around'
     },
     input: {
-        height: 40,
+        height: 35,
         width: 180,
         borderColor: 'black',
         borderBottomWidth: 1,
@@ -186,7 +191,7 @@ const styles = StyleSheet.create({
     },
     middleView: {
         alignItems: 'center',
-        marginTop: 20,
+        // marginTop: 20,
     },
     createAccountButton: {
         paddingVertical: 15,
@@ -196,7 +201,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     loginButton: {
-        paddingVertical: 15,
+        paddingVertical: 12,
         paddingHorizontal: 25,
         backgroundColor: 'white',
         borderRadius: 5,
@@ -213,7 +218,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 60,
         alignItems: 'center',
-        marginTop: 60
+        // marginTop: 60
     }
 });
 
