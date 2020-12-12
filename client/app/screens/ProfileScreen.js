@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { Image, Platform, Button, ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity, Switch } from 'react-native';
+import { Avatar, Accessory } from 'react-native-elements';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost, googleMapsAPI } from '../localhost.js';
@@ -194,18 +195,31 @@ const ProfileScreen = props => {
             return;
         };
 
-        ImageManipulator.manipulateAsync(pickerResult.uri, [{resize: {width: 40, height: 40}}], {base64: true})
-        .then(result => {
-            console.log("resized imaged: " + JSON.stringify(result));
-        })
-        .catch(err => console.log(err));
+        ImageManipulator.manipulateAsync(pickerResult.uri, [{ resize: { width: 40, height: 40 } }], { base64: true })
+            .then(result => {
+                console.log("resized imaged: " + JSON.stringify(result));
+            })
+            .catch(err => console.log(err));
     };
 
     return (
         <ScrollView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
-                {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />}
+                {/* <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
+                {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />} */}
+                <Avatar
+                    rounded
+                    onPress={openImagePickerAsync}
+                    // title="MD"
+                    title={profileUpdate.firstname[0]}
+                    // icon={{ name: 'user', type: 'font-awesome' }}
+                    source={{ uri: selectedImage }}
+                    // style={{ width: 200, height: 200 }}
+                    size="xlarge"
+                    activeOpacity={0.7}
+                    containerStyle={{ marginTop: 20 }}
+                />
+                    
             </View>
             <View style={styles.form}>
                 <View style={styles.row}>
@@ -335,7 +349,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginTop: 10,
         alignSelf: 'center',
-        marginTop: 120
+        // marginTop: 120
     },
     logoutButtonText: {
         fontSize: 16,
