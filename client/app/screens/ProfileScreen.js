@@ -24,7 +24,7 @@ const ProfileScreen = props => {
         pushEnabled: true
     });
     const [zipUpdate, setZipUpdate] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [profilePic, setProfilePic] = useState(null);
     const [skillLabel, setSkillLabel] = useState('');
     const { signOut } = React.useContext(AuthContext);
 
@@ -72,10 +72,10 @@ const ProfileScreen = props => {
     useEffect(() => {
         if (profileUpdate.username === '') {
             getProfileInfo();
-        }
+        };
         if (zipUpdate) {
             zipToCoordinates();
-        }
+        };
     }, [profileUpdate.zipcode]);
 
     const handleProfileUpdate = () => {
@@ -140,6 +140,7 @@ const ProfileScreen = props => {
                     lng: res.lng,
                     pushEnabled: res.pushEnabled
                 });
+                setProfilePic(res.profilePic);
                 setSkillLabel(skillConversion(res.skilllevel));
             })
             .catch((error) => console.error(error))
@@ -188,17 +189,28 @@ const ProfileScreen = props => {
             return;
         };
 
-        // const pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true });
-        const pickerResult = await ImagePicker.launchImageLibraryAsync();
-        console.log("image info: " + JSON.stringify(pickerResult.uri));
+        const pickerResult = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true });
 
         if (pickerResult.cancelled === true) {
             return;
         };
 
-        ImageManipulator.manipulateAsync(pickerResult.uri, [{ resize: { width: 40, height: 40 } }], { base64: true })
+        ImageManipulator.manipulateAsync(pickerResult.uri, [{ resize: { width: 100, height: 100 } }], { base64: true })
             .then(result => {
-                console.log("resized imaged: " + JSON.stringify(result));
+                setProfilePic(result.base64);
+                const picUpdate = {profilePic: result.base64};
+
+                fetch(localHost + "/api/profileupdate", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(picUpdate)
+                })
+                    .then(res => {
+                        console.log('pic saved in database');
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
     };
@@ -207,7 +219,7 @@ const ProfileScreen = props => {
         <ScrollView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
-                {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />}
+                {profilePic && <Image source={{ uri: "data:image/png;base64, " + profilePic }} style={{ width: 100, height: 100 }} />}
             </View>
             <View style={styles.form}>
                 <View style={styles.row}>

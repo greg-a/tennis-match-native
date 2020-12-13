@@ -54,6 +54,10 @@ module.exports = function(sequelize, DataTypes) {
         pushEnabled: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        profilePic: {
+            type: DataTypes.TEXT,
+            allowNull: true
         }
     });
 
