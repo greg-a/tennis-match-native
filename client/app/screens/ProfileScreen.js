@@ -211,7 +211,7 @@ const ProfileScreen = props => {
                     rounded
                     onPress={openImagePickerAsync}
                     // title="MD"
-                    title={profileUpdate.firstname[0]}
+                    title={profileUpdate.firstname ? profileUpdate.firstname[0] : profileUpdate.username[0]}
                     // icon={{ name: 'user', type: 'font-awesome' }}
                     source={{ uri: selectedImage }}
                     // style={{ width: 200, height: 200 }}
