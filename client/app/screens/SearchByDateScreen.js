@@ -222,7 +222,7 @@ const SearchByDateScreen = props => {
                         mode="date"
                         onConfirm={handleConfirmDate}
                         onCancel={hideDatePicker}
-                        textColor={isDarkMode ? 'white' : 'black'}
+                        // textColor={isDarkMode ? 'white' : 'black'}
                     />
                 </View>
                 <View>

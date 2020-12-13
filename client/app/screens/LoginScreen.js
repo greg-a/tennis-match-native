@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
 import { localHost } from '../localhost.js';
@@ -65,7 +66,11 @@ const LoginScreen = props => {
         return <AppLoading />;
     } else {
         return (
-            <View style={styles.container}>
+            <KeyboardAwareScrollView
+                style={{backgroundColor: 'rgb(108,230,49)'}}
+                contentContainerStyle={styles.container}
+                extraHeight={20}
+            >
                 <View style={styles.topView}>
                     <Image
                         resizeMode="contain"
@@ -115,7 +120,7 @@ const LoginScreen = props => {
                         <Text style={[styles.signUpButtonText]}>SIGN UP</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 };
