@@ -24,7 +24,8 @@ const ProfileScreen = props => {
         lng: '',
         pushEnabled: true
     });
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [zipUpdate, setZipUpdate] = useState(false);
+    const [profilePic, setProfilePic] = useState(null);
     const [skillLabel, setSkillLabel] = useState('');
     const { signOut } = React.useContext(AuthContext);
 
@@ -72,8 +73,10 @@ const ProfileScreen = props => {
     useEffect(() => {
         if (profileUpdate.username === '') {
             getProfileInfo();
-        }
-        zipToCoordinates();
+        };
+        if (zipUpdate) {
+            zipToCoordinates();
+        };
     }, [profileUpdate.zipcode]);
 
     const handleProfileUpdate = () => {
@@ -138,6 +141,7 @@ const ProfileScreen = props => {
                     lng: res.lng,
                     pushEnabled: res.pushEnabled
                 });
+                setProfilePic(res.profilePic);
                 setSkillLabel(skillConversion(res.skilllevel));
             })
             .catch((error) => console.error(error))
@@ -151,7 +155,6 @@ const ProfileScreen = props => {
                 .then(res => res.json())
                 .then(res => {
                     const geocodeCoordinates = res.results[0].geometry.location;
-
                     setProfileUpdate({ ...profileUpdate, lat: geocodeCoordinates.lat, lng: geocodeCoordinates.lng });
                 })
                 .catch(err => console.log(err))
@@ -187,17 +190,28 @@ const ProfileScreen = props => {
             return;
         };
 
-        // const pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true });
-        const pickerResult = await ImagePicker.launchImageLibraryAsync();
-        console.log("image info: " + JSON.stringify(pickerResult.uri));
+        const pickerResult = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true });
 
         if (pickerResult.cancelled === true) {
             return;
         };
 
-        ImageManipulator.manipulateAsync(pickerResult.uri, [{ resize: { width: 40, height: 40 } }], { base64: true })
+        ImageManipulator.manipulateAsync(pickerResult.uri, [{ resize: { width: 100, height: 100 } }], { base64: true })
             .then(result => {
-                console.log("resized imaged: " + JSON.stringify(result));
+                setProfilePic(result.base64);
+                const picUpdate = {profilePic: result.base64};
+
+                fetch(localHost + "/api/profileupdate", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(picUpdate)
+                })
+                    .then(res => {
+                        console.log('pic saved in database');
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
     };
@@ -205,15 +219,12 @@ const ProfileScreen = props => {
     return (
         <ScrollView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {/* <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
-                {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />} */}
                 <Avatar
                     rounded
                     onPress={openImagePickerAsync}
-                    // title="MD"
+                    source={{ uri: "data:image/png;base64, " + profilePic }}
                     title={profileUpdate.firstname ? profileUpdate.firstname[0] : ''}
                     icon={{ name: 'user', type: 'font-awesome' }}
-                    source={{ uri: selectedImage }}
                     // style={{ width: 200, height: 200 }}
                     size="xlarge"
                     activeOpacity={0.7}
@@ -268,7 +279,10 @@ const ProfileScreen = props => {
                         <TextInput
                             style={styles.input}
                             value={profileUpdate.zipcode}
-                            onChangeText={text => setProfileUpdate({ ...profileUpdate, zipcode: text })}
+                            onChangeText={text => {
+                                setProfileUpdate({ ...profileUpdate, zipcode: text });
+                                setZipUpdate(true);
+                            }}
                             keyboardType="numeric"
                         />
                     </View>
