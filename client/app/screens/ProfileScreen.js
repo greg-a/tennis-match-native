@@ -219,15 +219,12 @@ const ProfileScreen = props => {
     return (
         <ScrollView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {/* <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
-                {profilePic && <Image source={{ uri: "data:image/png;base64, " + profilePic }} style={{ width: 100, height: 100 }} />} */}
                 <Avatar
                     rounded
                     onPress={openImagePickerAsync}
-                    // title="MD"
-                    title={profileUpdate.firstname ? profileUpdate.firstname[0] : profileUpdate.username[0]}
-                    // icon={{ name: 'user', type: 'font-awesome' }}
                     source={{ uri: "data:image/png;base64, " + profilePic }}
+                    title={profileUpdate.firstname ? profileUpdate.firstname[0] : ''}
+                    icon={{ name: 'user', type: 'font-awesome' }}
                     // style={{ width: 200, height: 200 }}
                     size="xlarge"
                     activeOpacity={0.7}
