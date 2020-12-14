@@ -40,19 +40,6 @@ const FeedScreen = props => {
         console.log(JSON.stringify(confirmedMatches));
     });
 
-    // example of a notification
-    const triggerNotificationHandler = () => {
-        Notifications.scheduleNotificationAsync({
-            content: {
-                title: 'So Refreshed',
-                body: 'You refreshed the feed screen!',
-            },
-            trigger: {
-                seconds: 1
-            }
-        })
-    };
-
     const getNotificationPermission = () => {
         Permissions.getAsync(Permissions.NOTIFICATIONS)
         .then((statusObj) => {
@@ -97,7 +84,6 @@ const FeedScreen = props => {
             .then(res => res.json())
             .then((dates) => {
                 setConfirmedMatches(dates);
-                console.log("Confirmed matches: " + dates);
             })
             .catch(err => console.log(err));
 
@@ -105,7 +91,6 @@ const FeedScreen = props => {
             .then(res => res.json())
             .then((dates) => {
                 setUpdatedMatches(dates);
-                console.log("Updated matches: " + dates)
             })
             .catch(err => console.log(err));
     };
@@ -121,6 +106,8 @@ const FeedScreen = props => {
                         month={item.start.substring(5, 7)}
                         day={item.start.substring(8, 10)}
                         hour={moment(item.start).format("h:mm a")}
+                        organizerPic={item.User.profilePic}
+                        confirmerPic={item.secondUser.profilePic}
                     />
                 </View>
             )
