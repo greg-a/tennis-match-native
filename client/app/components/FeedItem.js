@@ -13,7 +13,7 @@ const FeedItem = props => {
                         // title="MD"
                         title={props.organizer ? props.organizer[0] : ''}
                         icon={{ name: 'user', type: 'font-awesome' }}
-                        // source={{ uri: selectedImage }}
+                        source={props.organizerPic && { uri: "data:image/png;base64, " + props.organizerPic }}
                         // style={{ width: 200, height: 200 }}
                         size="medium"
                         activeOpacity={0.7}
@@ -33,7 +33,7 @@ const FeedItem = props => {
                         // title="MD"
                         title={props.confirmer ? props.confirmer[0] : ''}
                         icon={{ name: 'user', type: 'font-awesome' }}
-                        // source={{ uri: selectedImage }}
+                        source={props.confirmerPic && { uri: "data:image/png;base64, " + props.confirmerPic }}
                         // style={{ width: 200, height: 200 }}
                         size="medium"
                         activeOpacity={0.7}
