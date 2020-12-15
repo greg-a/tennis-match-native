@@ -4,19 +4,42 @@ import { View, StyleSheet, Text, TouchableOpacity, FlatList, Dimensions, Refresh
 import { localHost } from '../localhost.js';
 import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import io from 'socket.io-client';
+import { Avatar, Accessory } from 'react-native-elements';
 
 const socket = io(localHost);
 
 const { width, height } = Dimensions.get('window');
 
-const Item = ({ title, sender, timestamp, read, onPress, senderId, myUserId }) => (
+const Item = ({ title, sender, timestamp, read, onPress, senderId, myUserId, profilePic }) => (
     <TouchableOpacity style={styles.message} onPress={onPress}>
         {/* <Text style={read === true ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
         <Text style={read === true ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
         <Text style={read === true ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text> */}
-        <Text style={read === true || senderId === myUserId ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
-        <Text style={read === true || senderId === myUserId ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
-        <Text style={read === true || senderId === myUserId ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
+        <View style={styles.picAndChat}>
+            <View style={styles.avatarContainer}>
+                <Avatar
+                    rounded
+                    // onPress={openImagePickerAsync}
+                    // title="MD"
+                    title={sender ? sender[0] : ''}
+                    icon={{ name: 'user', type: 'font-awesome' }}
+                    source={profilePic && { uri: "data:image/png;base64, " + profilePic }}
+                    // style={{ width: 200, height: 200 }}
+                    size="medium"
+                    activeOpacity={0.7}
+                    overlayContainerStyle={{ backgroundColor: 'silver' }}
+
+                />
+            </View>
+
+            <View style={styles.messageAndTimeContainer}>
+                <Text style={read === true || senderId === myUserId ? styles.senderTextRead : styles.senderTextUnread}>{sender}</Text>
+                <Text style={read === true || senderId === myUserId ? styles.messageTextRead : styles.messageTextUnread}>{title}</Text>
+                <Text style={read === true || senderId === myUserId ? styles.timeStampRead : styles.timeStampUnread}>{timestamp}</Text>
+            </View>
+        </View>
+
+
     </TouchableOpacity>
 );
 
@@ -91,13 +114,15 @@ const InboxScreen = props => {
             myUserId={myUserId}
             timestamp={handleTimeStamp(item.createdAt)}
             read={item.read}
+            profilePic={item.senderId == myUserId ? item.recipient.profilePic : item.User.profilePic }
             onPress={() => props.navigation.navigate('Messenger', {
                 recipientId: item.senderId == myUserId ? item.recipientId : item.senderId,
                 recipientUsername: item.senderId == myUserId ? item.recipient.username : item.User.username,
                 recipientPushToken: item.senderId == myUserId ? item.recipient.pushToken : item.User.pushToken,
                 recipientPushEnabled: item.senderId == myUserId ? item.recipient.pushEnabled : item.User.pushEnabled,
                 myUserId: myUserId,
-                myUsername: myUsername
+                myUsername: myUsername,
+                profilePic: item.senderId == myUserId ? item.recipient.profilePic : item.User.profilePic,
             })}
         />
     );
@@ -138,6 +163,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-end'
+    },
+    picAndChat: {
+        flexDirection: 'row'
+    },
+    avatarContainer: {
+        flex: 1, 
+        alignSelf: 'center'
+    },
+    messageAndTimeContainer: {
+        flex: 5
     },
     message: {
         backgroundColor: 'white',

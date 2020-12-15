@@ -501,8 +501,8 @@ module.exports = function (app) {
                 },
                 order: [["createdAt", "DESC"]],
                 include: [
-                    { model: db.User, attributes: ["username", "firstname", "lastname", "pushToken", "pushEnabled"] },
-                    { model: db.User, as: "recipient", attributes: ["username", "firstname", "lastname", "pushToken", "pushEnabled"] }
+                    { model: db.User, attributes: ["username", "firstname", "lastname", "pushToken", "pushEnabled", "profilePic"] },
+                    { model: db.User, as: "recipient", attributes: ["username", "firstname", "lastname", "pushToken", "pushEnabled", "profilePic"] }
                 ]
             })
                 .then(function (results) {
