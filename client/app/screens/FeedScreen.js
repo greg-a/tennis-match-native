@@ -36,10 +36,6 @@ const FeedScreen = props => {
         getDates();
     }, []);
 
-    useEffect(() => {
-        console.log(JSON.stringify(confirmedMatches));
-    });
-
     const getNotificationPermission = () => {
         Permissions.getAsync(Permissions.NOTIFICATIONS)
         .then((statusObj) => {
@@ -59,7 +55,7 @@ const FeedScreen = props => {
         })
         .then(response => {
             const token = { pushToken: response.data, pushEnabled: true };
-            console.log("push token: " + JSON.stringify(token))
+            
             fetch(localHost + "/api/profileupdate", {
                 method: "PUT",
                 headers: {
