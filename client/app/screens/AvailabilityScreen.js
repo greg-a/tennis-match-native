@@ -298,17 +298,18 @@ const AvailabilityScreen = props => {
     };
 
     return (
-        <ScrollView>
+        <View style={styles.container}>
             <LocationPicker
                 modalVisible={modalVisible}
                 cancelModal={() => setModalVisible(false)}
                 handleLocation={getCurrentLocation}
                 handleZip={zipToCoordinates}
             />
-            <View style={styles.container}>
+            {/* <View style={styles.container}> */}
                 <View style={styles.instructions}>
                     <Text style={[styles.baseText, styles.instructionsText]}>{userInstructions}</Text>
                 </View>
+
                 <ModalSelector
                     data={playTypeData}
                     initValue='Play Type'
@@ -322,6 +323,8 @@ const AvailabilityScreen = props => {
                         placeholderTextColor='grey'
                     />
                 </ModalSelector>
+
+                <View style={{alignItems: 'center'}}>
                 <ModalSelector
                     data={courtLocations}
                     initValue='Court Location'
@@ -335,9 +338,14 @@ const AvailabilityScreen = props => {
                         multiline={true}
                     />
                 </ModalSelector>
-                <View style={styles.locationButton}>
-                    <Button title='Set Location' onPress={() => setModalVisible(true)} />
+                <View style={styles.locationButtonView}>
+                    {/* <Button title='Set Location' onPress={() => setModalVisible(true)} /> */}
+                    <TouchableOpacity style={styles.locationButton} onPress={() => setModalVisible(true)}>
+                        <Text style={[styles.baseText, styles.locationButtonText]}>SET LOCATION</Text>
+                    </TouchableOpacity>
                 </View>
+                </View>
+
                 <View>
                     <TouchableWithoutFeedback onPress={showDatePicker}>
                         <View style={styles.input}>
@@ -354,39 +362,42 @@ const AvailabilityScreen = props => {
                     />
                 </View>
 
-                <View>
-                    <TouchableWithoutFeedback onPress={showStartTimePicker}>
-                        <View style={styles.input}>
-                            {startTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(startTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Start Time</Text>}
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <DateTimePickerModal
-                        isVisible={isStartTimePickerVisible}
-                        mode="time"
-                        onConfirm={handleConfirmStartTime}
-                        onCancel={hideStartTimePicker}
-                        // textColor={isDarkMode ? 'white' : 'black'}
-                        headerTextIOS='Pick a time'
-                        date={initialTime}
-                    />
+                <View style={styles.timeContainer}>
+                    <View style={styles.timeViewPadding}>
+                        <TouchableWithoutFeedback onPress={showStartTimePicker}>
+                            <View style={[styles.input, styles.timeInput]}>
+                                {startTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(startTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Start Time</Text>}
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <DateTimePickerModal
+                            isVisible={isStartTimePickerVisible}
+                            mode="time"
+                            onConfirm={handleConfirmStartTime}
+                            onCancel={hideStartTimePicker}
+                            // textColor={isDarkMode ? 'white' : 'black'}
+                            headerTextIOS='Pick a time'
+                            date={initialTime}
+                        />
+                    </View>
+
+                    <View style={styles.timeViewPadding}>
+                        <TouchableWithoutFeedback onPress={showEndTimePicker}>
+                            <View style={[styles.input, styles.timeInput]}>
+                                {endTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(endTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>End Time</Text>}
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <DateTimePickerModal
+                            isVisible={isEndTimePickerVisible}
+                            mode="time"
+                            onConfirm={handleConfirmEndTime}
+                            onCancel={hideEndTimePicker}
+                            // textColor={isDarkMode ? 'white' : 'black'}
+                            headerTextIOS='Pick a time'
+                            date={initialEndTime}
+                        />
+                    </View>
                 </View>
 
-                <View>
-                    <TouchableWithoutFeedback onPress={showEndTimePicker}>
-                        <View style={styles.input}>
-                            {endTime !== "" ? <Text style={[styles.baseText, styles.viewInputText2]}>{moment(endTime).format("hh:mm A")}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>End Time</Text>}
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <DateTimePickerModal
-                        isVisible={isEndTimePickerVisible}
-                        mode="time"
-                        onConfirm={handleConfirmEndTime}
-                        onCancel={hideEndTimePicker}
-                        // textColor={isDarkMode ? 'white' : 'black'}
-                        headerTextIOS='Pick a time'
-                        date={initialEndTime}
-                    />
-                </View>
                 <View>
                     <ModalSelector
                         data={eventTypeData}
@@ -432,8 +443,8 @@ const AvailabilityScreen = props => {
                 <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                     <Text style={[styles.baseText, styles.submitButtonText]}>SUBMIT</Text>
                 </TouchableOpacity>
-            </View>
-        </ScrollView>
+            {/* </View> */}
+        </View>
     );
 
 };
@@ -446,24 +457,24 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginBottom: 20
+        // marginBottom: 20
     },
     input: {
-        height: 60,
-        width: 180,
+        height: 45,
+        width: 210,
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 1,
         fontSize: 16,
         fontWeight: '300',
-        marginTop: 10,
+        // marginTop: 10,
         paddingLeft: 10,
         color: 'black',
         justifyContent: 'center'
     },
     instructions: {
         width: '80%',
-        alignItems: 'center',
-        marginTop: 20
+        // alignItems: 'center',
+        // marginTop: 20
     },
     instructionsText: {
         textAlign: 'center',
@@ -473,21 +484,45 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 25
+        // marginTop: 15
     },
     submitButtonText: {
         fontSize: 16,
         color: 'white'
     },
     viewInputText: {
-        color: 'grey'
+        color: 'grey',
+        fontWeight: '300',
     },
     viewInputText2: {
         color: 'black',
         fontWeight: "300"
     },
     locationButton: {
-        marginTop: 10
+        paddingVertical: 8,
+        // paddingHorizontal: 10,
+        backgroundColor: '#269bee',
+        borderRadius: 5,
+        width: 120
+        // marginTop: 15
+    },
+    locationButtonView: {
+        marginTop: 15, 
+    },
+    locationButtonText: {
+        fontSize: 14,
+        color: 'white',
+        textAlign: 'center'
+    },
+    timeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    timeInput: {
+        width: 90,
+    },
+    timeViewPadding: {
+        paddingHorizontal:15,
     },
     userClear: {
         position: 'absolute',

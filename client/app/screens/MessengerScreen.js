@@ -19,6 +19,7 @@ import { handleTimeStamp } from '../../utils/handleTimeStamp';
 import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
 import { useFocusEffect } from '@react-navigation/native';
+import { Avatar, Accessory } from 'react-native-elements';
 
 const socket = io(localHost);
 
@@ -43,6 +44,7 @@ const MessengerScreen = props => {
     const myUsername = props.route.params.myUsername;
     // const updateInbox = props.route.params.getMessages;
     const thisRoom = createRoom(myUserId, recipientId);
+    const profilePic = props.route.params.profilePic;
     const [recId, updateRecId] = useState(recipientId);
     const [messages, setMessages] = useState();
     const [newMessage, setNewMessage] = useState();
@@ -72,10 +74,37 @@ const MessengerScreen = props => {
         }
     };
 
+    const headerImageName = (username, userPic) => {
+        return (
+            <View style={styles.headerContent}>
+                <View style={styles.avatarContainer}>
+                    <Avatar
+                        rounded
+                        // onPress={openImagePickerAsync}
+                        // title="MD"
+                        title={username[0]}
+                        icon={{ name: 'user', type: 'font-awesome' }}
+                        source={profilePic && { uri: "data:image/png;base64, " + profilePic }}
+                        // style={{ width: 200, height: 200 }}
+                        size="small"
+                        activeOpacity={0.7}
+                        overlayContainerStyle={{ backgroundColor: 'silver' }}
+
+                    />
+                </View>
+                <View>
+                    <Text style={styles.headerName}>{username}</Text>
+                </View>
+
+            </View>
+        )
+
+    }
+
     useEffect(() => {
         getMessages(recipientId);
         connectToSocket();
-
+        console.log("line 111: " + profilePic);
         // setStatusBarHeight() {
         //     statusBarHeight = isIOS ? 20 : StatusBarManager.HEIGHT;
         //     if (isIOS) {
@@ -124,8 +153,9 @@ const MessengerScreen = props => {
         fetch(localHost + "/api/conversation/" + recipient)
             .then(res => res.json())
             .then((messages) => {
-                props.navigation.setOptions({ title: recipientUsername });
+                props.navigation.setOptions({ headerTitle: headerImageName(recipientUsername, profilePic) });
                 setMessages(messages);
+
             })
             .catch(err => console.log(err));
     };
@@ -248,6 +278,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: '#ECECEB'
+    },
+    headerContent: {
+        flexDirection: 'row', 
+        justifyContent: 'center', 
+        alignItems: 'center' 
+    },
+    avatarContainer: {
+        padding: 5 
+    },
+    headerName: {
+        color: 'white'
     },
     image: {
         width,

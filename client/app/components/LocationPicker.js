@@ -49,7 +49,7 @@ const LocationPicker = props => {
     };
 
     return (
-        <View style={styles.centeredView}>
+        // <View style={styles.centeredView}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -94,7 +94,7 @@ const LocationPicker = props => {
                     </View>
                 </View>
             </Modal>
-        </View>
+        // </View>
     )
 };
 
