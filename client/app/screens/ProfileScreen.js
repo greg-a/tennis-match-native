@@ -9,6 +9,7 @@ import { AuthContext } from './../../context';
 import ModalItem from '../components/ModalItem';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ProfileScreen = props => {
     const [profileUpdate, setProfileUpdate] = useState({
@@ -217,7 +218,8 @@ const ProfileScreen = props => {
     };
 
     return (
-        <ScrollView style={{ flex: 1 }}>
+        // <ScrollView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Avatar
                     rounded
@@ -321,8 +323,8 @@ const ProfileScreen = props => {
                     <Text style={styles.logoutButtonText}>LOGOUT</Text>
                 </TouchableOpacity>
             </View>
-
-        </ScrollView>
+            </KeyboardAwareScrollView>
+        // </ScrollView>
     )
 };
 
