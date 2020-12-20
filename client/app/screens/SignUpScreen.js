@@ -16,7 +16,6 @@ const SignUpScreen = props => {
     const [signUpPassword, setSignUpPassword] = React.useState("");
     const [signUpPasswordCon, setSignUpPasswordCon] = React.useState("");
     const [signUpEmail, setSignUpEmail] = React.useState("");
-    // const [emailIsValid, setEmailIsValid] = React.useState(false);
     const [userInstructions, setUserInstructions] = React.useState("Please enter your details");
     const [warningText, setWarningText] = React.useState(false);
 

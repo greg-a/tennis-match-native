@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { View, Text, Platform, TouchableOpacity, StyleSheet, ScrollView, FlatList, SafeAreaView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
 import * as Permissions from 'expo-permissions';
@@ -18,6 +18,7 @@ const FeedScreen = props => {
     const [confirmedMatches, setConfirmedMatches] = useState([]);
     const [updatedMatches, setUpdatedMatches] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [bottomScrollCount, setBottomScrollCount] = useState(20);
 
     const wait = (timeout) => {
         return new Promise(resolve => {
@@ -33,12 +34,11 @@ const FeedScreen = props => {
 
     useEffect(() => {
         getNotificationPermission();
-        getDates();
     }, []);
 
     useEffect(() => {
-        console.log(JSON.stringify(confirmedMatches));
-    });
+        getDates();
+    }, [bottomScrollCount])
 
     const getNotificationPermission = () => {
         Permissions.getAsync(Permissions.NOTIFICATIONS)
@@ -59,7 +59,7 @@ const FeedScreen = props => {
         })
         .then(response => {
             const token = { pushToken: response.data, pushEnabled: true };
-            console.log("push token: " + JSON.stringify(token))
+            
             fetch(localHost + "/api/profileupdate", {
                 method: "PUT",
                 headers: {
@@ -80,7 +80,7 @@ const FeedScreen = props => {
     };
 
     const getDates = () => {
-        fetch(localHost + '/api/confirmed')
+        fetch(localHost + '/api/confirmed/' + bottomScrollCount)
             .then(res => res.json())
             .then((dates) => {
                 setConfirmedMatches(dates);
@@ -93,6 +93,10 @@ const FeedScreen = props => {
                 setUpdatedMatches(dates);
             })
             .catch(err => console.log(err));
+    };
+
+    const handleBottomScroll = () => {
+        setBottomScrollCount(bottomScrollCount + 20);
     };
 
     const renderItem = ({ item }) => {
@@ -133,6 +137,7 @@ const FeedScreen = props => {
                         onRefresh={onRefresh}
                     />
                 }
+                onScrollEndDrag={handleBottomScroll}
             />
         </View>
 

@@ -10,12 +10,8 @@ import {
     KeyboardAvoidingView,
     SafeAreaView,
     Platform,
-    Alert,
-    Button,
     Dimensions,
-    NativeModules,
-    StatusBar,
-    StatusBarIOS
+    NativeModules
 }
     from 'react-native';
 import io from 'socket.io-client';

@@ -44,31 +44,28 @@ const FadeInOptions = props => {
     };
 
     return (
-            <Animated.View
-                style={[
-                    styles.fadingContainer,
-                    {
-                        opacity: fadeAnim
-                    }
-                ]}
-            >
-                <EventModal
+        <Animated.View
+            style={[
+                styles.fadingContainer, { opacity: fadeAnim }
+            ]}
+        >
+            <EventModal
                 cancelModal={() => setModalVisible(false)}
                 getDirections={handleGetDirections}
                 modalVisible={modalVisible}
                 title={props.eventLocation}
                 subtitle={`near ${props.vicinity}`}
             />
-                <TouchableOpacity
-                    style={styles.buttonsContainer}
-                    onPress={() => setModalVisible(true)}
-                >
-                    <Image
-                        source={{ uri: props.imageURL }}
-                        style={props.style}
-                    />
-                </TouchableOpacity>
-            </Animated.View>
+            <TouchableOpacity
+                style={styles.buttonsContainer}
+                onPress={() => setModalVisible(true)}
+            >
+                <Image
+                    source={{ uri: props.imageURL }}
+                    style={props.style}
+                />
+            </TouchableOpacity>
+        </Animated.View>
     )
 };
 

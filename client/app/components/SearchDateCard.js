@@ -88,8 +88,7 @@ function SearchDateCard(props) {
                             handleClick={props.handleClick}
                             expand={expandContainer}
                             collapse={collapseContainer}
-                            lat={props.eventLat}
-                            lng={props.eventLng}
+                            primaryButton='PROPOSE MATCH'
                         />
                     }
                 </Animated.View>

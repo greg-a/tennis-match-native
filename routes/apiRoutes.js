@@ -225,7 +225,7 @@ module.exports = function (app) {
     });
 
     // confirmed events for feed
-    app.get("/api/confirmed", function (req, res) {
+    app.get("/api/confirmed/:limit", function (req, res) {
         if (req.session.loggedin) {
             db.Event.findAll({
                 where: {
@@ -237,7 +237,8 @@ module.exports = function (app) {
                         model: db.User,
                         as: 'secondUser'
                     }],
-                order: [["createdAt", "DESC"]]
+                order: [["start", "DESC"]],
+                limit: parseInt(req.params.limit)
             }).then(function (results) {
                 res.json(results)
             })

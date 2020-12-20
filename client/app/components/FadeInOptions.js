@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { Animated, View, Text, StyleSheet } from 'react-native';
+import { Animated, View, Text, TextInput, StyleSheet } from 'react-native';
+import ModalSelector from 'react-native-modal-selector';
 
 const FadeInOptions = props => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -29,32 +30,54 @@ const FadeInOptions = props => {
             fadeOut();
             props.collapse();
         }
-    },[])
+    }, [])
 
     return (
-            <Animated.View
-                style={[
-                    styles.fadingContainer,
-                    {
-                        opacity: fadeAnim
-                    }
-                ]}
-            >
-        <View style={styles.buttonsContainer}>
-                <Text
-                    style={[styles.baseText, styles.linkText]}
-                    onPress={() => props.handleClick(props.eventIndex)}
-                >
-                    PROPOSE MATCH
-                        </Text>
+        <Animated.View
+            style={[
+                styles.fadingContainer,
+                {
+                    opacity: fadeAnim
+                }
+            ]}
+        >
+            <View style={styles.buttonsContainer}>
+                {props.selectCourt ?
+                    <ModalSelector
+                        data={props.courtLocations}
+                        onChange={(option) => props.handleCourt(option)}>
+                        <TextInput
+                            style={styles.modalButton}
+                            editable={false}
+                            value='SELECT COURT'
+                            multiline={true}
+                        />
+                    </ModalSelector>
+                    :
+                    <Text
+                        style={[styles.baseText, styles.linkText]}
+                        onPress={() => props.handleClick(props.eventIndex)}
+                    >
+                        {props.primaryButton}
+                    </Text>
+                }
                 <Text
                     style={[styles.baseText, styles.linkText]}
                     onPress={() => props.seeMapClick(props.eventIndex)}
                 >
                     {props.showMap ? 'SEE DETAILS' : 'SEE ON MAP'}
                 </Text>
-        </View>
-            </Animated.View>
+                {
+                    props.handleDeny &&
+                    <Text
+                        style={[styles.baseText, styles.linkTextDeny]}
+                        onPress={() => props.handleClick(props.eventIndex)}
+                    >
+                        DENY
+                </Text>
+                }
+            </View>
+        </Animated.View>
     )
 };
 
@@ -64,12 +87,21 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     baseText: {
-        fontSize: 16,
+        fontSize: 14,
         paddingBottom: 2,
     },
     linkText: {
         color: '#269bee',
+        paddingTop: 10
+    },
+    linkTextDeny: {
+        color: '#f50057',
         paddingTop: 10,
+    },
+    modalButton: {
+        color: '#269bee',
+        fontSize: 14,
+        paddingTop: 6
     }
 });
 

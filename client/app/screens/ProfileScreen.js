@@ -228,7 +228,7 @@ const ProfileScreen = props => {
                     title={profileUpdate.firstname ? profileUpdate.firstname[0] : ''}
                     icon={{ name: 'user', type: 'font-awesome' }}
                     // style={{ width: 200, height: 200 }}
-                    size="xlarge"
+                    size="large"
                     activeOpacity={0.7}
                     containerStyle={{ marginTop: 20 }}
                 />
