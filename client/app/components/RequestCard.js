@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import { Animated, StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
-import ModalSelector from 'react-native-modal-selector';
+import { Animated, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import FadeInOptions from '../components/FadeInOptions';
 import FadeInMapView from '../components/FadeInMapView';
 
