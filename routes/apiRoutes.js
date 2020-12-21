@@ -208,12 +208,12 @@ module.exports = function (app) {
                 include: [
                     {
                         model: db.User,
-                        attributes: ["username", "firstname", "lastname", "id"]
+                        attributes: ["username", "firstname", "lastname", "id", "profilePic"]
                     },
                     {
                         model: db.User,
                         as: 'secondUser',
-                        attributes: ["username", "firstname", "lastname", "id"]
+                        attributes: ["username", "firstname", "lastname", "id", "profilePic"]
                     }]
             }).then(function (results) {
                 res.json({ results: results, myUserId: req.session.userID });
@@ -317,7 +317,7 @@ module.exports = function (app) {
                 include: [
                     {
                         model: db.User,
-                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled", "profilePic"],
                         where: skillUserSearch
                     }]
             }).then(function (results) {
@@ -341,7 +341,7 @@ module.exports = function (app) {
                 include: [
                     {
                         model: db.User,
-                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled", "profilePic"],
                     }]
             }).then(function (results) {
                 results = { results: results, userid: req.session.userID }

@@ -57,6 +57,7 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
                     username={event.User.username}
                     userFirstname={event.User.firstname}
                     userLastname={event.User.lastname}
+                    profilePic={event.User.profilePic}
                     userSkill={event.User.skilllevel}
                     eventLocation={event.location}
                     eventLat={event.latitude}
