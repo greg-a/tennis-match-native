@@ -141,7 +141,7 @@ module.exports = function (app) {
                     let userArr = (req.query.username).split(" ");
 
                     db.User.findAll({
-                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled", "profilePic"],
                         where: {
                             [Op.and]: [
                                 { firstname: { [Op.substring]: userArr[0] } },
@@ -154,7 +154,7 @@ module.exports = function (app) {
                     });
                 } else {
                     db.User.findAll({
-                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled", "profilePic"],
                         where: {
                             id: { [Op.not]: req.session.userID },
                             [Op.or]: [
