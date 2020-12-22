@@ -226,6 +226,7 @@ const RequestsScreen = props => {
             username={item.User.username}
             userFirstname={item.User.firstname}
             userLastname={item.User.lastname}
+            profilePic={item.User.profilePic}
             userSkill={item.User.skilllevel}
             eventLocation={item.location}
             date={moment(item.start).format("MM/DD/YYYY")}

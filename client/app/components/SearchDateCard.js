@@ -68,7 +68,7 @@ function SearchDateCard(props) {
                                 </View>
                                 <View style={styles.usernameContainer}> 
                                     <Text style={[styles.baseText, styles.subTitle]}>
-                                        {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
+                                        {props.userFirstname ? `@${props.username} (${props.userFirstname} ${props.userLastname})` : `@${props.username}`}
                                     </Text>
                                 </View>
 

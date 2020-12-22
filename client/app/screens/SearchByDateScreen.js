@@ -186,7 +186,7 @@ const SearchByDateScreen = props => {
                         setUserInstructions('No availability for that date.');
                     } else {
                         setSearchResult(res);
-                        props.navigation.navigate('DateResults', {
+                        props.navigation.navigate('Date Results', {
                             searchResults: res
                         });
                         setWarningText(false);

@@ -25,7 +25,7 @@ const SearchDateResultsScreen = ({ route, navigation }) => {
 
         setSelectedEventIndex(index)
         
-        navigation.navigate('ProposeDate', {
+        navigation.navigate('Propose Date', {
             eventObj: eventObj,
         });
     };
