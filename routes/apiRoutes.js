@@ -240,7 +240,8 @@ module.exports = function (app) {
                 order: [["start", "DESC"]],
                 limit: parseInt(req.params.limit)
             }).then(function (results) {
-                res.json(results)
+                // const results = {events: res, myUserId: req.session.userID}
+                res.json({events: results, myUserId: req.session.userID});
             })
         } else {
             res.status(400).end();
@@ -272,7 +273,6 @@ module.exports = function (app) {
 
     // searching for players with availibility on chosen day
     app.get("/api/calendar/propose", function (req, res) {
-        console.log('DATE!!!!: ' + req.query.date);
         let dateSearch;
         if (req.query.date) {
             dateSearch = { start: { [Op.like]: req.query.date + "%" } };
@@ -374,7 +374,6 @@ module.exports = function (app) {
     });
 
     app.put("/api/calendar/requests/location", function (req, res) {
-        console.log("update request" + JSON.stringify(req.body))
         if (req.session.loggedin) {
             db.Event.update(
                 {
@@ -557,7 +556,7 @@ module.exports = function (app) {
                     }
                 }
             ).then(function (result) {
-                console.log("message update result: " + result)
+                console.log("messages updated")
             })
             .catch(err => console.log(err))
         } else {
@@ -591,8 +590,7 @@ module.exports = function (app) {
             Promise
                 .all([messageNotifications, matchNotifications])
                 .then(responses => {
-                    res.json({ messages: responses[0], matches: responses[1], userid: req.session.userID })
-                    // console.log("notification update: " + responses)
+                    res.json({ messages: responses[0], matches: responses[1], userid: req.session.userID });
                 })
                 .catch(err => console.log(err));
         }
