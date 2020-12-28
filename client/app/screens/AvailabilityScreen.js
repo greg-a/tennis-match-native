@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, ScrollView, Alert, Button } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Appearance, Alert } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';

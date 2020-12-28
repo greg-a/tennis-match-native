@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import moment from 'moment';
-import { View, Text, StyleSheet, FlatList, RefreshControl, Switch } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl, Switch, Alert } from 'react-native';
 import { HeaderButtons } from 'react-navigation-header-buttons';
 import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
@@ -22,7 +22,6 @@ const FeedScreen = props => {
     const [refreshing, setRefreshing] = useState(false);
     const [bottomScrollCount, setBottomScrollCount] = useState(20);
     const [filterFeed, setFilterFeed] = useState(true);
-    const [myUserId, setMyUserId] = useState();
 
     const wait = (timeout) => {
         return new Promise(resolve => {
@@ -44,8 +43,31 @@ const FeedScreen = props => {
         getDates();
     }, [bottomScrollCount]);
 
+    useEffect(() => {
+        if (updatedMatches.length > 0) {
+            Alert.alert(
+                updatedMatches[0].title,
+                `Match that was scheduled for ${updatedMatches[0].start.substring(5 ,7)}/${updatedMatches[0].start.substring(8, 10)} at ${moment(updatedMatches[0].start).format("h:mm a")} was declined.`,
+                [{ text: "OK", onPress: () => handleDeleteEvent(updatedMatches[0].id) }]
+            );
+        }
+    }, [updatedMatches]);
+
+    const handleDeleteEvent = id => {
+        fetch(localHost + "/api/event/delete/" + id, {
+            method: "DELETE"
+        })
+        .then(res => {
+            console.log("event was deleted");
+            const newUpdatedMatches = updatedMatches.filter(match => match.id != id);
+
+            setUpdatedMatches(newUpdatedMatches);
+        })
+        .catch(err => console.log(err));
+    };
+
     const toggleSwitch = () =>{
-        setFilterFeed(previousState => !previousState)
+        setFilterFeed(previousState => !previousState);
     };
 
     useLayoutEffect(() => {
@@ -109,11 +131,8 @@ const FeedScreen = props => {
         fetch(localHost + '/api/confirmed/' + bottomScrollCount)
             .then(res => res.json())
             .then((data) => {
-                const allEvents = data.events;
-                const myEvents = allEvents.filter(item => item.UserId == data.myUserId || data.myUserId);
-                setConfirmedMatches(allEvents);
-                setMyUserId(data.myUserId);
-                setMyMatches(myEvents);
+                setConfirmedMatches(data.events);
+                getMyDates(data.myUserId);
             })
             .catch(err => console.log(err));
 
@@ -123,6 +142,15 @@ const FeedScreen = props => {
                 setUpdatedMatches(dates);
             })
             .catch(err => console.log(err));
+    };
+
+    const getMyDates = id => {
+        fetch(localHost + '/api/confirmed/' + bottomScrollCount + '/' + id)
+        .then(res => res.json())
+        .then((data) => {
+            setMyMatches(data.events);
+        })
+        .catch(err => console.log(err));
     };
 
     const handleBottomScroll = () => {

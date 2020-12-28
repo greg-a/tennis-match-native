@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { Image, Platform, Button, ScrollView, View, StyleSheet, TextInput, Text, Alert, TouchableOpacity, Switch } from 'react-native';
-import { Avatar, Accessory } from 'react-native-elements';
+import { HeaderButtons } from 'react-navigation-header-buttons';
+import { View, StyleSheet, TextInput, Text, Alert, TouchableOpacity, Switch } from 'react-native';
+import { Avatar } from 'react-native-elements';
 import { States, Skills } from '../../data/ProfileData';
 import ModalSelector from 'react-native-modal-selector';
 import { localHost, googleMapsAPI } from '../localhost.js';
