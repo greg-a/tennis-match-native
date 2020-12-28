@@ -192,8 +192,8 @@ const SearchByDateStackNavigator = ({ navigation }) => {
           </View>
         ),
       }} />
-      <Stack.Screen name="DateResults" component={SearchDateResultsScreen} />
-      <Stack.Screen name="ProposeDate" component={SearchDatePropose} />
+      <Stack.Screen name="Date Results" component={SearchDateResultsScreen} />
+      <Stack.Screen name="Propose Date" component={SearchDatePropose} />
       <Stack.Screen name="User Search" component={UserSearchScreen} />
     </Stack.Navigator>
   );
