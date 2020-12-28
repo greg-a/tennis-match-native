@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { Animated, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import FadeInOptions from '../components/FadeInOptions';
 import FadeInMapView from '../components/FadeInMapView';
+import { Avatar } from 'react-native-elements';
 
 function skillConversion(skillLevel) {
     if (skillLevel === 1) {
@@ -49,9 +50,30 @@ function RequestCard(props) {
                             <Text style={styles.titleText}>
                                 {props.title}
                             </Text>
-                            <Text style={[styles.baseText, styles.subTitle]}>
-                                {props.userFirstname ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})` : `Username: ${props.username}`}
-                            </Text>
+                            <View style={styles.picAndUsername}>
+                                <View style={styles.avatarContainer}>
+                                    <Avatar
+                                        rounded
+                                        // onPress={openImagePickerAsync}
+                                        // title="MD"
+                                        // title={sender ? sender[0] : ''}
+                                        icon={{ name: 'user', type: 'font-awesome' }}
+                                        source={props.profilePic && { uri: "data:image/png;base64, " + props.profilePic }}
+                                        // style={{ width: 200, height: 200 }}
+                                        size="medium"
+                                        activeOpacity={0.7}
+                                        overlayContainerStyle={{ backgroundColor: 'silver' }}
+
+                                    />
+                                </View>
+                                <View style={styles.usernameContainer}>
+                                    <Text style={[styles.baseText, styles.subTitle]}>
+                                        {props.userFirstname ? `@${props.username} (${props.userFirstname} ${props.userLastname})` : `@${props.username}`}
+                                    </Text>
+                                </View>
+
+                            </View>
+
                             <Text style={[styles.baseText, styles.subTitle, styles.skillText]}>
                                 Skill level: {props.userSkill ? `${skillConversion(props.userSkill)}` : `n/a`}
                             </Text>
@@ -112,6 +134,18 @@ const styles = StyleSheet.create({
         padding: 15,
         marginVertical: 10,
         marginHorizontal: 25
+    },
+    picAndUsername: {
+        flexDirection: 'row'
+    },
+    avatarContainer: {
+        flex: 1,
+        // alignSelf: 'center',
+        padding: 5
+    },
+    usernameContainer: {
+        flex: 3,
+        alignSelf: 'center'
     },
     rowContainer: {
         flexDirection: 'row',

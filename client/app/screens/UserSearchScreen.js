@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import { localHost } from '../localhost.js';
+import { Avatar } from 'react-native-elements';
 
 const { width, height } = Dimensions.get('window');
 
-const Item = ({ username, name, onPress }) => (
+const Item = ({ username, name, profilePic, onPress }) => (
     <TouchableOpacity style={styles.searchResultContainer} onPress={onPress}>
-        <Text style={styles.usernameText}>{username}</Text>
-        <Text style={styles.nameText}>{name}</Text>
+        <View style={styles.picAndName}>
+            <View style={styles.avatarContainer}>
+                <Avatar
+                    rounded
+                    // onPress={openImagePickerAsync}
+                    // title="MD"
+                    // title={sender ? sender[0] : ''}
+                    icon={{ name: 'user', type: 'font-awesome' }}
+                    source={profilePic && { uri: "data:image/png;base64, " + profilePic }}
+                    // style={{ width: 200, height: 200 }}
+                    size="medium"
+                    activeOpacity={0.7}
+                    overlayContainerStyle={{ backgroundColor: 'silver' }}
+
+                />
+            </View>
+            <View style={styles.usernameContainer}>
+                <Text style={styles.usernameText}>{username}</Text>
+                <Text style={styles.nameText}>{name}</Text>
+            </View>
+
+        </View>
+
     </TouchableOpacity>
 );
 
@@ -22,8 +44,8 @@ const UserSearchScreen = props => {
         fetch(localHost + "/api/username?username=" + search)
             .then(res => res.json())
             .then((users) => {
-                    setUserList(users);
-                    console.log("user list: " + JSON.stringify(users));
+                setUserList(users);
+                console.log("user list: " + JSON.stringify(users));
             })
             .catch(err => console.log(err));
     };
@@ -36,11 +58,13 @@ const UserSearchScreen = props => {
         <Item
             username={`@${item.username}`}
             name={`${item.firstname === null ? '' : item.firstname} ${item.lastname === null ? '' : item.lastname}`}
+            profilePic={item.profilePic === null ? null : item.profilePic}
             onPress={searchType === 'message' ? () => props.navigation.replace('Messenger', {
                 recipientId: item.id,
                 recipientUsername: item.username,
                 pushToken: item.pushToken,
                 pushEnabled: item.pushEnabled,
+                profilePic: item.profilePic,
                 myUserId: myUserId,
                 myUsername: myUsername
             })
@@ -93,6 +117,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-end'
+    },
+    picAndName: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    },
+    avatarContainer: {
+        flex: 1,
+        alignSelf: 'center'
+    },
+    usernameContainer: {
+        flex: 5
     },
     searchResultContainer: {
         backgroundColor: 'white',

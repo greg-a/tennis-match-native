@@ -141,7 +141,7 @@ module.exports = function (app) {
                     let userArr = (req.query.username).split(" ");
 
                     db.User.findAll({
-                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled", "profilePic"],
                         where: {
                             [Op.and]: [
                                 { firstname: { [Op.substring]: userArr[0] } },
@@ -154,7 +154,7 @@ module.exports = function (app) {
                     });
                 } else {
                     db.User.findAll({
-                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "pushToken", "pushEnabled", "profilePic"],
                         where: {
                             id: { [Op.not]: req.session.userID },
                             [Op.or]: [
@@ -208,12 +208,12 @@ module.exports = function (app) {
                 include: [
                     {
                         model: db.User,
-                        attributes: ["username", "firstname", "lastname", "id"]
+                        attributes: ["username", "firstname", "lastname", "id", "profilePic"]
                     },
                     {
                         model: db.User,
                         as: 'secondUser',
-                        attributes: ["username", "firstname", "lastname", "id"]
+                        attributes: ["username", "firstname", "lastname", "id", "profilePic"]
                     }]
             }).then(function (results) {
                 res.json({ results: results, myUserId: req.session.userID });
@@ -312,7 +312,7 @@ module.exports = function (app) {
                 include: [
                     {
                         model: db.User,
-                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled", "profilePic"],
                         where: skillUserSearch
                     }]
             }).then(function (results) {
@@ -336,7 +336,7 @@ module.exports = function (app) {
                 include: [
                     {
                         model: db.User,
-                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled"],
+                        attributes: ["username", "firstname", "lastname", "id", "skilllevel", "pushToken", "pushEnabled", "profilePic"],
                     }]
             }).then(function (results) {
                 results = { results: results, userid: req.session.userID }
