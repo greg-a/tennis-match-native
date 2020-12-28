@@ -71,7 +71,7 @@ const FadeInOptions = props => {
                     props.handleDeny &&
                     <Text
                         style={[styles.baseText, styles.linkTextDeny]}
-                        onPress={() => props.handleClick(props.eventIndex)}
+                        onPress={() => props.handleDeny(props.eventIndex)}
                     >
                         DENY
                 </Text>
