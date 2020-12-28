@@ -225,12 +225,13 @@ module.exports = function (app) {
     });
 
     // confirmed events for feed
-    app.get("/api/confirmed/:limit", function (req, res) {
+    app.get("/api/confirmed/:limit/:userId?", function (req, res) {
         if (req.session.loggedin) {
+            // checks if the query should include a where condition for a specific user id
+            const whereStatement = req.params.userId ? { eventStatus: "confirmed", [Op.or]: [{ UserId: req.params.userId }, { confirmedByUser: req.params.userId }] } : { eventStatus: "confirmed" };
+
             db.Event.findAll({
-                where: {
-                    eventStatus: "confirmed"
-                },
+                where: whereStatement,
                 include: [
                     { model: db.User },
                     {
@@ -240,7 +241,7 @@ module.exports = function (app) {
                 order: [["start", "DESC"]],
                 limit: parseInt(req.params.limit)
             }).then(function (results) {
-                res.json(results)
+                res.json({ events: results, myUserId: req.session.userID });
             })
         } else {
             res.status(400).end();
@@ -251,16 +252,11 @@ module.exports = function (app) {
     app.get("/api/updates", function (req, res) {
         if (req.session.loggedin) {
             db.Event.findAll({
+                attributes: ["id", "title", "start"],
                 where: {
                     eventStatus: "denied",
                     UserId: req.session.userID
                 },
-                include: [
-                    { model: db.User },
-                    {
-                        model: db.User,
-                        as: 'secondUser'
-                    }],
                 order: [["createdAt", "DESC"]]
             }).then(function (results) {
                 res.json(results)
@@ -272,7 +268,6 @@ module.exports = function (app) {
 
     // searching for players with availibility on chosen day
     app.get("/api/calendar/propose", function (req, res) {
-        console.log('DATE!!!!: ' + req.query.date);
         let dateSearch;
         if (req.query.date) {
             dateSearch = { start: { [Op.like]: req.query.date + "%" } };
@@ -374,7 +369,6 @@ module.exports = function (app) {
     });
 
     app.put("/api/calendar/requests/location", function (req, res) {
-        console.log("update request" + JSON.stringify(req.body))
         if (req.session.loggedin) {
             db.Event.update(
                 {
@@ -557,9 +551,9 @@ module.exports = function (app) {
                     }
                 }
             ).then(function (result) {
-                console.log("message update result: " + result)
+                console.log("messages updated")
             })
-            .catch(err => console.log(err))
+                .catch(err => console.log(err))
         } else {
             res.status(400).end();
         }
@@ -591,8 +585,7 @@ module.exports = function (app) {
             Promise
                 .all([messageNotifications, matchNotifications])
                 .then(responses => {
-                    res.json({ messages: responses[0], matches: responses[1], userid: req.session.userID })
-                    // console.log("notification update: " + responses)
+                    res.json({ messages: responses[0], matches: responses[1], userid: req.session.userID });
                 })
                 .catch(err => console.log(err));
         }
@@ -620,9 +613,11 @@ module.exports = function (app) {
     });
 
     app.delete("/api/event/delete/:id", function (req, res) {
-        db.Event.destroy({ where: { id: req.params.id } }).then(function (event) {
-            res.json(event)
-        })
+        if (req.session.loggedin) {
+            db.Event.destroy({ where: { id: req.params.id } }).then(function (event) {
+                res.json(event)
+            })
+        }
     })
     // Delete an example by id
     //   app.delete("/api/examples/:id", function(req, res) {

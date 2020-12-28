@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import moment from 'moment';
-import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl, Switch, Alert } from 'react-native';
+import { HeaderButtons } from 'react-navigation-header-buttons';
 import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
 import * as Permissions from 'expo-permissions';
@@ -17,8 +18,10 @@ Notifications.setNotificationHandler({
 const FeedScreen = props => {
     const [confirmedMatches, setConfirmedMatches] = useState([]);
     const [updatedMatches, setUpdatedMatches] = useState([]);
+    const [myMatches, setMyMatches] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [bottomScrollCount, setBottomScrollCount] = useState(20);
+    const [filterFeed, setFilterFeed] = useState(true);
 
     const wait = (timeout) => {
         return new Promise(resolve => {
@@ -38,7 +41,52 @@ const FeedScreen = props => {
 
     useEffect(() => {
         getDates();
-    }, [bottomScrollCount])
+    }, [bottomScrollCount]);
+
+    useEffect(() => {
+        if (updatedMatches.length > 0) {
+            Alert.alert(
+                updatedMatches[0].title,
+                `Match that was scheduled for ${updatedMatches[0].start.substring(5 ,7)}/${updatedMatches[0].start.substring(8, 10)} at ${moment(updatedMatches[0].start).format("h:mm a")} was declined.`,
+                [{ text: "OK", onPress: () => handleDeleteEvent(updatedMatches[0].id) }]
+            );
+        }
+    }, [updatedMatches]);
+
+    const handleDeleteEvent = id => {
+        fetch(localHost + "/api/event/delete/" + id, {
+            method: "DELETE"
+        })
+        .then(res => {
+            console.log("event was deleted");
+            const newUpdatedMatches = updatedMatches.filter(match => match.id != id);
+
+            setUpdatedMatches(newUpdatedMatches);
+        })
+        .catch(err => console.log(err));
+    };
+
+    const toggleSwitch = () =>{
+        setFilterFeed(previousState => !previousState);
+    };
+
+    useLayoutEffect(() => {
+        props.navigation.setOptions({
+            headerRight: () => (
+                <HeaderButtons>
+                    <Text style={{color: 'white', paddingRight: 10}}>{filterFeed ? 'Me' : 'Everyone'}</Text>
+                    <Switch
+                        style={{marginRight: 20}}
+                        trackColor={{ false: "#767577", true: "#bbf7e7" }}
+                        thumbColor={filterFeed ? "#24ad9d" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={filterFeed}
+                    />
+                </HeaderButtons>
+            ),
+        });
+    }, [filterFeed]);
 
     const getNotificationPermission = () => {
         Permissions.getAsync(Permissions.NOTIFICATIONS)
@@ -82,8 +130,9 @@ const FeedScreen = props => {
     const getDates = () => {
         fetch(localHost + '/api/confirmed/' + bottomScrollCount)
             .then(res => res.json())
-            .then((dates) => {
-                setConfirmedMatches(dates);
+            .then((data) => {
+                setConfirmedMatches(data.events);
+                getMyDates(data.myUserId);
             })
             .catch(err => console.log(err));
 
@@ -93,6 +142,15 @@ const FeedScreen = props => {
                 setUpdatedMatches(dates);
             })
             .catch(err => console.log(err));
+    };
+
+    const getMyDates = id => {
+        fetch(localHost + '/api/confirmed/' + bottomScrollCount + '/' + id)
+        .then(res => res.json())
+        .then((data) => {
+            setMyMatches(data.events);
+        })
+        .catch(err => console.log(err));
     };
 
     const handleBottomScroll = () => {
@@ -128,7 +186,7 @@ const FeedScreen = props => {
 
         <View style={styles.container}>
             <FlatList
-                data={confirmedMatches}
+                data={filterFeed ? myMatches : confirmedMatches}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
                 refreshControl={

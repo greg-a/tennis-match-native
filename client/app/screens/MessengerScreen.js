@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         width: width - 20,
         backgroundColor: '#fff',
         marginLeft: 10,
-        marginRight: 10,
+        marginRight: 10
         // marginBottom: 10,
         // shadowColor: '#3d3d3d',
         // shadowRadius: 2,
