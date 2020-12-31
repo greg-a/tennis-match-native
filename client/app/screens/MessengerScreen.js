@@ -20,6 +20,7 @@ import { localHost } from '../localhost.js';
 import { createRoom } from '../../utils/createRoom';
 import { useFocusEffect } from '@react-navigation/native';
 import { Avatar, Accessory } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const socket = io(localHost);
 
@@ -264,7 +265,7 @@ const MessengerScreen = props => {
                             onPress={handleMessageSend}
                             disabled={newMessage === '' ? true : false}
                         >
-                            <Text>SEND</Text>
+                            <Text><Icon name="send" size={20}/></Text>
                         </TouchableOpacity>
                     </View>
                 </View>

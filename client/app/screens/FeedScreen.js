@@ -6,6 +6,7 @@ import FeedItem from '../components/FeedItem';
 import { localHost } from '../localhost.js';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => {
@@ -74,12 +75,12 @@ const FeedScreen = props => {
         props.navigation.setOptions({
             headerRight: () => (
                 <HeaderButtons>
-                    <Text style={{color: 'white', paddingRight: 10}}>{filterFeed ? 'Me' : 'Everyone'}</Text>
+                    <Text style={{color: 'white', paddingRight: 10}}>{filterFeed ? <Icon name="account-multiple" size={30}/> : <Icon name="earth" size={30}/>}</Text>
                     <Switch
                         style={{marginRight: 20}}
-                        trackColor={{ false: "#767577", true: "#bbf7e7" }}
-                        thumbColor={filterFeed ? "#24ad9d" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "grey", true: "grey" }}
+                        thumbColor={filterFeed ? "white" : "white"}
+                        ios_backgroundColor="grey"
                         onValueChange={toggleSwitch}
                         value={filterFeed}
                     />
