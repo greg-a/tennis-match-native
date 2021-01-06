@@ -20,14 +20,8 @@ const LoginScreen = props => {
 
     const { signIn } = React.useContext(AuthContext);
 
-    const handleSpinner = () => {
-        if (!warningText) {
-            setSigningIn(true);
-        }
-    };
-
     const handleSignIn = () => {
-        handleSpinner();
+        setSigningIn(true);
 
         let userCred = {
             username: loginUsername,
