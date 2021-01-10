@@ -136,7 +136,7 @@ const SearchDatePropose = ({ route, navigation }) => {
         // console.log('location: '+eventLocation);
         if (eventLocation && startTimeHourValue && startTimeMinuteValue && endTimeHourValue && endTimeMinuteValue) {
             let fetchBody;
-            if(typeof eventLocation === 'string') {
+            if (typeof eventLocation === 'string') {
                 fetchBody = JSON.stringify({
                     title: "Proposed - " + eventTitle,
                     start: currentStartDate,
@@ -273,24 +273,24 @@ const SearchDatePropose = ({ route, navigation }) => {
         const recipientPushEnabled = eventObj.User.pushEnabled;
 
         if (recipientPushEnabled) {
-        fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Accept-Encoding': 'gzip, deflate',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                to: recipientPushToken,
-                // data: {},
-                title: 'Match Request',
-                body: 'New Match Request'
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: recipientPushToken,
+                    // data: {},
+                    title: 'Match Request',
+                    body: 'New Match Request'
+                })
             })
-        })
-    }
-    else {
-        console.log('recipient disabled push notifications');
-    }
+        }
+        else {
+            console.log('recipient disabled push notifications');
+        }
     };
 
     return (
@@ -335,9 +335,9 @@ const SearchDatePropose = ({ route, navigation }) => {
                                 multiline={true}
                             />
                         </ModalSelector>
-                        <View style={styles.locationButton}>
-                            <Button title='Set Location' onPress={() => setModalVisible(true)} />
-                        </View>
+                        <TouchableOpacity style={styles.locationButton} onPress={() => setModalVisible(true)}>
+                            <Text style={styles.locationButtonText}>SET LOCATION</Text>
+                        </TouchableOpacity>
                     </View>
                     :
 
@@ -452,9 +452,8 @@ const styles = StyleSheet.create({
     input: {
         height: 60,
         // width: 120,
-        borderColor: 'lightgrey',
-        borderWidth: 1,
-        borderRadius: 5,
+        borderBottomColor: 'lightgrey',
+        borderBottomWidth: 1,
         fontSize: 16,
         fontWeight: '300',
         // marginBottom: 20,
@@ -497,8 +496,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     locationButton: {
-        marginTop: 10,
-        alignItems: 'center'
+        paddingVertical: 8,
+        // paddingHorizontal: 10,
+        backgroundColor: '#269bee',
+        borderRadius: 5,
+        width: 120,
+        alignSelf: 'center',
+        marginTop: 10
+    },
+    locationButtonText: {
+        fontSize: 14,
+        color: 'white',
+        textAlign: 'center'
     },
     warningText: {
         color: '#d30000'

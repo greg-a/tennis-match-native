@@ -141,7 +141,8 @@ const styles = StyleSheet.create({
     avatarContainer: {
         flex: 1,
         alignSelf: 'center',
-        padding: 10
+        padding: 10,
+        marginRight: 20
     },
     usernameContainer: {
         flex: 5,

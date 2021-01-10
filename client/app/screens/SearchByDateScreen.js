@@ -211,7 +211,6 @@ const SearchByDateScreen = props => {
                     {userInstructions}
                 </Text> */}
                 <View>
-                    <Text style={styles.baseText}>Date</Text>
                     <TouchableWithoutFeedback onPress={showDatePicker}>
                         <View style={styles.viewInput}>
                             {newDate ? <Text style={[styles.baseText, styles.viewInputText2]}>{conDate}</Text> : <Text style={[styles.baseText, styles.viewInputText]}>Date</Text>}
@@ -226,7 +225,6 @@ const SearchByDateScreen = props => {
                     />
                 </View>
                 <View>
-                    <Text style={styles.baseText}>Skill Level</Text>
                     <ModalSelector
                         // style={styles.viewInput}
                         data={skillsArr}
@@ -239,11 +237,11 @@ const SearchByDateScreen = props => {
                             value={skillLabel}
                             editable={false}
                             placeholder={"Any"}
+                            placeholderTextColor={'lightgrey'}
                         />
                     </ModalSelector>
                 </View>
                 <View>
-                    <Text style={styles.baseText}>User</Text>
                     <View style={[styles.viewInput]}>
                         <Text
                             style={{ color: recipientId === null ? 'lightgrey' : 'black', fontSize: 16, fontWeight: "300" }}
@@ -269,7 +267,6 @@ const SearchByDateScreen = props => {
                 </View>
 
                 <View>
-                    <Text style={styles.baseText}>Court</Text>
                     <ModalSelector
                         data={courtLocations}
                         style={styles.courtInput}
@@ -286,9 +283,9 @@ const SearchByDateScreen = props => {
                             multiline={true}
                         />
                     </ModalSelector>
-                    <View style={styles.locationButton}>
-                        <Button title='Set Location' onPress={() => setModalVisible(true)} />
-                    </View>
+                    <TouchableOpacity style={styles.locationButton} onPress={() => setModalVisible(true)}>
+                        <Text style={[styles.baseText, styles.searchButtonText]}>SET LOCATION</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.searchButton} onPress={handleFormSubmit}>
@@ -327,18 +324,25 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     instructionText: {
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: 20
     },
     locationButton: {
-        marginTop: 10,
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingVertical: 8,
+        // paddingHorizontal: 10,
+        backgroundColor: '#269bee',
+        borderRadius: 5,
+        width: 120,
+        alignSelf: 'center'
+        // marginTop: 15
     },
     searchButton: {
         paddingVertical: 15,
         paddingHorizontal: 25,
         backgroundColor: '#269bee',
         borderRadius: 5,
-        marginTop: 10
+        marginTop: 45
     },
     searchButtonText: {
         fontSize: 16,
@@ -357,11 +361,11 @@ const styles = StyleSheet.create({
     viewInput: {
         height: 60,
         width: 180,
-        borderColor: 'lightgrey',
-        borderWidth: 1,
-        borderRadius: 5,
+        borderBottomColor: 'lightgrey',
+        borderBottomWidth: 1,
         paddingLeft: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 20
     },
     viewInputText: {
         color: 'lightgrey'
