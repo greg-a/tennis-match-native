@@ -1,11 +1,11 @@
-import { View, Platform } from 'react-native';
+import React from 'react';
+import { View, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen';
 import MessengerScreen from '../screens/MessengerScreen';
 import FeedScreen from '../screens/FeedScreen';
 import AvailabilityScreen from '../screens/AvailabilityScreen';
-import React from 'react';
 import CalendarScreen from '../screens/CalendarScreen';
 import InboxScreen from '../screens/InboxScreen';
 import UserSearchScreen from '../screens/UserSearchScreen';
@@ -13,6 +13,7 @@ import SearchByDateScreen from '../screens/SearchByDateScreen';
 import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
 import SearchDatePropose from '../screens/SearchDatePropose';
 import RequestsScreen from '../screens/RequestsScreen';
+import TennisIcon from '../../assets/racket2white.png';
 
 const Stack = createStackNavigator();
 
@@ -30,12 +31,14 @@ const MainStackNavigator = ({ navigation }) => {
       <Stack.Screen name="Feed" component={FeedScreen} options={{
         headerLeft: () => (
           <View>
-            <Icon
+            <TouchableOpacity
               onPress={() => navigation.toggleDrawer()}
-              name="tennis"
-              color="white"
-              size={40}
-            />
+            >
+              <Image 
+                source={TennisIcon}
+                style={{ width: 50, height: 50 }}
+              />
+            </TouchableOpacity>
           </View>
         ),
       }} />
