@@ -13,7 +13,7 @@ import SearchByDateScreen from '../screens/SearchByDateScreen';
 import SearchDateResultsScreen from '../screens/SearchDateResultsScreen';
 import SearchDatePropose from '../screens/SearchDatePropose';
 import RequestsScreen from '../screens/RequestsScreen';
-import TennisIcon from '../../assets/racket2white.png';
+import TennisIcon from '../../assets/racket3white.png';
 
 const Stack = createStackNavigator();
 
@@ -36,7 +36,7 @@ const MainStackNavigator = ({ navigation }) => {
             >
               <Image 
                 source={TennisIcon}
-                style={{ width: 50, height: 50 }}
+                style={{ width: 50, height: 50, marginLeft: 5 }}
               />
             </TouchableOpacity>
           </View>
