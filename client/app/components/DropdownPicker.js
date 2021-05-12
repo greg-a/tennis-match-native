@@ -11,7 +11,7 @@ const DropdownPicker = props => {
             >
                 {props.menuContent.map((item, index) => {
                     return (
-                        <Picker.Item label={item.label} value={item.value} key={index} />
+                        <Picker.Item label={item.label} value={item.value} key={index} data-test={`picker-${item.label}`}/>
                     )
                 })}
             </Picker>
