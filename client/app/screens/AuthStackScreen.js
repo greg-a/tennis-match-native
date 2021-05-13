@@ -5,7 +5,7 @@ import LoginScreen from './LoginScreen';
 
 const AuthStack = createStackNavigator();
 
-export default AuthStackScreen = () => (
+const AuthStackScreen = () => (
   <AuthStack.Navigator headerMode="none">
     <AuthStack.Screen
       name="Login"
@@ -19,3 +19,5 @@ export default AuthStackScreen = () => (
     />
   </AuthStack.Navigator>
 );
+
+export default AuthStackScreen;

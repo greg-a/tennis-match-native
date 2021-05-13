@@ -1,7 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MainStackNavigator, AvailabilityStackNavigator, CalendarStackNavigator } from "./StackNavigator";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MainStackNavigator from "./MainStackNavigator";
+import AvailabilityStackNavigator from "./AvailabilityStackNavigator";
+import CalendarStackNavigator from "./CalendarStackNavigator";
 
 const Tabs = createBottomTabNavigator();
 

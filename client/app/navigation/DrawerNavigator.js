@@ -2,10 +2,13 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ProfileStackNavigator, MessengerStackNavigator, SearchByDateStackNavigator, RequestsStackNavigator } from "./StackNavigator";
 import BottomTabNavigator from "./TabNavigator";
 import NotificationBadge from '../components/NotificationBadge';
 import { NotificationContext } from '../../context';
+import ProfileStackNavigator from "./ProfileStackNavigator";
+import MessengerStackNavigator from "./MessengerStackNavigator";
+import SearchByDateStackNavigator from "./SearchByDateStackNavigator";
+import RequestsStackNavigator from "./RequestsStackNavigator";
 
 const Drawer = createDrawerNavigator();
 

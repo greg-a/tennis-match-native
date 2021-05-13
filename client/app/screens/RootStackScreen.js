@@ -5,7 +5,7 @@ import AuthStackScreen from './AuthStackScreen';
 
 const RootStack = createStackNavigator();
 
-export default RootStackScreen = ({ userToken }) => (
+const RootStackScreen = ({ userToken }) => (
   <RootStack.Navigator headerMode="none">
     {userToken ? (
       <RootStack.Screen
@@ -20,3 +20,5 @@ export default RootStackScreen = ({ userToken }) => (
       )}
   </RootStack.Navigator>
 );
+
+export default RootStackScreen;
