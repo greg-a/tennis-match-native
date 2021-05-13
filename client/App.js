@@ -9,41 +9,7 @@ import SignUpScreen from './app/screens/SignUpScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthContext, NotificationContext } from './context';
 import { localHost } from './app/localhost';
-
-const AuthStack = createStackNavigator();
-
-const AuthStackScreen = () => (
-  <AuthStack.Navigator headerMode="none">
-    <AuthStack.Screen
-      name="Login"
-      component={LoginScreen}
-    // options={{ title: "Sign In" }}
-    />
-    <AuthStack.Screen
-      name="SignUp"
-      component={SignUpScreen}
-      options={{ title: "SignUp" }}
-    />
-  </AuthStack.Navigator>
-);
-
-const RootStack = createStackNavigator();
-
-const RootStackScreen = ({ userToken }) => (
-  <RootStack.Navigator headerMode="none">
-    {userToken ? (
-      <RootStack.Screen
-        name="Drawer Navigator"
-        component={DrawerNavigator}
-      />
-    ) : (
-        <RootStack.Screen
-          name="Auth"
-          component={AuthStackScreen}
-        />
-      )}
-  </RootStack.Navigator>
-);
+import RootStackScreen from './app/screens/RootStackScreen';
 
 export default function App() {
   const socket = io(localHost);
